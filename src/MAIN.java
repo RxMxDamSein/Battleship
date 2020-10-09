@@ -6,6 +6,7 @@ public class MAIN {
         System.out.println("Romasn zweite Zeile");
         System.out.println("Roman Branch muhahaha");
         System.out.println("Romans sagt: eZ");
+        new TEST_GUI();
     }
 
 }
