@@ -4,6 +4,8 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -31,10 +33,12 @@ public class MAIN extends Application implements EventHandler<ActionEvent> {
         primaryStage.setTitle("TITEL");
         StackPane layout=new StackPane();
         button=new Button();
+
         button.setText("CLICK! ");
         button.setOnAction(this);
         Scene scene=new Scene(layout,420,300);
         layout.getChildren().add(button);
+        StackPane.setAlignment(button, Pos.CENTER_LEFT);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -44,7 +48,7 @@ public class MAIN extends Application implements EventHandler<ActionEvent> {
         button.setText(button.getText()+"pog ");
 
 
-
+       
         explosion.setVolume(0.1);
         explosion.play();
     }
