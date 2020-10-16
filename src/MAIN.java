@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 
 public class MAIN extends Application implements EventHandler<ActionEvent> {
     Button button;
+    AudioClip explosion=new AudioClip(new File("./sfx/explosion.mp3").toURI().toString());
 
     public static void main(String[] args) {
         System.out.println("Working Directory = " +
@@ -43,7 +44,8 @@ public class MAIN extends Application implements EventHandler<ActionEvent> {
         button.setText(button.getText()+"pog ");
 
 
-        AudioClip explosion=new AudioClip(new File("./sfx/explosion.mp3").toURI().toString());
+       
+        explosion.setVolume(0.1);
         explosion.play();
     }
 
