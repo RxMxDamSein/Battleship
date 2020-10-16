@@ -5,13 +5,21 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
+import sun.audio.AudioPlayer;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 public class MAIN extends Application implements EventHandler<ActionEvent> {
     Button button;
 
     public static void main(String[] args) {
+        System.out.println("Working Directory = " +
+                System.getProperty("user.dir"));
         launch(args);
     }
 
@@ -31,5 +39,9 @@ public class MAIN extends Application implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         button.setText(button.getText()+"pog ");
+
+
+        AudioClip explosion=new AudioClip(new File("./sfx/explosion.mp3").toURI().toString());
+        explosion.play();
     }
 }
