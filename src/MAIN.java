@@ -61,9 +61,9 @@ public class MAIN extends Application  {
         }catch (NumberFormatException e){
 
         }finally {
-            if(x==0)
+            if(x<=0)
                 x=20;
-            if(y==0)
+            if(y<=0)
                 y=20;
         }
         System.out.println("X: "+x+" Y: "+y);
