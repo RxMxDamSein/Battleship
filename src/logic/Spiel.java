@@ -12,7 +12,7 @@ public class Spiel {
     private boolean started=false;
     private ArrayList<Schiff> schiffe;
     private Random random=new Random();
-    int abschussSpieler =-1;
+    private int abschussSpieler =-1;
     /**
      * make Spiel object
      */
@@ -50,6 +50,18 @@ public class Spiel {
         return true;
     }
 
+
+    private void gameOver(){
+        logicOUTput.printFeld(feld,true);
+        System.out.println("Der Sieger der Partie ist: "+((abschussSpieler==0)?"1":"0"));
+    }
+    /**
+     * checks if a winner is decided
+     * @return true if one player has one!
+     */
+    private boolean checkGameOver(){
+        return false;
+    }
     /**
      * @return gibt den Spieler der jetzt schießen darf zurück
      */
@@ -71,6 +83,10 @@ public class Spiel {
         started=true;
         if(abschussSpieler <0){
             abschussSpieler =random.nextInt(2);
+            System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
+        }
+        if(checkGameOver()){
+            gameOver();
         }
         return true;
     }
@@ -86,6 +102,7 @@ public class Spiel {
         if (!starteSpiel())
             return false;
         abschussSpieler =spieler;
+        System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
         return true;
     }
     /**
@@ -101,6 +118,14 @@ public class Spiel {
             System.err.println("Game has not started yet!");
             return false;
         }
+        if(spieler!=abschussSpieler){
+            System.err.println("Wrong Player to shoot!");
+            return false;
+        }
+        if(x>=this.x || y >=this.y || x<0 || y<0){
+            System.err.println("Shoot out of boundaries!");
+            return false;
+        }
         switch (feld[spieler][x][y]){
             default:
                 System.err.println("undefined feld state");
@@ -113,13 +138,19 @@ public class Spiel {
                 break;
             case 0://Wasser
                 feld[spieler][x][y]=3;
-                if(spieler>0)
+                if(spieler>0){
                     abschussSpieler=0;
-                else
+                    System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
+                } else{
                     abschussSpieler=1;
+                    System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
+                }
                 break;
         }
-
+        //System.out.println("Player "+spieler+"/"+abschussSpieler+" was shot at ("+x+"|"+y+")");
+        if(checkGameOver()){
+            gameOver();
+        }
         return true;
     }
 
