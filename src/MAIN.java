@@ -4,11 +4,11 @@
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
 
 
 public class MAIN extends Application  {
@@ -37,17 +37,24 @@ public class MAIN extends Application  {
         buttonSubmit=new Button("SUBMIT");
         buttonSubmit.setOnAction(e->submitFunc());
 
+
+        MenuBar menuBar=new MenuBar();
+        Menu m1=new Menu("Stift!");
+        MenuItem mi1=new MenuItem("GROß!");
+        mi1.setOnAction(e-> System.out.println("OPEN! YOUR FAVOURITE WEBSITE"));
+        m1.getItems().add(mi1);
+        menuBar.getMenus().addAll(m1);
         VBox vBox=new VBox();
-        vBox.setPadding(new Insets(10,10,10,10));
-        vBox.setSpacing(5);
-        vBox.getChildren().addAll(inputFieldX,inputFieldY,buttonSubmit);
+        //vBox.setPadding(new Insets(10,10,10,10));
+        //vBox.setSpacing(5);
+        vBox.getChildren().addAll(menuBar,inputFieldX,inputFieldY,buttonSubmit);
 
         scene_sizeS=new Scene(vBox);
         window.setScene(scene_sizeS);
         window.show();
     }
 
-    private void submitFunc(){
+    private void submitFunc()  {
         String xS=inputFieldX.getText();
         String yS=inputFieldY.getText();
         int x=0,y=0;
