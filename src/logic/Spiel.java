@@ -135,6 +135,9 @@ public class Spiel {
                 return false;
             case 1://Treffer
                 feld[spieler][x][y]=2;
+                //find ship and update its getroffen Attribute
+                Schiff s=findSchiffFromPos(x,y,spieler);
+
                 break;
             case 0://Wasser
                 feld[spieler][x][y]=3;
@@ -152,6 +155,47 @@ public class Spiel {
             gameOver();
         }
         return true;
+    }
+
+    /**
+     * ermöglicht ein Schiff Objekt zu erhalten anhand einer Postion und dem Spieler
+     * @param x X Koordinate eines Teiles des Schiffes
+     * @param y Y Koordinate eines Teiles des Schiffes
+     * @param spieler dem das Schiffzugehöriger Spieler
+     * @return das Schiffobjekt wenn erfolgreich ansonsten null
+     */
+    private Schiff findSchiffFromPos(int x, int y,int spieler){
+        int horizontal=2;  //-1 undefined, 0 horizontal, 1 vertical, 2 shipsize=1(both)
+        if((feld[spieler][x-1][y]==1 && x>0)||(feld[spieler][x-1][y]==2 && x>0)|| (feld[spieler][x+1][y]==1 && x<this.x)|| (feld[spieler][x+1][y]==2 && x<this.x)){
+            horizontal=0;
+        }else if((feld[spieler][x][y-1]==1 && y>0)||(feld[spieler][x][y-1]==2 && y>0)|| (feld[spieler][x][y+1]==1 && y<this.y)|| (feld[spieler][x][y+1]==2 && y<this.y)){
+            horizontal=1;
+        }
+        Schiff s=null;
+        switch (horizontal){
+            default://both(2) shipsize should be 1
+                s=Schiff.getSchiffFromOrigin(x,y,spieler,schiffe);
+                break;
+            case 0://horizontal
+                int xz=x;
+                while (xz>=0 && (feld[spieler][xz][y]==1 || feld[spieler][xz][y]==2)){
+                    xz--;
+                }
+                xz++;//xOPos des Schiffes
+                s=Schiff.getSchiffFromOrigin(xz,y,spieler,schiffe);
+                break;
+            case 1://vertical
+                int yz=y;
+                while (yz>=0 && (feld[spieler][x][yz]==1 || feld[spieler][x][yz]==2)){
+                    yz--;
+                }
+                yz++;//yOPos des Schiffes
+                s=Schiff.getSchiffFromOrigin(x,yz,spieler,schiffe);
+                break;
+        }
+        if(s==null)
+            System.err.println("Ship was not found error!");
+        return s;
     }
 
     /**
