@@ -1,9 +1,5 @@
-HELP
+Funktionsfähige Spieler gegen Spieler Spiellogik!
+Noch nicht darauf ausgelegt gegen einen remote Spieler zu spielen!
+	Das liegt noch in der Schwebe, da ich denke das der Remotespieler seine Schiffe nicht herübersenden wird und man somit also nicht weiß wer an der Reihe ist (muss der remote Host in dem Fall halt sagen)
 
-Die Gui können wir gerne in JavaFX machen. Tutorial hier: https://www.youtube.com/playlist?list=PL6gx4Cwl9DGBzfXLWLSYVy8EbTdpGbUIG
-Ich denk des ist nicht schwieriger als Java Swing was wir Vorlesung machen werden,
-und Dennis ist hyped darauf weil er Swing nicht rafft :).
-
-Plus JavaFX scheint moderner und Professioneler
-
-Natürlich kann man damit auch hinrotzen also alles gut :)
+Man kann jetzt schon Schiffeversenken in der Konsole spielen jedoch sieht man halt beide Felder komplett :)

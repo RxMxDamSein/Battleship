@@ -10,6 +10,8 @@ public class Spiel {
     private int[][][] feld;
     private boolean init=false;
     private boolean started=false;
+    private boolean fin=false;
+    private boolean versenkt=false;
     private ArrayList<Schiff> schiffe;
     private Random random=new Random();
     private int abschussSpieler =-1;
@@ -32,6 +34,19 @@ public class Spiel {
     }
 
     /**
+     * @return gibt zurück ob beim letzten erfolgreichen Schuss ein Schiff versunken wurde
+     * true -> versenkt, false -> nicht versenkt
+     */
+    public boolean istVersenkt(){
+        return versenkt;
+    }
+    /**
+     * @return true Spiel ist vorbei, false noch nicht!
+     */
+    public boolean isOver(){
+        return fin;
+    }
+    /**
      * Initialisiert das Spielbrett!
      * Nur 1 mal möglich!
      * @return boolean Erfolgreich oder nicht Erfolgreich
@@ -50,16 +65,39 @@ public class Spiel {
         return true;
     }
 
-
+    /**
+     * This Function just prints the winner.
+     * Works only when called right after checkGameOver()==true
+     */
     private void gameOver(){
         logicOUTput.printFeld(feld,true);
-        System.out.println("Der Sieger der Partie ist: "+((abschussSpieler==0)?"1":"0"));
+        System.out.println("Der Sieger der Partie ist Spieler "+((abschussSpieler==0)?"2(1)":"1(0)"));
     }
     /**
      * checks if a winner is decided
-     * @return true if one player has one!
+     * @return true if one player has won!
      */
     private boolean checkGameOver(){
+        if(!started){
+            System.err.println("Game has not started yet!");
+            return false;
+        }
+        boolean spieler1TOT=true;
+        boolean spieler2TOT=true;
+        for(int i=0;i<schiffe.size();i++){
+            Schiff s=schiffe.get(i);
+            if(spieler1TOT && s.schifflebt==true && s.spieler==0)
+                spieler1TOT=false;
+            if(spieler2TOT && s.schifflebt==true && s.spieler==1)
+                spieler2TOT=false;
+            if(!spieler1TOT && !spieler2TOT)
+                break;
+        }
+        if(spieler1TOT || spieler2TOT){
+            fin=true;
+            return true;
+        }
+
         return false;
     }
     /**
@@ -83,7 +121,7 @@ public class Spiel {
         started=true;
         if(abschussSpieler <0){
             abschussSpieler =random.nextInt(2);
-            System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
+            //System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
         }
         if(checkGameOver()){
             gameOver();
@@ -102,7 +140,7 @@ public class Spiel {
         if (!starteSpiel())
             return false;
         abschussSpieler =spieler;
-        System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
+        //System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
         return true;
     }
     /**
@@ -118,6 +156,10 @@ public class Spiel {
             System.err.println("Game has not started yet!");
             return false;
         }
+        if(fin){
+            System.err.println("Game is Over!");
+            return false;
+       }
         if(spieler!=abschussSpieler){
             System.err.println("Wrong Player to shoot!");
             return false;
@@ -134,19 +176,26 @@ public class Spiel {
                 System.err.println("Selected Field was already shot");
                 return false;
             case 1://Treffer
+                versenkt=false;
                 feld[spieler][x][y]=2;
                 //find ship and update its getroffen Attribute
                 Schiff s=findSchiffFromPos(x,y,spieler);
-
+                if(!Schiff.setGetroffenWposAship(x,y,s)){
+                    System.err.println("Es wurde ein Treffer erzielt, aber es sollte dort kein Schiff sein!");
+                }
+                if(!s.schifflebt){//Schiff ist versenkt!
+                    versenkt=true;
+                }
                 break;
-            case 0://Wasser
+            case 0://Wasser oder ehr noch frei
+                versenkt=false;
                 feld[spieler][x][y]=3;
                 if(spieler>0){
                     abschussSpieler=0;
-                    System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
+                    //System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
                 } else{
                     abschussSpieler=1;
-                    System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
+                    //System.out.println("abzuschiesender Spieler ist "+abschussSpieler);
                 }
                 break;
         }
@@ -166,9 +215,9 @@ public class Spiel {
      */
     private Schiff findSchiffFromPos(int x, int y,int spieler){
         int horizontal=2;  //-1 undefined, 0 horizontal, 1 vertical, 2 shipsize=1(both)
-        if((feld[spieler][x-1][y]==1 && x>0)||(feld[spieler][x-1][y]==2 && x>0)|| (feld[spieler][x+1][y]==1 && x<this.x)|| (feld[spieler][x+1][y]==2 && x<this.x)){
+        if((x>0 && feld[spieler][x-1][y]==1 )||(x>0 && feld[spieler][x-1][y]==2 )|| (x<this.x && feld[spieler][x+1][y]==1 )|| (x<this.x && feld[spieler][x+1][y]==2 )){
             horizontal=0;
-        }else if((feld[spieler][x][y-1]==1 && y>0)||(feld[spieler][x][y-1]==2 && y>0)|| (feld[spieler][x][y+1]==1 && y<this.y)|| (feld[spieler][x][y+1]==2 && y<this.y)){
+        }else if((y>0 && feld[spieler][x][y-1]==1 )||(y>0 && feld[spieler][x][y-1]==2 )|| (y<this.y && feld[spieler][x][y+1]==1 )|| (y<this.y && feld[spieler][x][y+1]==2 )){
             horizontal=1;
         }
         Schiff s=null;

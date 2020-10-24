@@ -64,8 +64,8 @@ public class logicOUTput {
                 printFeld(dasSpiel.getFeld(),true);
             }
             printFeld(dasSpiel.getFeld(),true);
-            dasSpiel.starteSpiel();
-            while (true){
+            dasSpiel.starteSpiel(1);
+            while (!dasSpiel.isOver()){
                 int spieler=dasSpiel.getAbschussSpieler();
                 System.out.println("Spieler "+(spieler+1)+" wird nun abgeschossen!");
                 System.out.print("X Koordinate: ");
@@ -76,6 +76,8 @@ public class logicOUTput {
                 y=Integer.parseInt(in);
                 dasSpiel.shoot(x,y,spieler);
                 printFeld(dasSpiel.getFeld(),true);
+                if(dasSpiel.istVersenkt())
+                    System.out.println("Treffer Versenkt!");
             }
         } catch (IOException e) {
             e.printStackTrace();

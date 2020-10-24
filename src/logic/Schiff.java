@@ -45,13 +45,19 @@ public class Schiff {
      * @param s das getroffene Schiff
      * @return true bei erfolg, false wenn misslungen
      */
-    public static boolean setGetroffenWposAship(int x,int y, Schiff s){
+    public static boolean setGetroffenWposAship(int x, int y, Schiff s){
         try {
             if (s.horizontal) {
                 s.getroffen[x - s.xOPos] = true;
             } else {
                 s.getroffen[y - s.yOPos] = true;
             }
+            int countLebt=0;
+            for(int i=0;i<s.getroffen.length;i++)
+                if( s.getroffen[i]==true)
+                    countLebt++;
+            if(countLebt==s.getroffen.length)
+                s.schifflebt=false;
         } catch (IndexOutOfBoundsException e) {
             System.err.println("Illegal POS!");
             return false;
