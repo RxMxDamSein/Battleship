@@ -267,18 +267,30 @@ public class Spiel {
     private boolean checkLegalSchiff(Schiff s){
         if(s.xOPos<0 || s.xOPos>=x || s.yOPos<0 || s.yOPos>=y || (s.horizontal && s.xOPos+s.schifflaenge>x) || (!s.horizontal && s.yOPos+s.schifflaenge>y))
             return false;
-        for(int i=0;i<s.schifflaenge+2;i++){
-            for (int j=0;j<3;j++){
-                if (s.horizontal){
-                    if(s.xOPos-1+j>=0 && s.xOPos-1+j<x){
-                        if(feld[s.spieler][s.xOPos-1+j][s.yOPos]!=0)
-                            return false;
-                    }
-                }else{
-                    if(s.yOPos-1+j>=0 && s.yOPos-1+j<y){
-                        if(feld[s.spieler][s.xOPos][s.yOPos-1+j]!=0)
-                            return false;
-                    }
+        /*if(s.horizontal){
+            for(int i=s.xOPos-1;i<=s.xOPos+s.schifflaenge;i++){
+                for(int j=s.yOPos-1;j)
+            }
+        }*/
+        int z=(s.horizontal)?s.xOPos:s.yOPos;
+        for(int i=(z-1<0)?0:z-1;i<z+s.schifflaenge+1;i++){
+            if(s.horizontal){
+                if(i>= this.x)
+                    continue;
+                for(int y=s.yOPos-1;y<=s.yOPos+1;y++){
+                    if(y<0 || y>=this.y)
+                        continue;
+                    if(feld[s.spieler][i][y]!=0)
+                        return false;
+                }
+            }else {
+                if(i>= this.y)
+                    continue;
+                for(int x=s.xOPos-1;x<=s.xOPos+1;x++){
+                    if(x<0 || x>=this.x)
+                        continue;
+                    if(feld[s.spieler][x][i]!=0)
+                        return false;
                 }
             }
         }
