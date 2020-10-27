@@ -26,10 +26,10 @@ public class MAIN extends Application  {
         window.setTitle("ENTER GRID SIZE");
 
         inputFieldX=new TextField();
-        inputFieldX.setPromptText("20");
+        inputFieldX.setPromptText("5");
         inputFieldX.setOnAction(e->submitFunc());
         inputFieldY=new TextField();
-        inputFieldY.setPromptText("20");
+        inputFieldY.setPromptText("5");
         inputFieldY.setOnAction(e->submitFunc());
         buttonSubmit=new Button("SUBMIT");
         buttonSubmit.setOnAction(e->submitFunc());
@@ -67,9 +67,9 @@ public class MAIN extends Application  {
 
         }finally {
             if(x<=0)
-                x=20;
+                x=5;
             if(y<=0)
-                y=20;
+                y=5;
         }
         System.out.println("X: "+x+" Y: "+y);
         new Grid(window,x,y,scene_sizeS);

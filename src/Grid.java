@@ -1,4 +1,5 @@
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,8 +14,9 @@ import logic.Spiel;
 import logic.logicOUTput;
 
 
-
-
+/**
+ * Klasse die das 2Spieler spielen Schiffeversenken Spiel erlaubt mit spicken!
+ */
 public class Grid {
     private Stage window;
     private Scene sceneOld;
@@ -23,12 +25,27 @@ public class Grid {
     private GridPane gridPlayer2;
     private int[][][] feld;
     private Label[][][] labels;
+    private Label[] lToShoot;
 
+    /**
+     * Konstruktor initialisiert alles
+     * @param window Das Fenster indem das Spiel angezeigt wird
+     * @param x Spielbrettbreite
+     * @param y Spielbretthöhe
+     * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
+     */
     public Grid(Stage window, int x, int y, Scene sceneOld)  {
         this.window=window;
         this.sceneOld=sceneOld;
         this.gridPlayer1=new GridPane();
         this.gridPlayer2=new GridPane();
+        this.lToShoot=new Label[2];
+        lToShoot[0]=new Label("1");
+        lToShoot[1]=new Label("2");
+        GridPane.setConstraints(lToShoot[0],0,y,x+1,y,HPos.CENTER,VPos.CENTER);
+        this.gridPlayer1.getChildren().add(lToShoot[0]);
+        GridPane.setConstraints(lToShoot[1],0,y,x+1,y,HPos.CENTER,VPos.CENTER);
+        this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
         this.dasSpiel=new Spiel(x,y);
         if(!dasSpiel.init())
@@ -39,20 +56,63 @@ public class Grid {
 
         Button buttonZuruck=new Button("Zurück");
         buttonZuruck.setOnAction(e->sceneZutuck());
+        Button buttonStart=new Button("Start Shooting!");
+        buttonStart.setOnAction(e->buttonSpielStart());
+
 
         HBox hBox=new HBox(10);
         hBox.getChildren().addAll(this.gridPlayer1,this.gridPlayer2);
+        HBox hBox2=new HBox(10);
+        hBox2.setPadding(new Insets(5,5,5,5));
+        hBox2.getChildren().addAll(buttonStart);
         VBox vBox=new VBox(5);
-        vBox.getChildren().addAll(hBox,buttonZuruck);
-
+        vBox.getChildren().addAll(hBox,hBox2,buttonZuruck);
+        vBox.setPadding(new Insets(5,5,5,5));
         Scene sceneGrid=new Scene(vBox);
         window.setScene(sceneGrid);
     }
+
+    /**
+     * Schreibt in die lToShoot Labels jeweils ob man verloren oder gewonnen hat.
+     * Diese Funkton gilt es unmittelbar beom Sieg aufzurufen
+     */
+    private void gameOver(){
+        lToShoot[dasSpiel.getAbschussSpieler()].setText("Verlierer!");
+        lToShoot[(dasSpiel.getAbschussSpieler()==0)?1:0].setText("Sieger!");
+    }
+
+    /**
+     * Zeigt bei den lToShoot Labels an welcher Spieler abzuschiesen ist
+     */
+    private void setLabelAbschuss(){
+        int s=dasSpiel.getAbschussSpieler();
+        lToShoot[s].setText("Schieß hier!");
+        lToShoot[(s==1)?0:1].setText("Spieler "+(((s==1)?0:1)+1));
+    }
+
+    /**
+     * Geht vom Schiff hinzufügen Modus in Spiel(Shoot) Modus über
+     */
+    private void buttonSpielStart(){
+        if(dasSpiel.starteSpiel()){
+            setLabelAbschuss();
+            if(dasSpiel.isOver())
+                gameOver();
+        }
+    }
+
+    /**
+     * geht in die im Konstruktor gegebene Scene zurück.
+     * -> das Spiel wird verworfen
+     */
     private void sceneZutuck(){
         window.setScene(sceneOld);
         window.setTitle("ENTER GRID SIZE");
     }
 
+    /**
+     * Initialisiert das Spielfeld
+     */
     private void initPlayerGrids(){
         GridPane[] gridPanes=new GridPane[2];
         gridPanes[0]=gridPlayer1;
@@ -70,6 +130,9 @@ public class Grid {
         }
     }
 
+    /**
+     * schreibt die Werte aus Spiel.feld in das Spielfeld
+     */
     private void updatePlayerGrids(){
         GridPane[] gridPanes=new GridPane[2];
         gridPanes[0]=gridPlayer1;
@@ -87,25 +150,37 @@ public class Grid {
     private Paint paint_old=null;
     boolean selected=false;
     boolean selectDone=false;
-    private void labelClick(int s,int x,int y){
 
+    /**
+     * Funktion wenn man auf ein Spielfeld klickt!
+     * Ermöglicht das hinzufügen von Schiffen.
+     * Und das schießen.
+     * @param s Spieler
+     * @param x X Koordinate
+     * @param y Y Koordinate
+     */
+    private void labelClick(int s,int x,int y){
         System.out.println("Clicked Label "+s+": "+x+" | "+y );
-        if(!dasSpiel.isStarted()){              //Schiff Hinzufügen!
+        if(dasSpiel.isStarted() && !dasSpiel.isOver()){
+            boolean shot=dasSpiel.shoot(x,y,s);
+            if(shot){
+                if(dasSpiel.istVersenkt())
+                    System.out.println("Treffer Versenkt!");
+                setLabelAbschuss();
+                updatePlayerGrids();
+                if(dasSpiel.isOver())
+                    gameOver();
+            }
+
+        } else if(!dasSpiel.isStarted()){              //Schiff Hinzufügen!
             if(selected){                     //altes Feld zurücksetzen
                 labels[s_old][x_old][y_old].setTextFill(paint_old);
                 if(s_old==s && x_old==x ){       //vertical ship!
-                    if(dasSpiel.addShip(x_old,(y_old<y)?y_old:y,false,(y_old-y<1)?y-y_old+1:y_old-y+1,s)){
+                    dasSpiel.addShip(x_old,(y_old<y)?y_old:y,false,(y_old-y<1)?y-y_old+1:y_old-y+1,s);
                         selectDone=true;
-                    }else {
-                        selected=selectDone=false;
-                    }
-
                 }else if(s_old==s && y_old==y){ //horizontales Schiff
-                    if(dasSpiel.addShip((x_old<x)?x_old:x,y_old,true,(x_old-x<1)?x-x_old+1:x_old-x+1,s)){
+                    dasSpiel.addShip((x_old<x)?x_old:x,y_old,true,(x_old-x<1)?x-x_old+1:x_old-x+1,s);
                         selectDone=true;
-                    }else {
-                        selected=selectDone=false;
-                    }
                 }
             }
             if(!selectDone){
@@ -116,7 +191,7 @@ public class Grid {
                 s_old=x_old=y_old=-1;
                 paint_old=null;
                 updatePlayerGrids();
-                logicOUTput.printFeld(feld,true);
+                //logicOUTput.printFeld(feld,true);
                 selected=selectDone=false;
             }
         }
