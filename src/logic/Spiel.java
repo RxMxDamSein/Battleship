@@ -331,6 +331,14 @@ public class Spiel {
     }
 
     /**
+     * If false you can add ships if true you shall shoot
+     * @return true -> game started false -> game has not started
+     */
+    public boolean isStarted() {
+        return started;
+    }
+
+    /**
      * @return Breite des Spielfeldes
      */
     public int getSizeX(){
