@@ -66,6 +66,7 @@ public class RDM_Bot extends  Bot{
             zx=rdm.nextInt(x);
             zy=rdm.nextInt(y);
         }while (dasSpiel.getFeld()[1][zx][zy]!=0 /*&& count<x*y*2*/);
+        System.out.println(dasSpiel.getFeld()[1][zx][zy]+" getSchuss "+zx+" "+zy);
         return new int[]{zx, zy};
     }
 

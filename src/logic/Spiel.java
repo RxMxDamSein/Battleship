@@ -284,7 +284,7 @@ public class Spiel {
                 return false;
             case 2: case 3:
                 if(verbose)
-                    System.err.println("Selected Field was already shot");
+                    System.err.println("Selected Field was already shot s "+spieler+" xy "+x+" "+y);
                 return false;
             case 1://Treffer
                 feld[spieler][x][y]=2;

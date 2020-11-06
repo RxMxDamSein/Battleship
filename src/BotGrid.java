@@ -89,20 +89,22 @@ public class BotGrid {
      */
     private void setLabelAbschuss(){
         int s=dasSpiel.getAbschussSpieler();
-        if(s==0)
+        if(s==0){
             botSchuss();
+            return;
+        }
         lToShoot[s].setText("Schieß hier!");
         lToShoot[(s==1)?0:1].setText("Spieler "+(((s==1)?0:1)+1));
     }
 
     private void botSchuss(){
-        int s=dasSpiel.getAbschussSpieler();
+        //int s=dasSpiel.getAbschussSpieler();
         //while(s==0 && !dasSpiel.isOver()){
         int[] xy=derBot.getSchuss();
-        if(!dasSpiel.shoot(xy[0],xy[1],s,0,false))
+        if(!dasSpiel.shoot(xy[0],xy[1],0,0,false))
             return;
-        derBot.setSchussFeld(xy[0],xy[1],s,dasSpiel.istVersenkt());
-        s=dasSpiel.getAbschussSpieler();
+        derBot.setSchussFeld(xy[0],xy[1],feld[0][xy[0]][xy[1]],dasSpiel.istVersenkt());
+        //s=dasSpiel.getAbschussSpieler();
         //}
         setLabelAbschuss();
         updatePlayerGrids();
@@ -207,9 +209,7 @@ public class BotGrid {
                 gameOver();
             //}
 
-        } else if(dasSpiel.isStarted() && !dasSpiel.isOver() && s==0){
-            botSchuss();
-        }else if(!dasSpiel.isStarted()) {              //Schiff Hinzufügen!
+        } else if(!dasSpiel.isStarted()) {              //Schiff Hinzufügen!
             if (s == 0) {
                 if (selected) {                     //altes Feld zurücksetzen
                     labels[s_old][x_old][y_old].setTextFill(paint_old);
