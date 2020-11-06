@@ -86,6 +86,7 @@ public class BotGrid {
 
     /**
      * Zeigt bei den lToShoot Labels an welcher Spieler abzuschiesen ist
+     * ist mittlerweile dafür verantwortlich das der Bott schießt warum?!
      */
     private void setLabelAbschuss(){
         int s=dasSpiel.getAbschussSpieler();
@@ -97,6 +98,9 @@ public class BotGrid {
         lToShoot[(s==1)?0:1].setText("Spieler "+(((s==1)?0:1)+1));
     }
 
+    /**
+     * lässt den Bott schießen!
+     */
     private void botSchuss(){
         //int s=dasSpiel.getAbschussSpieler();
         //while(s==0 && !dasSpiel.isOver()){

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class RDM_Bot extends  Bot{
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {//test
         RDM_Bot rdm_bot=new RDM_Bot(5,5);
         int[] s={1,1,1,1,1,1,1,2};
         rdm_bot.shipSizesToAdd(s);
@@ -70,6 +70,7 @@ public class RDM_Bot extends  Bot{
         return new int[]{zx, zy};
     }
 
+    @Override
     public void setSchussFeld(int x,int y,int wert,boolean versenkt){
         int[][][] f=dasSpiel.getFeld();
         f[1][x][y]=wert;
