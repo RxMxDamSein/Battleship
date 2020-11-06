@@ -7,7 +7,8 @@ public class MAIN  {
     public static void main(String[] args) {
         System.out.println("THIS IS GAME LOGIC!");
         //logicOUTput.console2SpielerSpiel();
-        logicOUTput.remoteTestSpiel();
+        //logicOUTput.remoteTestSpiel();
+        //logicOUTput.playagainstRDM_Bot();
         /*Spiel dasSpiel=new Spiel(10,2);
         dasSpiel.init();
         dasSpiel.addShip(0,0,false,2,0);
