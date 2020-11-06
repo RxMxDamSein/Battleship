@@ -12,9 +12,12 @@ public class Spiel {
     private boolean started=false;
     private boolean fin=false;
     private boolean versenkt=false;
-    private ArrayList<Schiff> schiffe;
+    public ArrayList<Schiff> schiffe;
     private Random random=new Random();
     private int abschussSpieler =-1;
+    private boolean verbose=true;
+    //if remote -> both sides are known; !remote -> only your side is known! and you are player 0(1)
+    private boolean remote;
     /**
      * make Spiel object
      */
@@ -23,7 +26,16 @@ public class Spiel {
     }
 
     /**
+     * Verbose soll setzen ob prints gemacht werden oder nicht!
+     * @param verbose
+     */
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
+    }
+
+    /**
      * make Spiel object
+     * remote is set to false
      * @param x horizontal size
      * @param y vertical size
      */
@@ -31,6 +43,18 @@ public class Spiel {
         this();
         this.x=x;
         this.y=y;
+        this.remote=false;
+    }
+
+    /**
+     * make Spiel object
+     * @param x horizontal size
+     * @param y vertical size
+     * @param remote set if both player sides are known or not
+     */
+    public Spiel(int x,int y,boolean remote){
+        this(x,y);
+        this.remote=remote;
     }
 
     /**
@@ -53,11 +77,13 @@ public class Spiel {
      */
     public boolean init(){
         if(init){
-            System.err.println("Das Spiel wurde bereits Initialisiert erstelle lieber ein NEUES!");
+            if(verbose)
+                System.err.println("Das Spiel wurde bereits Initialisiert erstelle lieber ein NEUES!");
             return false;
         }
         if(x<1||y<1){
-            System.err.println("Feld eingabe zu klein x: "+x+"y: "+y+" sollen mindestens 1 sein!");
+            if(verbose)
+                System.err.println("Feld eingabe zu klein x: "+x+"y: "+y+" sollen mindestens 1 sein!");
             return false;
         }
         feld=new int[2][x][y];
@@ -79,7 +105,8 @@ public class Spiel {
      */
     private boolean checkGameOver(){
         if(!started){
-            System.err.println("Game has not started yet!");
+            if(verbose)
+                System.err.println("Game has not started yet!");
             return false;
         }
         boolean spieler1TOT=true;
@@ -93,12 +120,45 @@ public class Spiel {
             if(!spieler1TOT && !spieler2TOT)
                 break;
         }
-        if(spieler1TOT || spieler2TOT){
+        if(remote){//you are player 0(1)
+            //System.out.println("spieler 1 "+spieler1TOT);
+            if (spieler1TOT){
+                //System.out.println("Spieler 1 Ausgelöscht!");
+                fin=true;
+                /*To Do! tell enemy you lost!
+                can also be done in GameOVer function or with fin Attribute
+                 */
+                return true;
+            }
+        }else if(spieler1TOT || spieler2TOT){
             fin=true;
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Possibility for remote host to say he lost
+     * @return true if success
+     */
+    public boolean setGameOver(){
+        if(!remote){
+            if(verbose)
+                System.err.println("You can only set GameOver while playing remote!");
+            return false;
+        }else if(abschussSpieler==0){
+            if(verbose)
+                System.err.println("Only remote can set GameOver!");
+            return false;
+        }else if(!started){
+            if(verbose)
+                System.err.println("Game has not started yet!");
+            return false;
+        }
+        fin=true;
+        gameOver();
+        return true;
     }
     /**
      * @return gibt den Spieler der jetzt schießen darf zurück
@@ -115,7 +175,8 @@ public class Spiel {
      */
     public boolean starteSpiel(){
         if(started){
-            System.err.println("Das Spiel ist bereits im Gange!");
+            if(verbose)
+                System.err.println("Das Spiel ist bereits im Gange!");
             return false;
         }
         started=true;
@@ -146,45 +207,98 @@ public class Spiel {
     /**
      * Schießt auf ein Feld(x|y) auf dem Spielbrett des angegebenen Spielers
      * setzt zudem denn nächsten zu beschiesenden Spieler
+     * Nur verwendbar wenn remote==false
      * @param x X Koordinate des Schusses
      * @param y Y Koordinate des Schusses
      * @param spieler der abzuschiesende Spieler
      * @return true -> es wurde geschossen, false -> es wurde nicht geschossen FEHLER!
      */
     public boolean shoot(int x, int y,int spieler){
+        if(remote){
+            if(verbose)
+                System.err.println("use other shoot function while playing remote!");
+            return false;
+        }
+        return abstractShoot(x,y,spieler,0);
+    }
+
+    /**
+     * Schießt auf ein Feld(x|y) auf dem Spielbrett des angegebenen Spielers
+     * setzt zudem denn nächsten zu beschiesenden Spieler
+     * Nur verwendbar wenn remote==true
+     * @param x X Koordinate des Schusses
+     * @param y Y Koordinate des Schusses
+     * @param spieler der abzuschiesende Spieler
+     * @param p_hit Value des getroffenen Feldes auf dem Remotefeld 0 frei 1 Schiff 2 getroffen 3 Wasser| wenn man auf Spieler 0 schießt wird diese Eingabe ignoriert!
+     * @param p_versenkt true wenn bei Remote ein Schiff versenkt wurde, false wenn bei Remote kein Schiff versenkt wurde
+     * @return true -> es wurde geschossen, false -> es wurde nicht geschossen FEHLER!
+     */
+    public boolean shoot(int x, int y,int spieler,int p_hit,boolean p_versenkt){
+        if(!remote){
+            if(verbose)
+                System.err.println("use other shoot function while playing local!");
+            return false;
+        }
+        boolean ret=abstractShoot(x,y,spieler,p_hit);
+        if(ret && spieler==1)
+            versenkt=p_versenkt;
+        return  ret;
+    }
+
+    /**
+     * Hilfsfunktion für die ShootFunktionen
+     * @param x
+     * @param y
+     * @param spieler
+     * @param p_hit
+     * @return
+     */
+    private boolean abstractShoot(int x, int y,int spieler,int p_hit){
         if(!started){
-            System.err.println("Game has not started yet!");
+            if(verbose)
+                System.err.println("Game has not started yet!");
             return false;
         }
         if(fin){
-            System.err.println("Game is Over!");
-            return false;
-       }
-        if(spieler!=abschussSpieler){
-            System.err.println("Wrong Player to shoot!");
+            if(verbose)
+                System.err.println("Game is Over!");
             return false;
         }
+        if(spieler!=abschussSpieler && p_hit!=31){
+            if(verbose)
+                System.err.println("Wrong Player to shoot!");
+            return false;
+        }
+
         if(x>=this.x || y >=this.y || x<0 || y<0){
-            System.err.println("Shoot out of boundaries!");
+            if(verbose)
+                System.err.println("Shoot out of boundaries!");
             return false;
         }
+        if(remote && spieler==1 && feld[spieler][x][y]==0)
+            feld[spieler][x][y]=p_hit;
         switch (feld[spieler][x][y]){
             default:
-                System.err.println("undefined feld state");
+                if(verbose)
+                    System.err.println("undefined feld state");
                 return false;
             case 2: case 3:
-                System.err.println("Selected Field was already shot");
+                if(verbose)
+                    System.err.println("Selected Field was already shot");
                 return false;
             case 1://Treffer
-                versenkt=false;
                 feld[spieler][x][y]=2;
                 //find ship and update its getroffen Attribute
-                Schiff s=findSchiffFromPos(x,y,spieler);
-                if(!Schiff.setGetroffenWposAship(x,y,s)){
-                    System.err.println("Es wurde ein Treffer erzielt, aber es sollte dort kein Schiff sein!");
-                }
-                if(!s.schifflebt){//Schiff ist versenkt!
-                    versenkt=true;
+                if(!remote || (remote&&spieler==0)){
+                    versenkt=false;
+                    Schiff s=findSchiffFromPos(x,y,spieler);
+                    if(!Schiff.setGetroffenWposAship(x,y,s)){
+                        if(verbose)
+                            System.err.println("Es wurde ein Treffer erzielt, aber es sollte dort kein Schiff sein!");
+                    }
+                    if(!s.schifflebt){//Schiff ist versenkt!
+                        versenkt=true;
+                    }
                 }
                 break;
             case 0://Wasser oder ehr noch frei
@@ -215,9 +329,9 @@ public class Spiel {
      */
     private Schiff findSchiffFromPos(int x, int y,int spieler){
         int horizontal=2;  //-1 undefined, 0 horizontal, 1 vertical, 2 shipsize=1(both)
-        if((x>0 && feld[spieler][x-1][y]==1 )||(x>0 && feld[spieler][x-1][y]==2 )|| (x<this.x && feld[spieler][x+1][y]==1 )|| (x<this.x && feld[spieler][x+1][y]==2 )){
+        if((x>0 && feld[spieler][x-1][y]==1 )||(x>0 && feld[spieler][x-1][y]==2 )|| (x<this.x-1 && feld[spieler][x+1][y]==1 )|| (x<this.x-1 && feld[spieler][x+1][y]==2 )){
             horizontal=0;
-        }else if((y>0 && feld[spieler][x][y-1]==1 )||(y>0 && feld[spieler][x][y-1]==2 )|| (y<this.y && feld[spieler][x][y+1]==1 )|| (y<this.y && feld[spieler][x][y+1]==2 )){
+        }else if((y>0 && feld[spieler][x][y-1]==1 )||(y>0 && feld[spieler][x][y-1]==2 )|| (y<this.y-1 && feld[spieler][x][y+1]==1 )|| (y<this.y-1 && feld[spieler][x][y+1]==2 )){
             horizontal=1;
         }
         Schiff s=null;
@@ -242,8 +356,11 @@ public class Spiel {
                 s=Schiff.getSchiffFromOrigin(x,yz,spieler,schiffe);
                 break;
         }
-        if(s==null)
-            System.err.println("Ship was not found error!");
+        if(s==null){
+            if(verbose)
+                System.err.println("Ship was not found error!");
+        }
+
         return s;
     }
 
@@ -309,8 +426,13 @@ public class Spiel {
      */
     public boolean addShip(int x,int y,boolean horizontal,int len,int spieler){
         if(started){
-            System.err.println("Game has already started!");
+            if(verbose)
+                System.err.println("Game has already started!");
             return false;
+        }
+        if(remote && spieler==1){
+            if(verbose)
+                System.err.println("You can not set Enemy ships (Remote)");
         }
         Schiff s=new Schiff();
         s.xOPos=x;
@@ -324,10 +446,12 @@ public class Spiel {
             feldAddSchiff(s);
             return true;
         }else{
-            System.err.println("Illegales Schiff!");
+            if(verbose)
+                System.err.println("Illegales Schiff!");
             return false;
         }
     }
+
 
     /**
      * Set specific field size later
@@ -335,12 +459,13 @@ public class Spiel {
      * @param x horizontal size
      * @param y vertical size
      */
+    /*
     public void setSize(int x,int y){
         if (!init){
             this.x=x;
             this.y=y;
         }
-    }
+    }*/
 
     /**
      * If false you can add ships if true you shall shoot
