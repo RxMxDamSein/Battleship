@@ -459,13 +459,13 @@ public class Spiel {
      * @param x horizontal size
      * @param y vertical size
      */
-    /*
+
     public void setSize(int x,int y){
         if (!init){
             this.x=x;
             this.y=y;
         }
-    }*/
+    }
 
     /**
      * @return Breite des Spielfeldes
