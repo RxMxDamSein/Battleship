@@ -27,6 +27,17 @@ public class Grid {
     private Label[][][] labels;
     private Label[] lToShoot;
 
+
+    public Grid(Stage window, Scene sceneOld, String id){
+        Spiel s=Spiel.load(id);
+        init(window,s.getSizeX(), s.getSizeY(), sceneOld);
+        dasSpiel=s;
+        feld=s.getFeld();
+        updatePlayerGrids();
+        if(dasSpiel.isStarted() && !dasSpiel.isOver()) {
+            setLabelAbschuss();
+        }
+    }
     /**
      * Konstruktor initialisiert alles
      * @param window Das Fenster indem das Spiel angezeigt wird
@@ -35,6 +46,10 @@ public class Grid {
      * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
      */
     public Grid(Stage window, int x, int y, Scene sceneOld)  {
+        init(window,x,y,sceneOld);
+    }
+
+    private void init(Stage window, int x, int y, Scene sceneOld){
         this.window=window;
         this.sceneOld=sceneOld;
         this.gridPlayer1=new GridPane();
@@ -59,17 +74,25 @@ public class Grid {
         Button buttonStart=new Button("Start Shooting!");
         buttonStart.setOnAction(e->buttonSpielStart());
 
+        Button buttonSave=new Button("SAVE");
+        buttonSave.setOnAction(e->buttonSave());
 
         HBox hBox=new HBox(10);
         hBox.getChildren().addAll(this.gridPlayer1,this.gridPlayer2);
         HBox hBox2=new HBox(10);
         hBox2.setPadding(new Insets(5,5,5,5));
         hBox2.getChildren().addAll(buttonStart);
+        HBox hBox3=new HBox(5);
+        hBox3.getChildren().addAll(buttonZuruck,buttonSave);
         VBox vBox=new VBox(5);
-        vBox.getChildren().addAll(hBox,hBox2,buttonZuruck);
+        vBox.getChildren().addAll(hBox,hBox2,hBox3);
         vBox.setPadding(new Insets(5,5,5,5));
         Scene sceneGrid=new Scene(vBox);
         window.setScene(sceneGrid);
+    }
+
+    private void buttonSave(){
+        dasSpiel.saveGame("2P");
     }
 
     /**

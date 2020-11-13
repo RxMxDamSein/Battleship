@@ -1,10 +1,16 @@
 package logic;
 
 
+import logic.save.ResourceManager;
+
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Spiel {
+
+public class Spiel implements Serializable {
+    private static final long serialVersionUID=1337L;
     private int x=20,y=20;
     // 0 frei, 1 Schiff, 2 Treffer, 3 Wasser
     private int[][][] feld;
@@ -23,6 +29,23 @@ public class Spiel {
      */
     public Spiel(){
         schiffe=new ArrayList<Schiff>();
+    }
+
+    /**
+     * Lädt das Spiel anhand der ID
+     * @param id die Id des zu laden dem Objekts
+     * @return null Failure, sonst Erfolg
+     */
+    public static Spiel load(String id){
+        try {
+            return (Spiel)ResourceManager.load(id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.err.println("load error");
+        return null;
     }
 
     /**
@@ -161,7 +184,7 @@ public class Spiel {
         return true;
     }
     /**
-     * @return gibt den Spieler der jetzt schießen darf zurück
+     * @return gibt den Spieler der jetzt abgeschossen wird zurück
      */
     public int getAbschussSpieler(){
         return abschussSpieler;
@@ -494,5 +517,20 @@ public class Spiel {
      */
     public int getSizeY(){
         return y;
+    }
+
+    /**
+     * speichert das Spiel ab um später wieder geladen zu werden
+     * @return true erfolg, false failure
+     */
+    public boolean saveGame(String id){
+        try {
+            ResourceManager.save(this,id);
+        } catch (IOException e) {
+            System.err.println("SAVE ERROR!");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

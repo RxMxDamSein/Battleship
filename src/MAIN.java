@@ -5,17 +5,21 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.Spiel;
 
 import java.io.FileNotFoundException;
 
 
 public class MAIN extends Application  {
+
+
     Stage window;
     Scene scene_sizeS;
     TextField inputFieldX;
     TextField inputFieldY;
     Button buttonSubmit;
     Button buttonSubmitBot;
+    Button buttonLoad2P;
     public static void main(String[] args) {
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
@@ -37,6 +41,8 @@ public class MAIN extends Application  {
         buttonSubmit.setOnAction(e->submitFunc());
         buttonSubmitBot=new Button("BOT");
         buttonSubmitBot.setOnAction(e->submitFuncBot());
+        buttonLoad2P=new Button("LOAD 2P");
+        buttonLoad2P.setOnAction(e->load2P());
 
         /*MenuBar menuBar=new MenuBar();
         Menu m1=new Menu("Stift!");
@@ -49,13 +55,18 @@ public class MAIN extends Application  {
         vBox.setSpacing(5);
         //vBox.getChildren().addAll(menuBar,inputFieldX,inputFieldY,buttonSubmit);
         HBox hBox=new HBox(5);
-        hBox.getChildren().addAll(buttonSubmit,buttonSubmitBot);
+        hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot);
         vBox.getChildren().addAll(inputFieldX,inputFieldY,hBox);
 
         scene_sizeS=new Scene(vBox);
         window.setScene(scene_sizeS);
         window.show();
     }
+
+    private void load2P(){
+        new Grid(window,scene_sizeS,"2P");
+    }
+
     private void submitFuncBot()  {
         int[] xy=checkXY();
         int x=xy[0];
