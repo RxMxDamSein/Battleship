@@ -36,6 +36,8 @@ public class Grid {
         updatePlayerGrids();
         if(dasSpiel.isStarted() && !dasSpiel.isOver()) {
             setLabelAbschuss();
+        }else if(dasSpiel.isOver()){
+            gameOver();
         }
     }
     /**
