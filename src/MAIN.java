@@ -19,6 +19,7 @@ public class MAIN  {
         dasSpiel.shoot(1,0,0);
         dasSpiel.shoot(1,0,1);
         logicOUTput.printFeld(dasSpiel.getFeld(),true);*/
+
     }
 
 }
