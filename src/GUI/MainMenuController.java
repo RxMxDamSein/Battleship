@@ -34,6 +34,7 @@ public class MainMenuController implements Initializable {
         String sy = String.valueOf(GridSizey.getText()); //Text aus der Benutzereingabe
         Object value = choiceBox.getValue();
         String ch = (String) value;
+
         //bidde wieder weg machen
         sx="10";
         sy="10";
