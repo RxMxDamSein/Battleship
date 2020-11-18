@@ -11,6 +11,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -26,6 +27,7 @@ import java.util.ResourceBundle;
 public class GameGridController implements Initializable {
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private StackPane StackPane;
+    @FXML private Button placebutton;
     private boolean spielstatus=false;
     private GridPane GameGrid;
     private Label[ ][ ] labels;
@@ -33,6 +35,10 @@ public class GameGridController implements Initializable {
     private Integer x,y;
     private int labelclicked [][][];
     private int dex,dey,drx,dry;
+    private int sx=-1,sy=-1,ex=-1,ey=-1;
+
+    private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+    private RDM_Bot ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST;
 
     public GameGridController() {}
     public void setInteger(Integer a,Integer b) {
@@ -43,29 +49,20 @@ public class GameGridController implements Initializable {
     }
 
     private void Spielinit() {
-        Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,y,true);
-        RDM_Bot ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x,y);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,y,true);
+        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x,y);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
 
     //Grid und Labels initialisieren
     public void Gridinit() {
-
-        labels2 = new Label[x][y];
-
         GameGrid = new GridPane();
         labels = new Label[x][y];
         labelclicked = new int[x][y][2];
         for(int a=x-1;a >= 0;a--) {
             //System.out.println("for 2");
             for(int b=y-1;b >= 0;b--) {
-/*
-                //Targeto Labels
-                labels2 [a][b]= new Label();
-                labels2[a][b].setMinSize(50,50);
-                labels2[a][b].setText("KAKAKAKKA");
 
- */
                 //Game Labels
                 labels [a] [b] = new Label();
                 labels[a][b].setMinSize(50,50);
@@ -87,7 +84,7 @@ public class GameGridController implements Initializable {
                 labels[a][b].setOnDra
                  */
 
-
+/*
                 //#Geklaute Drag and Drop kake
                 labels[a][b].setOnMousePressed(new EventHandler<MouseEvent>() {
                     @Override
@@ -148,15 +145,9 @@ public class GameGridController implements Initializable {
 
                 //////////
 
-
-
+ */
                 GridPane.setConstraints(labels[a][b],a,b,1,1,HPos.CENTER,VPos.CENTER);
                 GameGrid.getChildren().add(labels[a][b]);
-               /*
-                GridPane.setConstraints(labels2[a][b],a,b,1,1,HPos.CENTER,VPos.CENTER);
-                GameGrid.getChildren().add(labels2[a][b]);
-
-                */
             }
         }
         GameGrid.setAlignment(Pos.CENTER);
@@ -164,10 +155,6 @@ public class GameGridController implements Initializable {
         GameGrid.setVgap(1);
         StackPane.getChildren().add(GameGrid);
     }
-
-
-
-
 
 /*
     private void DragExit(int ca, int cb) {
@@ -204,30 +191,140 @@ public class GameGridController implements Initializable {
 
  */
 
+    public void place(ActionEvent event) {
+        boolean shippaddo,richtung;
+        int size;
+        System.out.println("Place ship");
+        System.out.println("sx= "+sx+" sy= "+sy+" ex= "+ex+" ey= "+ey);
+        //sx == ex horizontal
+        //sy == ey vertikal
+        //sonst fail
+        if (sx == -1 || sy == -1 || ex == -1 || ey == -1) {
+            System.err.println("Ungültiges Schiff");
+            labels[sx][sy].setStyle("-fx-background-color: blue");
+            labels[ex][ey].setStyle("-fx-background-color: blue");
+            sx=-1;
+            sy=-1;
+            ex=-1;
+            ey=-1;
+            return;
+        }
+        if(sx == ex) {
+            System.out.println("Vertikal Schiff");
+            System.out.println("ey= "+ey+" sy= " +sy);
+            //Schiff geht nach
+            if (ey > sy) {
+                size = ey - sy+1;
+                System.out.println("Size: "+size);
+                shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(sx,sy,false,size,0);
+                System.out.println(shippaddo);
+                if(!shippaddo) {
+                    illegalesSchiff();
+                    return;
+                }
+                for (int i = ey; i != sy-1; i--) {
+                    //System.out.println("PENIS 1");
+                    //System.out.println("i= " + i);
+                    labels[sx][i].setStyle("-fx-background-color: grey");
+                }
+            }
+            if (sy > ey) {
+                size = sy - ey+1;
+                System.out.println("Size: "+size);
+                shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(ex,ey,false,size,0);
+                System.out.println(shippaddo);
+                if(!shippaddo) {
+                    illegalesSchiff();
+                    return;
+                }
+                for (int i = sy; i != ey-1; i--) {
+                    //System.out.println("PENIS 2");
+                    //System.out.println("i= "+i);
+                    labels[sx][i].setStyle("-fx-background-color: grey");
+                }
+            }
+            sx=-1;
+            sy=-1;
+            ex=-1;
+            ey=-1;
+            return;
+        }
+        if(sy == ey) {
+            System.out.println("Horizontal Schiff");
+            if (ex > sx) {
+                size = ex - sx+1;
+                System.out.println("Size: "+size);
+                shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(sx,sy,true,size,0);
+                System.out.println(shippaddo);
+                if(!shippaddo) {
+                    illegalesSchiff();
+                    return;
+                }
+                for (int i = ex; i != sx-1; i--) {
+                    //System.out.println("i= " + i);
+                    System.out.println("KAKA 1");
+                    labels[i][sy].setStyle("-fx-background-color: grey");
+                }
+            }
+            if (ex < sx) {
+                size = sx - ex+1;
+                System.out.println("Size: "+size);
+                shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(ex,ey,true,size,0);
+                System.out.println(shippaddo);
+                if(!shippaddo) {
+                    illegalesSchiff();
+                    return;
+                }
+                for (int i = sx; i != ex-1; i--) {
+                    System.out.println("KAKA 2");
+                    //System.out.println("i= "+i);
+                    labels[i][sy].setStyle("-fx-background-color: grey");
+                }
+            }
+            sx=-1;
+            sy=-1;
+            ex=-1;
+            ey=-1;
+            return;
+        }
+        //System.out.println("Ungültiges Schiff");
+        illegalesSchiff();
+    }
+
+    private void illegalesSchiff() {
+        System.err.println("Ungültiges Schiff");
+        labels[sx][sy].setStyle("-fx-background-color: blue");
+        labels[ex][ey].setStyle("-fx-background-color: blue");
+        sx=-1;
+        sy=-1;
+        ex=-1;
+        ey=-1;
+    }
 
 
     //ActionHandler für Label gedrückt
     private void labelclick(int a, int b) {
         System.out.println("x= "+a+" y= "+b);
-
-
-        /*
-        //Schiff setzen
-        if (!spielstatus){
-            labels[a][b].setStyle("-fx-background-color: grey");
+        // sx,sy,ex,ey
+        if (sx == -1 && sy == -1 ) {
+            sx = a;
+            sy = b;
+            labels[a][b].setStyle("-fx-background-color: white");
+            return;
         }
-        //feuern
-        if (spielstatus) {
-            labels[a][b].setStyle("-fx-background-color: red");
+        if (sx != -1 && sy != -1) {
+            ex = a;
+            ey = b;
+            labels[a][b].setStyle("-fx-background-color: white");
         }
 
-        */
     }
     //versetzt Spiel in Feuermodus
     public void gameStart(ActionEvent event) {
         spielstatus = true;
         System.out.println(spielstatus);
     }
+
     public void BacktoMenu(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Scene s = new Scene(root);
@@ -240,4 +337,6 @@ public class GameGridController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
     }
+
+
 }
