@@ -1,10 +1,14 @@
 package logic;
 
 
+import logic.save.ResourceManager;
+
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Bot {
+public abstract class Bot implements Serializable {
     public Spiel dasSpiel;
     protected int x,y;
     protected Random rdm;
@@ -106,4 +110,29 @@ public abstract class Bot {
      * @param versenkt true das hier liegende Schiff wurde versenkt -> daneben muss Wasser sein für KI
      */
     public abstract void setSchussFeld(int x,int y,int wert,boolean versenkt);
+
+    public boolean saveGame(String id){
+        try {
+            ResourceManager.save(this,id);
+        } catch (IOException e) {
+            System.err.println("SAVE ERROR!");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static Bot load(String id){
+        try {
+            return (Bot)ResourceManager.load(id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.err.println("load error");
+        return null;
+    }
 }
+
+

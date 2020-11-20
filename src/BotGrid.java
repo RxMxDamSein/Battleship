@@ -29,14 +29,23 @@ public class BotGrid {
     private Label[][][] labels;
     private Label[] lToShoot;
 
-    /**
-     * Konstruktor initialisiert alles
-     * @param window Das Fenster indem das Spiel angezeigt wird
-     * @param x Spielbrettbreite
-     * @param y Spielbretthöhe
-     * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
-     */
-    public BotGrid(Stage window, int x, int y, Scene sceneOld)  {
+
+    public BotGrid(Stage window,Scene sceneOld,String id){
+        RDM_Bot b=(RDM_Bot) Bot.load(id+"B");
+        Spiel s=Spiel.load(id+"S");
+        init(window,s.getSizeX(),s.getSizeY(),sceneOld);
+        derBot=b;
+        dasSpiel=s;
+        feld=s.getFeld();
+        updatePlayerGrids();
+        if(dasSpiel.isStarted() && !dasSpiel.isOver()) {
+            setLabelAbschuss();
+        }
+        if(dasSpiel.isOver() || derBot.isFinOver())
+            gameOver();
+    }
+
+    private void init(Stage window, int x, int y, Scene sceneOld){
         this.window=window;
         this.sceneOld=sceneOld;
         this.gridPlayer1=new GridPane();
@@ -62,19 +71,39 @@ public class BotGrid {
         Button buttonStart=new Button("Start Shooting!");
         buttonStart.setOnAction(e->buttonSpielStart());
 
+        Button buttonSave=new Button("SAVE");
+        buttonSave.setOnAction(e->buttonSave());
+
 
         HBox hBox=new HBox(10);
         hBox.getChildren().addAll(this.gridPlayer1,this.gridPlayer2);
         HBox hBox2=new HBox(10);
         hBox2.setPadding(new Insets(5,5,5,5));
         hBox2.getChildren().addAll(buttonStart);
+        HBox hBox3=new HBox(5);
+        hBox3.getChildren().addAll(buttonZuruck,buttonSave);
         VBox vBox=new VBox(5);
-        vBox.getChildren().addAll(hBox,hBox2,buttonZuruck);
+        vBox.getChildren().addAll(hBox,hBox2,hBox3);
         vBox.setPadding(new Insets(5,5,5,5));
         Scene sceneGrid=new Scene(vBox);
         window.setScene(sceneGrid);
     }
+    /**
+     * Konstruktor initialisiert alles
+     * @param window Das Fenster indem das Spiel angezeigt wird
+     * @param x Spielbrettbreite
+     * @param y Spielbretthöhe
+     * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
+     */
+    public BotGrid(Stage window, int x, int y, Scene sceneOld)  {
+        init(window,x,y,sceneOld);
+    }
 
+
+    private void buttonSave(){
+        dasSpiel.saveGame("RDMBOT-S");
+        derBot.saveGame("RDMBOT-B");
+    }
     /**
      * Schreibt in die lToShoot Labels jeweils ob man verloren oder gewonnen hat.
      * Diese Funkton gilt es unmittelbar beom Sieg aufzurufen

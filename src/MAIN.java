@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.RDM_Bot;
 import logic.Spiel;
 
 import java.io.FileNotFoundException;
@@ -20,6 +21,7 @@ public class MAIN extends Application  {
     Button buttonSubmit;
     Button buttonSubmitBot;
     Button buttonLoad2P;
+    Button buttonLoadRDMBot;
     public static void main(String[] args) {
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
@@ -43,6 +45,8 @@ public class MAIN extends Application  {
         buttonSubmitBot.setOnAction(e->submitFuncBot());
         buttonLoad2P=new Button("LOAD 2P");
         buttonLoad2P.setOnAction(e->load2P());
+        buttonLoadRDMBot=new Button("LOAD RDM");
+        buttonLoadRDMBot.setOnAction(e->loadRDM());
 
         /*MenuBar menuBar=new MenuBar();
         Menu m1=new Menu("Stift!");
@@ -55,7 +59,7 @@ public class MAIN extends Application  {
         vBox.setSpacing(5);
         //vBox.getChildren().addAll(menuBar,inputFieldX,inputFieldY,buttonSubmit);
         HBox hBox=new HBox(5);
-        hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot);
+        hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot,buttonLoadRDMBot);
         vBox.getChildren().addAll(inputFieldX,inputFieldY,hBox);
 
         scene_sizeS=new Scene(vBox);
@@ -65,6 +69,10 @@ public class MAIN extends Application  {
 
     private void load2P(){
         new Grid(window,scene_sizeS,"2P");
+    }
+
+    private void loadRDM(){
+        new BotGrid(window,scene_sizeS,"RDMBOT-");
     }
 
     private void submitFuncBot()  {
