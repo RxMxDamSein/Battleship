@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import logic.Bot;
 import logic.RDM_Bot;
 import logic.Spiel;
 
@@ -28,13 +29,14 @@ public class GameGridController implements Initializable {
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private StackPane StackPane;
     @FXML private Button placebutton;
+    @FXML private  Label GameTopLabel;
     private boolean spielstatus=false;
     private GridPane GameGrid;
     private Label[ ][ ] labels;
     private Label[][]labels2;
     private Integer x,y;
     private int labelclicked [][][];
-    private int dex,dey,drx,dry;
+    private int dex,dey,drx,dry,counter;
     private int sx=-1,sy=-1,ex=-1,ey=-1;
 
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
@@ -306,23 +308,45 @@ public class GameGridController implements Initializable {
     private void labelclick(int a, int b) {
         System.out.println("x= "+a+" y= "+b);
         // sx,sy,ex,ey
-        if (sx == -1 && sy == -1 ) {
-            sx = a;
-            sy = b;
-            labels[a][b].setStyle("-fx-background-color: white");
-            return;
+        if(!spielstatus) {
+            if (sx == -1 && sy == -1) {
+                sx = a;
+                sy = b;
+                labels[a][b].setStyle("-fx-background-color: white");
+                return;
+            }
+            if (sx != -1 && sy != -1) {
+                ex = a;
+                ey = b;
+                labels[a][b].setStyle("-fx-background-color: white");
+            }
         }
-        if (sx != -1 && sy != -1) {
-            ex = a;
-            ey = b;
-            labels[a][b].setStyle("-fx-background-color: white");
+        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
+        if(spieler == 0) {
+            if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b,1,0,false)) {
+                labels[a][b].setStyle("-fx-background-color: red");
+            }
+            labels[a][b].setStyle("-fx-background-color: pink");
         }
 
     }
     //versetzt Spiel in Feuermodus
     public void gameStart(ActionEvent event) {
         spielstatus = true;
-        System.out.println(spielstatus);
+        System.out.println("Spielstatus: "+spielstatus);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel();
+        if(!ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.shipSizesToAdd(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe))) {
+            System.err.println("Bot Schiffe fehler");
+            return;
+        }
+        placebutton.setVisible(false);
+        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
+        System.out.println("Spieler: "+spieler);
+        GameTopLabel.setText("Spieler: "+spieler);
+
+
+
+
     }
 
     public void BacktoMenu(ActionEvent event) throws IOException {
