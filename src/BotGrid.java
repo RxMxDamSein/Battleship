@@ -218,7 +218,7 @@ public class BotGrid {
      */
     private void labelClick(int s,int x,int y){
         System.out.println("Clicked Label "+s+": "+x+" | "+y );
-        if(dasSpiel.isStarted() && !dasSpiel.isOver() && s==1){
+        if(dasSpiel.isStarted() && !dasSpiel.isOver() &&!derBot.isFinOver()&& s==1){
             int ret=derBot.abschiesen(x,y);
             if(ret<0)
                 return;
@@ -238,11 +238,14 @@ public class BotGrid {
                 botSchuss();
             setLabelAbschuss();
             updatePlayerGrids();
-            if(dasSpiel.isOver() || derBot.isFinOver())
+            if(dasSpiel.isOver() || derBot.isFinOver()){
+                dasSpiel.setGameOver();
                 gameOver();
+            }
+
             //}
 
-        } else if(!dasSpiel.isStarted()) {              //Schiff Hinzufügen!
+        } else if(!dasSpiel.isStarted()&& !dasSpiel.isOver() && !derBot.isFinOver()) {              //Schiff Hinzufügen!
             if (s == 0) {
                 if (selected) {                     //altes Feld zurücksetzen
                     labels[s_old][x_old][y_old].setTextFill(paint_old);
