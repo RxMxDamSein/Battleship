@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,19 +25,21 @@ import logic.Spiel;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 public class GameGridController implements Initializable {
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private StackPane StackPane;
+    @FXML private StackPane StackPane2;
     @FXML private Button placebutton;
     @FXML private  Label GameTopLabel;
+    @FXML private Label GameTopLabel1;
     private boolean spielstatus=false;
     private GridPane GameGrid;
+    private GridPane GameGrid2;
     private Label[ ][ ] labels;
-    private Label[][]labels2;
+    private Label[ ][ ] labels2;
     private Integer x,y;
-    private int labelclicked [][][];
-    private int dex,dey,drx,dry,counter;
     private int sx=-1,sy=-1,ex=-1,ey=-1;
 
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
@@ -58,104 +61,149 @@ public class GameGridController implements Initializable {
 
     //Grid und Labels initialisieren
     public void Gridinit() {
+        //initialisieren Label und Grid (1)
         GameGrid = new GridPane();
         labels = new Label[x][y];
-        labelclicked = new int[x][y][2];
+        //initialisieren Label und Grid (2)
+        GameGrid2 = new GridPane();
+        labels2 = new Label[x][y];
         for(int a=x-1;a >= 0;a--) {
             //System.out.println("for 2");
             for(int b=y-1;b >= 0;b--) {
 
-                //Game Labels
+                //Game Labels (1)
                 labels [a] [b] = new Label();
                 labels[a][b].setMinSize(50,50);
-                labels[a][b].setStyle("-fx-background-color: blue");
+                labels[a][b].setStyle("-fx-background-color: #03fcf4");
                 //final int ca=a,cb=b;
                 int ca=a,cb=b;
                labels[a][b].setOnMouseClicked(e -> labelclick(ca,cb) );
-                //labels[a][b].setOnMouseDragEntered(e -> MouseDragEnter(ca,cb));
-                //labels[a][b].setOnMouseDragReleased(e ->MouseDragReleased(ca,cb));
-
-                //labels[a][b].setOnMousePressed(e -> MouseDragEnter(ca,cb));
-                //labels[a][b].setOnMouseReleased(e ->MouseDragReleased(ca,cb));
-
-                //Daragos
-                /*
-                labels[a][b].setOnDragDetected(e -> DragDetected(ca,cb));
-                labels[a][b].setOnDragEntered(e -> DragEntered(ca,cb));
-                labels[a][b].setOnDragExited(e -> DragExit(ca,cb));
-                labels[a][b].setOnDra
-                 */
-
-/*
-                //#Geklaute Drag and Drop kake
-                labels[a][b].setOnMousePressed(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        System.out.println("Event MAUS GEPRESSED x= "+ca+" b= "+cb);
-                        event.setDragDetect(true);
-                    }
-                });
-                labels[a][b].setOnMouseReleased(new EventHandler<MouseEvent>() {
-
-                    @Override
-                    public void handle(MouseEvent event) {
-                        System.out.println("");
-                        System.out.println("Maus RELASED x= "+ ca +" y= "+ cb);
-                        System.out.println("");
-                    }
-                });
-                labels[a][b].setOnMouseDragged(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        System.out.println("DARG DETECTET IN THE x= "+ca+" Y= "+cb);
-                        event.setDragDetect(false);
-                    }
-                });
-                labels[a][b].setOnDragDetected(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        System.out.println("Wundervoller Drag dedecktet x= "+ca+" y= "+cb);
-                    }
-                });
-                /////////////////////////////////
-                labels[a][b].setOnMouseDragEntered(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        System.out.println("Darg entero");
-                    }
-                });
-
-                labels[a][b].setOnMouseDragOver(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        System.out.println("Drago OVERO");
-                    }
-                });
-                labels[a][b].setOnMouseDragReleased(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        System.out.println("MAUS DRAG RELEASED IN x= "+ca+" y= "+cb);
-                    }
-                });
-                labels[a][b].setOnMouseDragExited(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        System.out.println("MAUS DRAG EXIT");
-                    }
-                });
-
-
-                //////////
-
- */
                 GridPane.setConstraints(labels[a][b],a,b,1,1,HPos.CENTER,VPos.CENTER);
                 GameGrid.getChildren().add(labels[a][b]);
+
+                //Game Labels (2)
+                labels2 [a] [b] = new Label();
+                labels2[a][b].setMinSize(50,50);
+                labels2[a][b].setStyle("-fx-background-color: #03fcf4");
+                labels2 [a][b].setOnMouseClicked(e -> label2click(ca,cb));
+                GridPane.setConstraints(labels2[a][b],a,b,1,1,HPos.CENTER,VPos.CENTER);
+                GameGrid2.getChildren().add(labels2[a][b]);
             }
         }
+        // GameGrid 1 zu Stackpane 1 hinzufügen
         GameGrid.setAlignment(Pos.CENTER);
         GameGrid.setHgap(1);
         GameGrid.setVgap(1);
         StackPane.getChildren().add(GameGrid);
+        // GameGrid 2 zu Stackpane 2 hinzufügen
+        GameGrid2.setAlignment(Pos.CENTER);
+        GameGrid2.setHgap(1);
+        GameGrid2.setVgap(1);
+        StackPane2.getChildren().add(GameGrid2);
+    }
+    //ActionHandler für Label 2 (Grid 2) gedrückt
+    private void label2click(int a, int b) {
+        int phit;
+        boolean schuss;
+        System.out.println("Grid 2 pressed in x: "+a+" y: "+b);
+        if (spielstatus) {
+            int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
+            //spieler 0 = Bot
+            // Spieler schießt auf Bot
+            if(spieler == 1) {
+                //phit: 4 = Versenkt
+                phit = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.abschiesen(a,b);
+                System.out.println("phit: "+phit);
+                //System.out.println("Botfeld: ");
+                if (phit == 4) {
+                    GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),1,true);
+                    labels2[a][b].setStyle("-fx-background-color: black");
+                    System.out.println("TREFFER VERSENKT!!");
+                    if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.isFinOver()) {
+                        GOETTLICHESSPIELDERVERNICHTUNGMITbot.setGameOver();
+                        System.out.println("DU HAST GEWONNEN!!");
+                        GameTopLabel1.setText("DU HAT GEWONNEN!!!");
+                        /*
+                        try {
+                            TimeUnit.SECONDS.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Platform.exit();
+
+                         */
+                    }
+                } else {
+                    GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),phit,false);
+                    if (phit == 1) {
+                        labels2[a][b].setStyle("-fx-background-color: red");
+                        System.out.println("TREFFER!!");
+                    }
+                    if (phit == 3 || phit == 0) {
+                        //Treffer auf Wasser
+                        System.out.println("TREFFER WASSER!!");
+                        labels2[a][b].setStyle("-fx-background-color: blue");
+                    }
+                }
+            }
+            System.out.println("nach Spieler schuss");
+            spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
+            if (spieler == 0)
+                Botschiesst();
+        }
+    }
+
+    private void Botschiesst() {
+        //Bot schießt auf Spieler
+        System.out.println("Bot schießt");
+        int[] xy = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getSchuss();
+        System.out.println("Bot schießt auf: x: "+xy[0]+" y: "+xy[1]);
+
+        if (!GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(xy[0],xy[1], 0,0,false)) {
+            System.err.println("BOT schuss fehler");
+            return;
+        }
+        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.setSchussFeld(xy[0],xy[1],GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld()[0][xy[0]][xy[1]],GOETTLICHESSPIELDERVERNICHTUNGMITbot.istVersenkt());
+        //3 wasser, 2 schiff
+        int hit = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld()[0][xy[0]][xy[1]];
+        System.out.println("Bot Hit: "+hit);
+        if (hit == 3 || hit == 0) {
+            //Treffer auf Wasser
+
+            labels[xy[0]][xy[1]].setStyle("-fx-background-color: blue");
+            logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
+            return;
+        }
+        //Treffer auf Schiff
+        if (hit == 2 || hit == 1) {
+            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.istVersenkt()) {
+                labels[xy[0]][xy[1]].setStyle("-fx-background-color: black");
+                System.out.println("BOT: TREFFER VERSENKT!!");
+                if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
+                    //Bot hat gewonnen
+                    System.out.println("BOT HAT GEWONNEN!!");
+                    GameTopLabel1.setText("BOT HAT GEWONNEN!!!");
+                    /*
+                    try {
+                        TimeUnit.SECONDS.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Platform.exit();
+
+                     */
+                }
+                logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
+                return;
+            }
+
+            labels[xy[0]][xy[1]].setStyle("-fx-background-color: red");
+            System.out.println("BOT: TREFFER!!");
+            logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
+            Botschiesst();
+            return;
+        }
+
     }
 
 /*
@@ -194,7 +242,7 @@ public class GameGridController implements Initializable {
  */
 
     public void place(ActionEvent event) {
-        boolean shippaddo,richtung;
+        boolean shippaddo;
         int size;
         System.out.println("Place ship");
         System.out.println("sx= "+sx+" sy= "+sy+" ex= "+ex+" ey= "+ey);
@@ -295,8 +343,8 @@ public class GameGridController implements Initializable {
 
     private void illegalesSchiff() {
         System.err.println("Ungültiges Schiff");
-        labels[sx][sy].setStyle("-fx-background-color: blue");
-        labels[ex][ey].setStyle("-fx-background-color: blue");
+        labels[sx][sy].setStyle("-fx-background-color: #03fcf4");
+        labels[ex][ey].setStyle("-fx-background-color: #03fcf4");
         sx=-1;
         sy=-1;
         ex=-1;
@@ -304,9 +352,10 @@ public class GameGridController implements Initializable {
     }
 
 
-    //ActionHandler für Label gedrückt
+    //ActionHandler für Label 1 (Grid 1) gedrückt
     private void labelclick(int a, int b) {
         System.out.println("x= "+a+" y= "+b);
+
         // sx,sy,ex,ey
         if(!spielstatus) {
             if (sx == -1 && sy == -1) {
@@ -321,6 +370,8 @@ public class GameGridController implements Initializable {
                 labels[a][b].setStyle("-fx-background-color: white");
             }
         }
+
+        /*
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         if(spieler == 0) {
             if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b,1,0,false)) {
@@ -329,20 +380,28 @@ public class GameGridController implements Initializable {
             labels[a][b].setStyle("-fx-background-color: pink");
         }
 
+         */
+
     }
     //versetzt Spiel in Feuermodus
     public void gameStart(ActionEvent event) {
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel();
+        GameTopLabel1.setText("Du schießt jetzt hier:");
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
         if(!ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.shipSizesToAdd(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe))) {
             System.err.println("Bot Schiffe fehler");
             return;
         }
         placebutton.setVisible(false);
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-        System.out.println("Spieler: "+spieler);
+        //System.out.println("Spieler: "+spieler);
         GameTopLabel.setText("Spieler: "+spieler);
+        if (spieler == 0) {
+            GameTopLabel.setText("Bot schießt");
+            Botschiesst();
+            GameTopLabel.setText("Du schießt");
+        }
 
 
 
@@ -363,4 +422,7 @@ public class GameGridController implements Initializable {
     }
 
 
+    public void printfeld(ActionEvent event) {
+        logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
+    }
 }

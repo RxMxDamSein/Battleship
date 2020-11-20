@@ -36,15 +36,13 @@ public class MainMenuController implements Initializable {
         String ch = (String) value;
 
         //bidde wieder weg machen
-        /*
-        if (sx == null || sy == null) {
-            sx = "10";
-            sy = "10";
+        if (sx.equals("") || sy.equals("")) {
+            sx = "4";
+            sy = "4";
         }
 
-         */
-        sx = "10";
-        sy = "10";
+
+
 
         x = Integer.parseInt(sx);
         y = Integer.parseInt(sy);
