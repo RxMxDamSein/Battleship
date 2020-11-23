@@ -133,6 +133,78 @@ public abstract class Bot implements Serializable {
         System.err.println("load error");
         return null;
     }
+
+    public static void waterAround(int x, int y, int[][][] f,int width,int height){
+        int zx=x,zy=y;
+        boolean horizontal=false;
+        if(zx>0 && f[1][zx-1][zy]==2 || zx<(x-1) && f[1][zx+1][zy]==2)
+            horizontal=true;
+        int schritt;
+        if(horizontal){
+            schritt=0;
+            while( x+schritt>=0 && x+schritt<width &&f[1][x+schritt][y]==2){
+                if(y+1<height)
+                    f[1][x+schritt][y+1]=3;
+                if(y-1>=0)
+                    f[1][x+schritt][y-1]=3;
+                schritt++;
+            }
+            if(x+schritt<width){
+                f[1][x+schritt][y]=3;
+                if(y+1<height)
+                    f[1][x+schritt][y+1]=3;
+                if(y-1>=0)
+                    f[1][x+schritt][y-1]=3;
+            }
+
+            schritt=-1;
+            while( x+schritt>=0 && x+schritt<width &&f[1][x+schritt][y]==2){
+                if(y+1<height)
+                    f[1][x+schritt][y+1]=3;
+                if(y-1>=0)
+                    f[1][x+schritt][y-1]=3;
+                schritt--;
+            }
+            if(x+schritt>=0){
+                f[1][x+schritt][y]=3;
+                if(y+1<height)
+                    f[1][x+schritt][y+1]=3;
+                if(y-1>=0)
+                    f[1][x+schritt][y-1]=3;
+            }
+        }else{
+            schritt=0;
+            while( y+schritt>=0 && y+schritt<height &&f[1][x][y+schritt]==2){
+                if(x+1<width)
+                    f[1][x+1][y+schritt]=3;
+                if(x-1>=0)
+                    f[1][x-1][y+schritt]=3;
+                schritt++;
+            }
+            if(y+schritt<height){
+                f[1][x][y+schritt]=3;
+                if(x+1<width)
+                    f[1][x+1][y+schritt]=3;
+                if(x-1>=0)
+                    f[1][x-1][y+schritt]=3;
+            }
+            schritt=-1;
+            while( y+schritt>=0 && y+schritt<height &&f[1][x][y+schritt]==2){
+                if(x+1<width)
+                    f[1][x+1][y+schritt]=3;
+                if(x-1>=0)
+                    f[1][x-1][y+schritt]=3;
+                schritt--;
+            }
+            if(y+schritt>=0){
+                f[1][x][y+schritt]=3;
+                if(x+1<width)
+                    f[1][x+1][y+schritt]=3;
+                if(x-1>=0)
+                    f[1][x-1][y+schritt]=3;
+            }
+        }
+    }
 }
 
 
