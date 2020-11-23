@@ -1,19 +1,33 @@
 package logic;
 
 
+import logic.save.ResourceManager;
+
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Bot {
+public abstract class Bot implements Serializable {
     public Spiel dasSpiel;
     protected int x,y;
     protected Random rdm;
 
-
+    /**
+     * gibt zurück ob der Bot verloren hat!
+     * genau wie is Over Function von Spiel
+     * @return true Bot hat verloren false Bott lebt noch
+     */
     public boolean isFinOver() {
         return dasSpiel.isOver();
     }
 
+    /**
+     * Bott Intialisierung des Spielfelds
+     * x und y werte müssen >0 sein!
+     * @param x Spielbreite
+     * @param y Spielhöhe
+     */
     public Bot(int x, int y) {
         this.x=x;
         this.y=y;
@@ -23,13 +37,42 @@ public abstract class Bot {
         rdm=new Random();
     };
 
+    /**
+     * Funktion die Schiffe dem Bott hinzufügt
+     * @param s {1,2,3,4,5} legt beim Bott 5 Schiffe an mit den Längen(1,2,3,4,5)
+     * @return true wenn erfolgreich false wenn fehler
+     */
     public abstract boolean shipSizesToAdd(int[] s);
+
+    /**
+     * schießt beim Bot ein Feld ab
+     * @param x
+     * @param y
+     * @return erfolg
+     */
     public abstract int abschiesen(int x, int y);
+
+    /**
+     * berechnet die nächste Stelle an die der Bot schießt!
+     * @return {x,y}
+     */
     public abstract  int[] getSchuss();
+
+    /**
+     * Falls man das Spielobjekt des Bots gebrauchen kann #ToterCode
+     * @return Spiel
+     */
     public Spiel getDasSpiel(){
         return dasSpiel;
     }
 
+    /**
+     * Hilfsfunktion zum zurücksetzten eines Spielbretts
+     * z.Bsp. falls man die Schiffe schlecht gesetzt hat und neu anfagen will
+     * @param f feld
+     * @param spieler wessens feld soll gelöscht werden
+     * @return erfolg
+     */
     public boolean resetFeld(int[][][] f,int spieler){
         if(spieler<0 || spieler>1)
             return false;
@@ -45,6 +88,11 @@ public abstract class Bot {
         return true;
     }
 
+    /**
+     * Hilfsfunktion um aus der Schiffsliste die Laengen zu extrahieren
+     * @param s Arraylist<Schiff>
+     * @return {1,2,3,4,5} // alles Schiffslängen in einem int array
+     */
     public static int[] getShipSizes(ArrayList<Schiff>s){
         int[] sizes=new int[s.size()];
         for(int i=0;i<sizes.length;i++){
@@ -52,4 +100,39 @@ public abstract class Bot {
         }
         return sizes;
     }
+
+    /**
+     * Setzt das angegebene Feld auf der Spielseite des Gegners vom Bot ausgesehen
+     * dient dazu, dass der Bot weiß was er getroffen hat und ob er wetwas versenkt hat!
+     * @param x XKoordinate
+     * @param y YKoordinate
+     * @param wert dieser wert wird eingesetzt feld[1][x][y]=wert
+     * @param versenkt true das hier liegende Schiff wurde versenkt -> daneben muss Wasser sein für KI
+     */
+    public abstract void setSchussFeld(int x,int y,int wert,boolean versenkt);
+
+    public boolean saveGame(String id){
+        try {
+            ResourceManager.save(this,id);
+        } catch (IOException e) {
+            System.err.println("SAVE ERROR!");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static Bot load(String id){
+        try {
+            return (Bot)ResourceManager.load(id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.err.println("load error");
+        return null;
+    }
 }
+
+

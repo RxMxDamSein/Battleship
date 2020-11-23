@@ -1,8 +1,10 @@
 package logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Schiff {
+public class Schiff implements Serializable {
+    private static final long serialVersionUID=1337L;
     public int spieler;
     public int schifflaenge;
     public boolean schifflebt;
