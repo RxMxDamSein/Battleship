@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import logic.Bot;
+import logic.Bot_lvl_2;
 import logic.RDM_Bot;
 import logic.Spiel;
 
@@ -22,7 +23,7 @@ public class BotGrid {
     private Stage window;
     private Scene sceneOld;
     private Spiel dasSpiel;
-    private RDM_Bot derBot;
+    private Bot derBot;
     private GridPane gridPlayer1;
     private GridPane gridPlayer2;
     private int[][][] feld;
@@ -31,7 +32,7 @@ public class BotGrid {
 
 
     public BotGrid(Stage window,Scene sceneOld,String id){
-        RDM_Bot b=(RDM_Bot) Bot.load(id+"B");
+        Bot b=(Bot) Bot.load(id+"B");
         Spiel s=Spiel.load(id+"S");
         init(window,s.getSizeX(),s.getSizeY(),sceneOld);
         derBot=b;
@@ -59,7 +60,7 @@ public class BotGrid {
         this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
         this.dasSpiel=new Spiel(x,y,true);
-        derBot=new RDM_Bot(x,y);
+        derBot=new Bot_lvl_2(x,y);
         if(!dasSpiel.init())
             sceneZutuck();
         this.feld=dasSpiel.getFeld();
@@ -141,8 +142,15 @@ public class BotGrid {
         //}
         setLabelAbschuss();
         updatePlayerGrids();
-        if(dasSpiel.isOver() || derBot.isFinOver())
+        if(dasSpiel.isOver() || derBot.isFinOver()){
+            if(!dasSpiel.isOver())
+                dasSpiel.setGameOver();
+            if(!derBot.getDasSpiel().isOver()){
+                derBot.getDasSpiel().setGameOver();
+            }
             gameOver();
+        }
+
     }
     /**
      * Geht vom Schiff hinzufügen Modus in Spiel(Shoot) Modus über

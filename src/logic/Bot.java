@@ -13,6 +13,8 @@ public abstract class Bot implements Serializable {
     public Spiel dasSpiel;
     protected int x,y;
     protected Random rdm;
+    protected boolean slayship=false; //true if you hit ship and not sunk
+    protected int slayX,slayY;
 
     /**
      * gibt zurück ob der Bot verloren hat!
@@ -125,10 +127,17 @@ public abstract class Bot implements Serializable {
     public void setSchussFeld(int x,int y,int wert,boolean versenkt){
         int[][][] f=dasSpiel.getFeld();
         f[1][x][y]=wert;
+        slayship=false;
         if(versenkt){//make water around ship
             Bot.waterAround(x,y,f,this.x,this.y);
             System.out.println("after versenkt!");
             logicOUTput.printFeld(f,true);
+        }else {
+            if(wert==2){
+                slayship=true;
+                slayX=x;
+                slayY=y;
+            }
         }
     }
 
@@ -184,6 +193,16 @@ public abstract class Bot implements Serializable {
             dasSpiel.starteSpiel();
         dasSpiel.setVerbose(v);
         return added;
+    }
+    protected static int[] rdmSchuss(Spiel dasSpiel, Random rdm,int width,int height){
+        int zx=0,zy=0,count=0;
+        do{
+            count++;
+            zx=rdm.nextInt(width);
+            zy=rdm.nextInt(height);
+        }while (dasSpiel.getFeld()[1][zx][zy]!=0 /*&& count<x*y*2*/);
+        System.out.println(dasSpiel.getFeld()[1][zx][zy]+" getSchuss "+zx+" "+zy);
+        return new int[]{zx, zy};
     }
 
     public static void waterAround(int x, int y, int[][][] f,int width,int height){

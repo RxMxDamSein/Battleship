@@ -23,14 +23,7 @@ public class RDM_Bot extends  Bot{
 
     @Override
     public int[] getSchuss() {
-        int zx=0,zy=0,count=0;
-        do{
-            count++;
-            zx=rdm.nextInt(x);
-            zy=rdm.nextInt(y);
-        }while (dasSpiel.getFeld()[1][zx][zy]!=0 /*&& count<x*y*2*/);
-        System.out.println(dasSpiel.getFeld()[1][zx][zy]+" getSchuss "+zx+" "+zy);
-        return new int[]{zx, zy};
+        return rdmSchuss(dasSpiel,rdm,x,y);
     }
 
 
