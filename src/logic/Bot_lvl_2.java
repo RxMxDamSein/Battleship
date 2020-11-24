@@ -9,21 +9,14 @@ public class Bot_lvl_2 extends Bot{
 
     @Override
     public boolean shipSizesToAdd(int[] s) {
-        return false;
+        return addShipsRDMly(s,dasSpiel,rdm,x,y);
     }
 
-    @Override
-    public int abschiesen(int x, int y) {
-        return 0;
-    }
 
     @Override
     public int[] getSchuss() {
         return new int[0];
     }
 
-    @Override
-    public void setSchussFeld(int x, int y, int wert, boolean versenkt) {
 
-    }
 }

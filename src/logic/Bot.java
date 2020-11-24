@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Bot implements Serializable {
+    private static final long serialVersionUID=1337L;
     public Spiel dasSpiel;
     protected int x,y;
     protected Random rdm;
@@ -33,7 +34,7 @@ public abstract class Bot implements Serializable {
         this.y=y;
         dasSpiel=new Spiel(x,y,true);
         dasSpiel.init();
-        dasSpiel.setVerbose(false);
+        //dasSpiel.setVerbose(false);
         rdm=new Random();
     };
 
@@ -50,7 +51,19 @@ public abstract class Bot implements Serializable {
      * @param y
      * @return erfolg
      */
-    public abstract int abschiesen(int x, int y);
+    public int abschiesen(int x, int y){
+        int p_hit=dasSpiel.getFeld()[0][x][y];
+        boolean succ=dasSpiel.shoot(x,y,0,31,false);
+        if(!succ)
+            return -1;
+        else if(dasSpiel.istVersenkt()) {
+            //System.out.println("Der Bot hat verloren!");
+            //fin=dasSpiel.isOver();
+            return 4;
+        }
+        else
+            return p_hit;
+    }
 
     /**
      * berechnet die nächste Stelle an die der Bot schießt!
@@ -73,7 +86,7 @@ public abstract class Bot implements Serializable {
      * @param spieler wessens feld soll gelöscht werden
      * @return erfolg
      */
-    public boolean resetFeld(int[][][] f,int spieler){
+    public static boolean resetFeld(int[][][] f,int spieler){
         if(spieler<0 || spieler>1)
             return false;
         //System.out.println("Feld prereset!");
@@ -109,7 +122,15 @@ public abstract class Bot implements Serializable {
      * @param wert dieser wert wird eingesetzt feld[1][x][y]=wert
      * @param versenkt true das hier liegende Schiff wurde versenkt -> daneben muss Wasser sein für KI
      */
-    public abstract void setSchussFeld(int x,int y,int wert,boolean versenkt);
+    public void setSchussFeld(int x,int y,int wert,boolean versenkt){
+        int[][][] f=dasSpiel.getFeld();
+        f[1][x][y]=wert;
+        if(versenkt){//make water around ship
+            Bot.waterAround(x,y,f,this.x,this.y);
+            System.out.println("after versenkt!");
+            logicOUTput.printFeld(f,true);
+        }
+    }
 
     public boolean saveGame(String id){
         try {
@@ -132,6 +153,37 @@ public abstract class Bot implements Serializable {
         }
         System.err.println("load error");
         return null;
+    }
+
+    public static boolean addShipsRDMly(int[] s,Spiel dasSpiel,Random rdm,int width,int height){
+        boolean v=dasSpiel.getVerbose();
+        dasSpiel.setVerbose(false);
+        boolean added=false;
+        int count=0;
+        while (!added && count<300){
+            count++;
+            dasSpiel.schiffe=new ArrayList<Schiff>();
+            //added=true;
+            resetFeld(dasSpiel.getFeld(),0);
+            for(int i=0;i<s.length;i++){
+                int zx=0,zy=0;
+                int count2=0;
+                do{
+                    count2++;
+                    zx=rdm.nextInt(width);
+                    zy=rdm.nextInt(height);
+                    added=dasSpiel.addShip(zx,zy, rdm.nextInt(2) == 0,s[i],0);
+                }while (added==false && count2<60);
+                if(!added)
+                    break;
+            }
+        }
+        logicOUTput.printFeld(dasSpiel.getFeld(),true);
+        System.out.println(added);
+        if(added)
+            dasSpiel.starteSpiel();
+        dasSpiel.setVerbose(v);
+        return added;
     }
 
     public static void waterAround(int x, int y, int[][][] f,int width,int height){

@@ -48,6 +48,10 @@ public class Spiel implements Serializable {
         return null;
     }
 
+    public boolean getVerbose() {
+        return verbose;
+    }
+
     /**
      * Verbose soll setzen ob prints gemacht werden oder nicht!
      * @param verbose
