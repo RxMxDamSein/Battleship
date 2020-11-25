@@ -206,9 +206,8 @@ public abstract class Bot implements Serializable {
     }
 
     public static void waterAround(int x, int y, int[][][] f,int width,int height){
-        int zx=x,zy=y;
         boolean horizontal=false;
-        if(zx>0 && f[1][zx-1][zy]==2 || zx<(x-1) && f[1][zx+1][zy]==2)
+        if(x>0 && f[1][x-1][y]==2 || x<(width-1) && f[1][x+1][y]==2)
             horizontal=true;
         int schritt;
         if(horizontal){
@@ -220,13 +219,10 @@ public abstract class Bot implements Serializable {
                     f[1][x+schritt][y-1]=3;
                 schritt++;
             }while( x+schritt>=0 && x+schritt<width &&f[1][x+schritt][y]==2);
-            /*if(x+schritt<width){
+            if(x+schritt<width){
                 f[1][x+schritt][y]=3;
-                if(y+1<height)
-                    f[1][x+schritt][y+1]=3;
-                if(y-1>=0)
-                    f[1][x+schritt][y-1]=3;
-            }*/
+            }
+            
 
             schritt=-1;
             do{
@@ -236,13 +232,9 @@ public abstract class Bot implements Serializable {
                     f[1][x+schritt][y-1]=3;
                 schritt--;
             }while( x+schritt>=0 && x+schritt<width &&f[1][x+schritt][y]==2);
-            /*if(x+schritt>=0){
+            if(x+schritt>=0){
                 f[1][x+schritt][y]=3;
-                if(y+1<height)
-                    f[1][x+schritt][y+1]=3;
-                if(y-1>=0)
-                    f[1][x+schritt][y-1]=3;
-            }*/
+            }
         }else{
             schritt=0;
             do{
@@ -252,13 +244,9 @@ public abstract class Bot implements Serializable {
                     f[1][x-1][y+schritt]=3;
                 schritt++;
             }while( y+schritt>=0 && y+schritt<height &&f[1][x][y+schritt]==2);
-            /*if(y+schritt<height){
+            if(y+schritt<height){
                 f[1][x][y+schritt]=3;
-                if(x+1<width)
-                    f[1][x+1][y+schritt]=3;
-                if(x-1>=0)
-                    f[1][x-1][y+schritt]=3;
-            }*/
+            }
             schritt=-1;
             do{
                 if(x+1<width && y+schritt>=0)
@@ -267,13 +255,9 @@ public abstract class Bot implements Serializable {
                     f[1][x-1][y+schritt]=3;
                 schritt--;
             }while( y+schritt>=0 && y+schritt<height &&f[1][x][y+schritt]==2);
-            /*if(y+schritt>=0){
+            if(y+schritt>=0){
                 f[1][x][y+schritt]=3;
-                if(x+1<width)
-                    f[1][x+1][y+schritt]=3;
-                if(x-1>=0)
-                    f[1][x-1][y+schritt]=3;
-            }*/
+            }
         }
     }
 }
