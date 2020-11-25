@@ -41,6 +41,8 @@ public class BotGrid {
         updatePlayerGrids();
         if(dasSpiel.isStarted() && !dasSpiel.isOver()) {
             setLabelAbschuss();
+            while (!dasSpiel.isOver() &&dasSpiel.getAbschussSpieler()==0)
+                botSchuss();
         }
         if(dasSpiel.isOver() || derBot.isFinOver())
             gameOver();
@@ -120,10 +122,10 @@ public class BotGrid {
      */
     private void setLabelAbschuss(){
         int s=dasSpiel.getAbschussSpieler();
-        if(s==0){
+        /*if(s==0){
             botSchuss();
             return;
-        }
+        }*/
         lToShoot[s].setText("Schieß hier!");
         lToShoot[(s==1)?0:1].setText("Spieler "+(((s==1)?0:1)+1));
     }
@@ -145,9 +147,7 @@ public class BotGrid {
         if(dasSpiel.isOver() || derBot.isFinOver()){
             if(!dasSpiel.isOver())
                 dasSpiel.setGameOver();
-            if(!derBot.getDasSpiel().isOver()){
-                derBot.getDasSpiel().setGameOver();
-            }
+            //dasSpiel.setGameOver();
             gameOver();
         }
 
@@ -206,6 +206,21 @@ public class BotGrid {
             for (int i=0;i<feld[s].length;i++){
                 for(int j=0;j<feld[s][i].length;j++){
                     labels[s][i][j].setText(" "+String.valueOf(feld[s][i][j])+" ");
+                    switch (feld[s][i][j]){
+                        default:
+                            labels[s][i][j].setTextFill(Color.web("grey"));
+                            break;
+                        case 1:
+                            labels[s][i][j].setTextFill(Color.web("black"));
+                            break;
+                        case 2:
+                            labels[s][i][j].setTextFill(Color.web("red"));
+                            break;
+                        case 3:
+                            labels[s][i][j].setTextFill(Color.web("blue"));
+                            break;
+
+                    }
                 }
             }
         }
@@ -242,7 +257,7 @@ public class BotGrid {
             //if(shot){
             //if(dasSpiel.istVersenkt())
             //    System.out.println("Treffer Versenkt!");
-            if(dasSpiel.getAbschussSpieler()==0)
+            while(dasSpiel.getAbschussSpieler()==0 && !dasSpiel.isOver())
                 botSchuss();
             setLabelAbschuss();
             updatePlayerGrids();
@@ -250,9 +265,6 @@ public class BotGrid {
                 dasSpiel.setGameOver();
                 gameOver();
             }
-
-            //}
-
         } else if(!dasSpiel.isStarted()&& !dasSpiel.isOver() && !derBot.isFinOver()) {              //Schiff Hinzufügen!
             if (s == 0) {
                 if (selected) {                     //altes Feld zurücksetzen

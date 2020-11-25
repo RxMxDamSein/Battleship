@@ -174,7 +174,7 @@ public class Spiel implements Serializable {
             if(verbose)
                 System.err.println("You can only set GameOver while playing remote!");
             return false;
-        }else if(abschussSpieler==0){
+        }else if(abschussSpieler==1){
             if(verbose)
                 System.err.println("Only remote can set GameOver!");
             return false;
