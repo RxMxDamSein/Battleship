@@ -206,58 +206,134 @@ public abstract class Bot implements Serializable {
     }
 
     public static void waterAround(int x, int y, int[][][] f,int width,int height){
-        boolean horizontal=false;
-        if(x>0 && f[1][x-1][y]==2 || x<(width-1) && f[1][x+1][y]==2)
-            horizontal=true;
-        int schritt;
-        if(horizontal){
-            schritt=0;
-            do {
-                if(y+1<height && x+schritt<width)
-                    f[1][x+schritt][y+1]=3;
-                if(y-1>=0 && x+schritt<width)
-                    f[1][x+schritt][y-1]=3;
-                schritt++;
-            }while( x+schritt>=0 && x+schritt<width &&f[1][x+schritt][y]==2);
-            if(x+schritt<width){
-                f[1][x+schritt][y]=3;
+        boolean up,down,left,right;
+        up=down=left=right=false;
+        if(y+1<height && f[1][x][y+1]==2){
+            down=true;
+        }
+        if(y-1>=0 && f[1][x][y-1]==2){
+            up=true;
+        }
+        if(x+1<width && f[1][x+1][y]==2){
+            right=true;
+        }
+        if(x-1>=0 && f[1][x-1][y]==2){
+            left=true;
+        }
+        int i;
+        if(up){
+            for(i=0;y-i>=0&&f[1][x][y-i]==2;i++){
+                if(x+1<width)
+                    f[1][x+1][y-i]=3;
+                if(x-1>=0)
+                    f[1][x-1][y-i]=3;
             }
-            
-
-            schritt=-1;
-            do{
-                if(y+1<height && x+schritt>=0)
-                    f[1][x+schritt][y+1]=3;
-                if(y-1>=0 && x+schritt>=0)
-                    f[1][x+schritt][y-1]=3;
-                schritt--;
-            }while( x+schritt>=0 && x+schritt<width &&f[1][x+schritt][y]==2);
-            if(x+schritt>=0){
-                f[1][x+schritt][y]=3;
+            if(y-i>=0){
+                if(x+1<width)
+                    f[1][x+1][y-i]=3;
+                if(x-1>=0)
+                    f[1][x-1][y-i]=3;
+                f[1][x][y-i]=3;
             }
-        }else{
-            schritt=0;
-            do{
-                if(x+1<width && y+schritt<height)
-                    f[1][x+1][y+schritt]=3;
-                if(x-1>=0 && y+schritt<height)
-                    f[1][x-1][y+schritt]=3;
-                schritt++;
-            }while( y+schritt>=0 && y+schritt<height &&f[1][x][y+schritt]==2);
-            if(y+schritt<height){
-                f[1][x][y+schritt]=3;
+            if(!down){
+                if(y+1<height){
+                    if(x+1<width)
+                        f[1][x+1][y+1]=3;
+                    if(x-1>=0)
+                        f[1][x-1][y+1]=3;
+                    f[1][x][y+1]=3;
+                }
             }
-            schritt=-1;
-            do{
-                if(x+1<width && y+schritt>=0)
-                    f[1][x+1][y+schritt]=3;
-                if(x-1>=0 && y+schritt>=0)
-                    f[1][x-1][y+schritt]=3;
-                schritt--;
-            }while( y+schritt>=0 && y+schritt<height &&f[1][x][y+schritt]==2);
-            if(y+schritt>=0){
-                f[1][x][y+schritt]=3;
+        }
+        if(down){
+            for(i=0;y+i<height&&f[1][x][y+i]==2;i++){
+                if(x+1<width)
+                    f[1][x+1][y+i]=3;
+                if(x-1>=0)
+                    f[1][x-1][y+i]=3;
             }
+            if(y+i<height){
+                if(x+1<width)
+                    f[1][x+1][y+i]=3;
+                if(x-1>=0)
+                    f[1][x-1][y+i]=3;
+                f[1][x][y+i]=3;
+            }
+            if(!up){
+                if(y-1>=0){
+                    if(x+1<width)
+                        f[1][x+1][y-1]=3;
+                    if(x-1>=0)
+                        f[1][x-1][y-1]=3;
+                    f[1][x][y-1]=3;
+                }
+            }
+        }
+        if(left){
+            for(i=0;x-i>=0&&f[1][x-i][y]==2;i++){
+                if(y+1<height)
+                    f[1][x-i][y+1]=3;
+                if(y-1>=0)
+                    f[1][x-i][y-1]=3;
+            }
+            if(x-i>=0){
+                if(y+1<height)
+                    f[1][x-i][y+1]=3;
+                if(y-1>=0)
+                    f[1][x-i][y-1]=3;
+                f[1][x-i][y]=3;
+            }
+            if(!right){
+                if(x+1>=0){
+                    if(y+1<height)
+                        f[1][x+1][y+1]=3;
+                    if(y-1>=0)
+                        f[1][x+1][y-1]=3;
+                    f[1][x+1][y]=3;
+                }
+            }
+        }
+        if(right){
+            for(i=0;x+i<width&&f[1][x+i][y]==2;i++){
+                if(y+1<height)
+                    f[1][x+i][y+1]=3;
+                if(y-1>=0)
+                    f[1][x+i][y-1]=3;
+            }
+            if(x+i<width){
+                if(y+1<height)
+                    f[1][x+i][y+1]=3;
+                if(y-1>=0)
+                    f[1][x+i][y-1]=3;
+                f[1][x+i][y]=3;
+            }
+            if(!left){
+                if(x-1>=0){
+                    if(y+1<height)
+                        f[1][x-1][y+1]=3;
+                    if(y-1>=0)
+                        f[1][x-1][y-1]=3;
+                    f[1][x-1][y]=3;
+                }
+            }
+        }
+        if(!up && !down && !right && !left){
+            if(x>0 && y>0)
+                f[1][x-1][y-1]=3;
+            if( y>0)
+                f[1][x][y-1]=3;
+            if(x+1<width && y>0)
+                f[1][x+1][y-1]=3;
+            if(x>0)
+                f[1][x-1][y]=3;
+            if(x+1<width )
+                f[1][x+1][y]=3;
+            if(x>0 && y+1<height)
+                f[1][x-1][y+1]=3;
+            if( y+1<height)
+                f[1][x][y+1]=3;
+            if(x+1<width && y+1<height)
+                f[1][x+1][y+1]=3;
         }
     }
 }
