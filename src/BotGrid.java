@@ -29,6 +29,7 @@ public class BotGrid {
     private int[][][] feld;
     private Label[][][] labels;
     private Label[] lToShoot;
+    private Label Lversenkt;
 
 
     public BotGrid(Stage window,Scene sceneOld,String id){
@@ -77,9 +78,11 @@ public class BotGrid {
         Button buttonSave=new Button("SAVE");
         buttonSave.setOnAction(e->buttonSave());
 
+        Lversenkt=new Label("o");
+
 
         HBox hBox=new HBox(10);
-        hBox.getChildren().addAll(this.gridPlayer1,this.gridPlayer2);
+        hBox.getChildren().addAll(this.gridPlayer1,Lversenkt,this.gridPlayer2);
         HBox hBox2=new HBox(10);
         hBox2.setPadding(new Insets(5,5,5,5));
         hBox2.getChildren().addAll(buttonStart);
@@ -243,11 +246,13 @@ public class BotGrid {
         System.out.println("Clicked Label "+s+": "+x+" | "+y );
         if(dasSpiel.isStarted() && !dasSpiel.isOver() &&!derBot.isFinOver()&& s==1){
             int ret=derBot.abschiesen(x,y);
+            Lversenkt.setText("o");
             if(ret<0)
                 return;
             else if(ret==4){
                 dasSpiel.shoot(x,y,s,1,true);
                 System.out.println("Treffer Versenkt!");
+                Lversenkt.setText("x");
                 //if(derBot.isFinOver())
                 //    dasSpiel.setGameOver();
             }

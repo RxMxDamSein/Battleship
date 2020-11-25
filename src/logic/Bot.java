@@ -284,7 +284,7 @@ public abstract class Bot implements Serializable {
                 f[1][x-i][y]=3;
             }
             if(!right){
-                if(x+1>=0){
+                if(x+1<width){
                     if(y+1<height)
                         f[1][x+1][y+1]=3;
                     if(y-1>=0)
