@@ -8,58 +8,65 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="617.0" prefWidth="1200.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.GameGridController">
+<AnchorPane prefHeight="617.0" prefWidth="1200.0" style="-fx-background-color: DARKCYAN;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.GameGridController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="14.0" layoutY="7.0" prefHeight="603.0" prefWidth="574.0" style="-fx-border-color: black;">
+      <HBox alignment="CENTER" maxHeight="1080.0" maxWidth="1920.0" prefHeight="617.0" prefWidth="1200.0" spacing="52.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="GameTopLabel" text="Spieler 1" textFill="#fbf8f8" />
-            <StackPane fx:id="StackPane" prefHeight="576.0" prefWidth="574.0" />
-            <HBox alignment="CENTER" prefHeight="49.0" prefWidth="572.0" spacing="130.0">
+            <VBox alignment="CENTER" maxHeight="1080.0" maxWidth="1920.0" prefHeight="603.0" prefWidth="574.0">
                <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <Label fx:id="GameTopLabel" prefWidth="85.0" text="Spieler 1" textFill="#fbf8f8" />
+                  <StackPane fx:id="StackPane" maxHeight="1080.0" maxWidth="1920.0" prefHeight="576.0" prefWidth="574.0" />
+                  <HBox alignment="CENTER" maxHeight="1080.0" maxWidth="1920.0" prefHeight="49.0" prefWidth="572.0" spacing="130.0">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#BacktoMenu" text="Back" />
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#BacktoMenu" text="Back" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                        <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#gameStart" text="Start" />
+                           </children>
+                        </VBox>
                      </children>
-                  </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <Button fx:id="placebutton" mnemonicParsing="false" onAction="#place" text="Place" />
-                     </children>
-                  </VBox>
-                  <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#gameStart" text="Start" />
-                     </children>
-                  </VBox>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
-            </HBox>
-         </children></VBox>
-      <VBox alignment="TOP_CENTER" layoutX="612.0" layoutY="7.0" prefHeight="603.0" prefWidth="574.0" style="-fx-border-color: black;">
-         <children>
-            <Label fx:id="GameTopLabel1" text="Spieler 2" textFill="WHITE" />
-            <StackPane fx:id="StackPane2" prefHeight="576.0" prefWidth="574.0" />
-            <HBox alignment="CENTER" prefHeight="48.0" prefWidth="572.0" spacing="130.0">
+            </VBox>
+            <VBox alignment="CENTER" maxHeight="1080.0" maxWidth="1920.0" prefHeight="603.0" prefWidth="574.0">
                <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <Label fx:id="GameTopLabel1" text="Spieler 2" textFill="WHITE" />
+                  <StackPane fx:id="StackPane2" prefHeight="576.0" prefWidth="574.0" />
+                  <HBox alignment="CENTER" prefHeight="48.0" prefWidth="572.0" spacing="130.0">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#printfeld" text="Printf" />
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#printfeld" text="Printf" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                        <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#gameStart" text="Start" />
+                           </children>
+                        </VBox>
                      </children>
-                  </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0" />
-                  <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#gameStart" text="Start" />
-                     </children>
-                  </VBox>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
-            </HBox>
+            </VBox>
          </children>
-      </VBox>
+      </HBox>
    </children>
 </AnchorPane>

@@ -19,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import logic.Bot;
+import logic.Bot_lvl_2;
 import logic.RDM_Bot;
 import logic.Spiel;
 
@@ -31,7 +32,7 @@ public class GameGridController implements Initializable {
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private StackPane StackPane;
     @FXML private StackPane StackPane2;
-    @FXML private Button placebutton;
+    //@FXML private Button placebutton;
     @FXML private  Label GameTopLabel;
     @FXML private Label GameTopLabel1;
     private boolean spielstatus=false;
@@ -39,23 +40,36 @@ public class GameGridController implements Initializable {
     private GridPane GameGrid2;
     private Label[ ][ ] labels;
     private Label[ ][ ] labels2;
-    private Integer x,y;
+    private Integer x,bot,count=0;
     private int sx=-1,sy=-1,ex=-1,ey=-1;
 
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
-    private RDM_Bot ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST;
+    private Bot ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST;
 
     public GameGridController() {}
     public void setInteger(Integer a,Integer b) {
         x=a;
-        y=b;
+        bot = b;
         Gridinit();
         Spielinit();
     }
 
     private void Spielinit() {
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,y,true);
-        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x,y);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
+        switch (bot) {
+            case 1:
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x,x);
+                break;
+            case 2:
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_lvl_2(x,x);
+                break;
+            case 3:
+                //ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x,x);
+                break;
+            default:
+                System.err.println("Bot Auswahl Fehler!!");
+
+        }
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
 
@@ -63,13 +77,13 @@ public class GameGridController implements Initializable {
     public void Gridinit() {
         //initialisieren Label und Grid (1)
         GameGrid = new GridPane();
-        labels = new Label[x][y];
+        labels = new Label[x][x];
         //initialisieren Label und Grid (2)
         GameGrid2 = new GridPane();
-        labels2 = new Label[x][y];
+        labels2 = new Label[x][x];
         for(int a=x-1;a >= 0;a--) {
             //System.out.println("for 2");
-            for(int b=y-1;b >= 0;b--) {
+            for(int b=x-1;b >= 0;b--) {
 
                 //Game Labels (1)
                 labels [a] [b] = new Label();
@@ -86,14 +100,18 @@ public class GameGridController implements Initializable {
                 labels2[a][b].setMinSize(50,50);
                 labels2[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels2 [a][b].setOnMouseClicked(e -> label2click(ca,cb));
+
+
                 GridPane.setConstraints(labels2[a][b],a,b,1,1,HPos.CENTER,VPos.CENTER);
                 GameGrid2.getChildren().add(labels2[a][b]);
             }
         }
+
         // GameGrid 1 zu Stackpane 1 hinzufügen
         GameGrid.setAlignment(Pos.CENTER);
         GameGrid.setHgap(1);
         GameGrid.setVgap(1);
+        //GameGrid
         StackPane.getChildren().add(GameGrid);
         // GameGrid 2 zu Stackpane 2 hinzufügen
         GameGrid2.setAlignment(Pos.CENTER);
@@ -120,7 +138,7 @@ public class GameGridController implements Initializable {
                     labels2[a][b].setStyle("-fx-background-color: black");
                     System.out.println("TREFFER VERSENKT!!");
                     if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.isFinOver()) {
-                        GOETTLICHESSPIELDERVERNICHTUNGMITbot.setGameOver();
+                        //GOETTLICHESSPIELDERVERNICHTUNGMITbot.setGameOver();
                         System.out.println("DU HAST GEWONNEN!!");
                         GameTopLabel1.setText("DU HAST GEWONNEN!!!");
                         /*
@@ -146,7 +164,7 @@ public class GameGridController implements Initializable {
                     }
                 }
             }
-            System.out.println("nach Spieler schuss");
+            //System.out.println("nach Spieler schuss");
             spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
             if (spieler == 0)
                 Botschiesst();
@@ -206,42 +224,7 @@ public class GameGridController implements Initializable {
 
     }
 
-/*
-    private void DragExit(int ca, int cb) {
-        System.out.println("Drag exito x= "+ca+" y= "+cb);
-    }
-
-    private void DragEntered(int ca, int cb) {
-        System.out.println("Drago Entro x= "+ca+" y= "+cb);
-    }
-
-    private void DragDetected(int ca, int cb) {
-        System.out.println("Darg in x: "+ca +" y: "+cb);
-    }
-
-    private void MouseDragReleased(int a, int b) {
-        int cx,dy;
-        drx = a;
-        dry = b;
-        cx = drx - dex;
-        dy = dry - dey;
-        System.out.println("");
-        System.out.println("Mous Pressed: x= "+dex+" y= "+dey);
-        System.out.println("Mous Released: x= "+drx+" y= "+dry);
-        System.out.println("Drag in x:"+cx);
-        System.out.println("Drag in y:"+dy);
-        System.out.println("");
-    }
-
-    private void MouseDragEnter(int a, int b) {
-        dex=a;
-        dey=b;
-
-    }
-
- */
-
-    public void place(ActionEvent event) {
+    public void shippplace() {
         boolean shippaddo;
         int size;
         System.out.println("Place ship");
@@ -312,7 +295,7 @@ public class GameGridController implements Initializable {
                 }
                 for (int i = ex; i != sx-1; i--) {
                     //System.out.println("i= " + i);
-                    System.out.println("KAKA 1");
+                    //System.out.println("KAKA 1");
                     labels[i][sy].setStyle("-fx-background-color: grey");
                 }
             }
@@ -326,7 +309,7 @@ public class GameGridController implements Initializable {
                     return;
                 }
                 for (int i = sx; i != ex-1; i--) {
-                    System.out.println("KAKA 2");
+                    //System.out.println("KAKA 2");
                     //System.out.println("i= "+i);
                     labels[i][sy].setStyle("-fx-background-color: grey");
                 }
@@ -358,16 +341,19 @@ public class GameGridController implements Initializable {
 
         // sx,sy,ex,ey
         if(!spielstatus) {
-            if (sx == -1 && sy == -1) {
+            if (count == 0) {
                 sx = a;
                 sy = b;
                 labels[a][b].setStyle("-fx-background-color: white");
+                count++;
                 return;
             }
-            if (sx != -1 && sy != -1) {
+            if (count == 1) {
                 ex = a;
                 ey = b;
                 labels[a][b].setStyle("-fx-background-color: white");
+                count = 0;
+                shippplace();
             }
         }
 
@@ -393,7 +379,7 @@ public class GameGridController implements Initializable {
             System.err.println("Bot Schiffe fehler");
             return;
         }
-        placebutton.setVisible(false);
+        //placebutton.setVisible(false);
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         //System.out.println("Spieler: "+spieler);
         GameTopLabel.setText("Spieler: "+spieler);
@@ -402,10 +388,6 @@ public class GameGridController implements Initializable {
             Botschiesst();
             GameTopLabel.setText("Du schießt");
         }
-
-
-
-
     }
 
     public void BacktoMenu(ActionEvent event) throws IOException {
