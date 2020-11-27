@@ -122,7 +122,7 @@ public class GameGridController implements Initializable {
                     if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.isFinOver()) {
                         GOETTLICHESSPIELDERVERNICHTUNGMITbot.setGameOver();
                         System.out.println("DU HAST GEWONNEN!!");
-                        GameTopLabel1.setText("DU HAT GEWONNEN!!!");
+                        GameTopLabel1.setText("DU HAST GEWONNEN!!!");
                         /*
                         try {
                             TimeUnit.SECONDS.sleep(10);

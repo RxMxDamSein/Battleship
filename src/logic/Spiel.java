@@ -1,10 +1,16 @@
 package logic;
 
 
+import logic.save.ResourceManager;
+
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Spiel {
+
+public class Spiel implements Serializable {
+    private static final long serialVersionUID=1337L;
     private int x=20,y=20;
     // 0 frei, 1 Schiff, 2 Treffer, 3 Wasser
     private int[][][] feld;
@@ -23,6 +29,27 @@ public class Spiel {
      */
     public Spiel(){
         schiffe=new ArrayList<Schiff>();
+    }
+
+    /**
+     * Lädt das Spiel anhand der ID
+     * @param id die Id des zu laden dem Objekts
+     * @return null Failure, sonst Erfolg
+     */
+    public static Spiel load(String id){
+        try {
+            return (Spiel)ResourceManager.load(id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.err.println("load error");
+        return null;
+    }
+
+    public boolean getVerbose() {
+        return verbose;
     }
 
     /**
@@ -147,7 +174,7 @@ public class Spiel {
             if(verbose)
                 System.err.println("You can only set GameOver while playing remote!");
             return false;
-        }else if(abschussSpieler==0){
+        }else if(abschussSpieler==1){
             if(verbose)
                 System.err.println("Only remote can set GameOver!");
             return false;
@@ -161,7 +188,7 @@ public class Spiel {
         return true;
     }
     /**
-     * @return gibt den Spieler der jetzt schießen darf zurück
+     * @return gibt den Spieler der jetzt abgeschossen wird zurück
      */
     public int getAbschussSpieler(){
         return abschussSpieler;
@@ -284,7 +311,7 @@ public class Spiel {
                 return false;
             case 2: case 3:
                 if(verbose)
-                    System.err.println("Selected Field was already shot");
+                    System.err.println("Selected Field was already shot s "+spieler+" xy "+x+" "+y);
                 return false;
             case 1://Treffer
                 feld[spieler][x][y]=2;
@@ -468,6 +495,14 @@ public class Spiel {
     }
 
     /**
+     * If false you can add ships if true you shall shoot
+     * @return true -> game started false -> game has not started
+     */
+    public boolean isStarted() {
+        return started;
+    }
+
+    /**
      * @return Breite des Spielfeldes
      */
     public int getSizeX(){
@@ -486,5 +521,20 @@ public class Spiel {
      */
     public int getSizeY(){
         return y;
+    }
+
+    /**
+     * speichert das Spiel ab um später wieder geladen zu werden
+     * @return true erfolg, false failure
+     */
+    public boolean saveGame(String id){
+        try {
+            ResourceManager.save(this,id);
+        } catch (IOException e) {
+            System.err.println("SAVE ERROR!");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
