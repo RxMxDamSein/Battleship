@@ -160,6 +160,7 @@ public class BotGrid {
      */
     private void buttonSpielStart(){
         derBot.shipSizesToAdd(Bot.getShipSizes(dasSpiel.schiffe));
+        derBot.getDasSpiel().starteSpiel(0);
         if(dasSpiel.starteSpiel(1)){
             setLabelAbschuss();
             if(dasSpiel.getAbschussSpieler()==0)

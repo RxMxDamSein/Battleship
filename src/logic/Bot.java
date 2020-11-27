@@ -6,7 +6,9 @@ import logic.save.ResourceManager;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
+import logic.Spiel;
 
 public abstract class Bot implements Serializable {
     private static final long serialVersionUID=1337L;
@@ -38,7 +40,7 @@ public abstract class Bot implements Serializable {
         dasSpiel.init();
         //dasSpiel.setVerbose(false);
         rdm=new Random();
-    };
+    }
 
     /**
      * Funktion die Schiffe dem Bott hinzufügt
@@ -94,9 +96,7 @@ public abstract class Bot implements Serializable {
         //System.out.println("Feld prereset!");
         //logicOUTput.printFeld(f);
         for(int i=0;i<f[spieler].length;i++){
-            for(int j=0;j<f[spieler][i].length;j++){
-                f[spieler][i][j]=0;
-            }
+            Arrays.fill(f[spieler][i], 0);
         }
         //System.out.println("Feld reset!");
         //logicOUTput.printFeld(f);
@@ -113,6 +113,7 @@ public abstract class Bot implements Serializable {
         for(int i=0;i<sizes.length;i++){
             sizes[i]=s.get(i).schifflaenge;
         }
+        java.util.Arrays.sort(sizes);
         return sizes;
     }
 
@@ -163,18 +164,67 @@ public abstract class Bot implements Serializable {
         System.err.println("load error");
         return null;
     }
+    private static boolean allScanBeAdded(int[] ss,boolean[] sa, int[][][] f,ArrayList<Schiff> as){
+
+        int x=f[0].length;
+        int y=f[0][0].length;
+        int s=f.length;
+
+        int[][][] cpy=new int[s][x][y];
+        for(int xi=0;xi<x;xi++)
+            for (int yi=0;yi<y;yi++)
+                cpy[0][xi][yi]=f[0][xi][yi];
+
+        for(int i=ss.length-1;i>=0;i--){
+            if(sa[i])
+                continue;
+            //check corners
+            for(int xi=0;xi<x;xi++){
+                if(Spiel.checkLegalSchiff(cpy,x,y,ss[i],true,0,xi,0)){
+                    Spiel.feldAddSchiff(cpy,ss[i],true,0,xi,0);
+                    sa[i]=true;
+                    continue;
+                }
+                if(Spiel.checkLegalSchiff(cpy,x,y,ss[i],true,0,xi,y-1)){
+                    Spiel.feldAddSchiff(cpy,ss[i],true,0,xi,y-1);
+                    sa[i]=true;
+                    continue;
+                }
+            }
+            for(int yi=0;yi<y;yi++){
+                if(Spiel.checkLegalSchiff(cpy,x,y,ss[i],false,0,0,yi)){
+                    Spiel.feldAddSchiff(cpy,ss[i],false,0,0,yi);
+                    sa[i]=true;
+                    continue;
+                }
+                if(Spiel.checkLegalSchiff(cpy,x,y,ss[i],false,0,x-1,yi)){
+                    Spiel.feldAddSchiff(cpy,ss[i],false,0,x-1,yi);
+                    sa[i]=true;
+                    continue;
+                }
+            }
+            for(int xi=0;xi<x;xi++) {
+                for (int yi = 0; yi < y; yi++) {
+                    
+                }
+            }
+        }
+
+        return false;
+    }
 
     public static boolean addShipsRDMly(int[] s,Spiel dasSpiel,Random rdm,int width,int height){
         boolean v=dasSpiel.getVerbose();
         dasSpiel.setVerbose(false);
         boolean added=false;
         int count=0;
-        while (!added && count<300){
+        while (!added && count<500){
+            boolean[] a_add=new boolean[s.length];
             count++;
             dasSpiel.schiffe=new ArrayList<Schiff>();
             //added=true;
             resetFeld(dasSpiel.getFeld(),0);
-            for(int i=0;i<s.length;i++){
+            for(int i=s.length-1;i>=0;i--){
                 int zx=0,zy=0;
                 int count2=0;
                 do{
@@ -182,9 +232,10 @@ public abstract class Bot implements Serializable {
                     zx=rdm.nextInt(width);
                     zy=rdm.nextInt(height);
                     added=dasSpiel.addShip(zx,zy, rdm.nextInt(2) == 0,s[i],0);
-                }while (added==false && count2<60);
+                }while (added==false && count2<500);
                 if(!added)
                     break;
+                a_add[i]=true;
             }
         }
         logicOUTput.printFeld(dasSpiel.getFeld(),true);

@@ -391,6 +391,15 @@ public class Spiel implements Serializable {
         return s;
     }
 
+    public static void feldAddSchiff(int[][][] feld,int schifflaenge,boolean horizontal,int spieler,int xOPos,int yOPos){
+        for(int i=0;i<schifflaenge;i++){
+            if(horizontal){
+                feld[spieler][xOPos+i][yOPos]=1;
+            }else{
+                feld[spieler][xOPos][yOPos+i]=1;
+            }
+        }
+    }
     /**
      * fügt ein Schiff dem Feld hinzu!
      */
@@ -403,42 +412,46 @@ public class Spiel implements Serializable {
             }
         }
     }
-    /**
-     * Soll überprüfen ob man das Schiff in das Spiel einfügen darf
-     * @param s das zu überprüfende Schiff
-     * @return true ist in Ordnung, false illegal!
-     */
-    private boolean checkLegalSchiff(Schiff s){
-        if(s.xOPos<0 || s.xOPos>=x || s.yOPos<0 || s.yOPos>=y || (s.horizontal && s.xOPos+s.schifflaenge>x) || (!s.horizontal && s.yOPos+s.schifflaenge>y))
+
+    public static boolean checkLegalSchiff(int[][][] feld,int xx, int yy,int schifflaenge,boolean horizontal,int spieler,int xOPos,int yOPos){
+        if(xOPos<0 || xOPos>=xx || yOPos<0 || yOPos>=yy || (horizontal && xOPos+schifflaenge>xx) || (!horizontal && yOPos+schifflaenge>yy))
             return false;
         /*if(s.horizontal){
             for(int i=s.xOPos-1;i<=s.xOPos+s.schifflaenge;i++){
                 for(int j=s.yOPos-1;j)
             }
         }*/
-        int z=(s.horizontal)?s.xOPos:s.yOPos;
-        for(int i=(z-1<0)?0:z-1;i<z+s.schifflaenge+1;i++){
-            if(s.horizontal){
-                if(i>= this.x)
+        int z=(horizontal)?xOPos:yOPos;
+        for(int i=(z-1<0)?0:z-1;i<z+schifflaenge+1;i++){
+            if(horizontal){
+                if(i>= xx)
                     continue;
-                for(int y=s.yOPos-1;y<=s.yOPos+1;y++){
-                    if(y<0 || y>=this.y)
+                for(int y=yOPos-1;y<=yOPos+1;y++){
+                    if(y<0 || y>=yy)
                         continue;
-                    if(feld[s.spieler][i][y]!=0)
+                    if(feld[spieler][i][y]!=0)
                         return false;
                 }
             }else {
-                if(i>= this.y)
+                if(i>= yy)
                     continue;
-                for(int x=s.xOPos-1;x<=s.xOPos+1;x++){
-                    if(x<0 || x>=this.x)
+                for(int x=xOPos-1;x<=xOPos+1;x++){
+                    if(x<0 || x>=xx)
                         continue;
-                    if(feld[s.spieler][x][i]!=0)
+                    if(feld[spieler][x][i]!=0)
                         return false;
                 }
             }
         }
         return true;
+    }
+    /**
+     * Soll überprüfen ob man das Schiff in das Spiel einfügen darf
+     * @param s das zu überprüfende Schiff
+     * @return true ist in Ordnung, false illegal!
+     */
+    private boolean checkLegalSchiff(Schiff s){
+        return checkLegalSchiff(feld,x,y,s.schifflaenge,s.horizontal,s.spieler,s.xOPos,s.yOPos);
     }
 
     /**
