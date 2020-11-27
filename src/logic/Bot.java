@@ -205,6 +205,8 @@ public abstract class Bot implements Serializable {
             }
         }
         if(!added){
+            resetFeld(dasSpiel.getFeld(), 0);
+            dasSpiel.schiffe=new ArrayList<>();
             int x=0,y=0;
             boolean h=(width>height)?true:false;
             boolean step=true;
@@ -214,7 +216,7 @@ public abstract class Bot implements Serializable {
                 if(sa[i])
                     continue;
                 //step=dasSpiel.addShip(x,y, (fill)?!h:h,s[i],0);
-                logicOUTput.printFeld(dasSpiel.getFeld(),true);
+                //logicOUTput.printFeld(dasSpiel.getFeld(),true);
                 step=addbiggestship(s,sa,dasSpiel,x,y,(fill)?!h:h,i);
                 if(h){
                     if(fill){
