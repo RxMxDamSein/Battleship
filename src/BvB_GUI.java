@@ -33,6 +33,7 @@ public class BvB_GUI {
     private Label Lversenkt;
     private boolean started=false;
     private Timeline oneSecondsWonder;
+    private int speed=1000;
 
 
     public BvB_GUI(Stage window, int x, int y, Scene sceneOld){
@@ -47,6 +48,7 @@ public class BvB_GUI {
         initPlayerGrids();
         updatePlayerGrids();
         window.setScene(sceneGrid);
+
     }
 
     /**
@@ -124,7 +126,7 @@ public class BvB_GUI {
             gameOver();
         //shoot();
         oneSecondsWonder = new Timeline(
-                new KeyFrame(Duration.seconds(1),
+                new KeyFrame(Duration.millis(speed),
                         new EventHandler<ActionEvent>() {
 
                             @Override
@@ -263,7 +265,8 @@ public class BvB_GUI {
     }
 
     private void sceneZutuck(){
-        oneSecondsWonder.stop();
+        if(oneSecondsWonder!=null)
+            oneSecondsWonder.stop();
         window.setScene(sceneOld);
         window.setTitle("ENTER GRID SIZE");
     }
