@@ -23,7 +23,10 @@
                               <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#BacktoMenu" text="Back" />
                            </children>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" />
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#Speichern" text="Speichern" />
+                           </children></VBox>
                         <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0">
                            <opaqueInsets>
                               <Insets />

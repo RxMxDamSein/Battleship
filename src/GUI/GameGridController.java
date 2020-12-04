@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
@@ -14,21 +15,27 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import logic.Bot;
+
 import logic.Bot_lvl_2;
 import logic.RDM_Bot;
 import logic.Spiel;
+import logic.save.ResourceManager;
+import logic.save.SaveData;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
-public class GameGridController implements Initializable {
+public class GameGridController implements Initializable, Serializable {
+    private static final long serialVersionUID=1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private StackPane StackPane;
     @FXML private StackPane StackPane2;
@@ -53,8 +60,76 @@ public class GameGridController implements Initializable {
         Gridinit();
         Spielinit();
     }
+    public void gameloader (String id1,String id2) {
+        Bot b =(Bot) Bot.load(id2);
+        Spiel s = Spiel.load(id1);
+        /*
+        Bot b =(Bot) Bot.load(id+"-B");
+        Spiel s = Spiel.load(id+"-S");
 
-    private void Spielinit() {
+         */
+        x = s.getSizeX();
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot = s;
+        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = b;
+
+        Gridinit();
+        GridUpdater();
+
+        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
+        if (spieler != -1) {
+            spielstatus = true;
+        }
+
+        //System.out.println("Abschussspieler: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler());
+        if (!GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver() && spieler == 0) {
+            //System.out.println("BOT SCHUSS NACH LADEN°°°°°°°°");
+            Botschiesst();
+        }
+        if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver() || ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.isFinOver())
+            System.out.println("SPIEL ENDE");
+
+
+
+
+    }
+    public void GridUpdater() {
+        int feld[][][] = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld();
+        //for (int s=0;s<2;s++){
+            for (int a = x - 1; a >= 0; a--) {
+                for (int b = x - 1; b >= 0; b--) {
+                    switch (feld[0][a][b]) {
+                        default:
+                            break;
+                        case 1:
+                            labels[a][b].setStyle("-fx-background-color: grey");
+                            break;
+                        case 2:
+                            labels[a][b].setStyle("-fx-background-color: red");
+                            break;
+                        case 3:
+                            labels[a][b].setStyle("-fx-background-color: blue");
+                            break;
+                    }
+                    switch (feld[1][a][b]) {
+                        default:
+                            break;
+                        case 1:
+                            labels2[a][b].setStyle("-fx-background-color: black");
+                            break;
+                        case 2:
+                            labels2[a][b].setStyle("-fx-background-color: red");
+                            break;
+                        case 3:
+                            labels2[a][b].setStyle("-fx-background-color: blue");
+                            break;
+                    }
+                }
+            }
+        //}
+
+    }
+
+    public void Spielinit() {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
         switch (bot) {
             case 1:
@@ -131,7 +206,7 @@ public class GameGridController implements Initializable {
             if(spieler == 1) {
                 //phit: 4 = Versenkt
                 phit = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.abschiesen(a,b);
-                System.out.println("phit: "+phit);
+                //System.out.println("phit: "+phit);
                 //System.out.println("Botfeld: ");
                 if (phit == 4) {
                     GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),1,true);
@@ -229,6 +304,7 @@ public class GameGridController implements Initializable {
         int size;
         System.out.println("Place ship");
         System.out.println("sx= "+sx+" sy= "+sy+" ex= "+ex+" ey= "+ey);
+        System.out.println("");
         //sx == ex horizontal
         //sy == ey vertikal
         //sonst fail
@@ -406,5 +482,39 @@ public class GameGridController implements Initializable {
 
     public void printfeld(ActionEvent event) {
         logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
+    }
+
+    public void Speichern(ActionEvent event) throws IOException {
+
+        //SaveData data = new SaveData();
+        //ResourceManager.save(this, "1.save");
+        // SAVE POP UP Fenster
+        Stage newStage = new Stage();
+        VBox comp = new VBox();
+        comp.setPadding(new Insets(10,10,10,10));
+        comp.setSpacing(5);
+        comp.setStyle("-fx-background-color: DARKCYAN;");
+        comp.setAlignment(Pos.CENTER);
+        TextField DateiName = new TextField();
+        DateiName.setText("Dateiname:");
+        Button Save = new Button();
+        Save.setPrefSize(100,30);
+        Save.setText("Save");
+        Save.setOnAction(event1 -> {
+            String name = String.valueOf(DateiName.getText());
+            System.out.println("Name: "+name);
+            GOETTLICHESSPIELDERVERNICHTUNGMITbot.saveGame(name+"-S");
+            ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.saveGame(name+"-B");
+            newStage.close();
+        });
+        comp.getChildren().add(DateiName);
+        comp.getChildren().add(Save);
+        Scene stageScene = new Scene(comp, 300, 150);
+        newStage.setScene(stageScene);
+        newStage.show();
+
+
+
+
     }
 }
