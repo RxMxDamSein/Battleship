@@ -12,7 +12,7 @@ public abstract class Bot implements Serializable {
     private static final long serialVersionUID=1337L;
     public Spiel dasSpiel;
     protected int x,y;
-    protected Random rdm;
+    public Random rdm;
     public boolean slayship=false; //true if you hit ship and not sunk
     public int slayX,slayY;
 
@@ -296,7 +296,8 @@ public abstract class Bot implements Serializable {
             zx=rdm.nextInt(width);
             zy=rdm.nextInt(height);
         }while (dasSpiel.getFeld()[1][zx][zy]!=0 /*&& count<x*y*2*/);
-        System.out.println(dasSpiel.getFeld()[1][zx][zy]+" getSchuss "+zx+" "+zy);
+        if(dasSpiel.getVerbose())
+            System.out.println(dasSpiel.getFeld()[1][zx][zy]+" getSchuss "+zx+" "+zy);
         return new int[]{zx, zy};
     }
 

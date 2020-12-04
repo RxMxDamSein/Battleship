@@ -16,7 +16,7 @@ public class Bot_lvl_2 extends Bot{
     @Override
     public int[] getSchuss() {
         if(slayship){
-            System.out.println("SLAYSHIP!");
+            //System.out.println("SLAYSHIP!");
             int zx=slayX;
             int zy=slayY;
             boolean horizontal=false;

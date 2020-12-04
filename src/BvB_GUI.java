@@ -1,7 +1,12 @@
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -19,6 +24,10 @@ import logic.Bot_lvl_2;
 import logic.Spiel;
 import logic.save.SAFE_SOME;
 
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class BvB_GUI {
     private Stage window;
     private Scene sceneOld;
@@ -33,7 +42,8 @@ public class BvB_GUI {
     private Label Lversenkt;
     private boolean started=false;
     private Timeline oneSecondsWonder;
-    private int speed=1000;
+    private int speed=100;
+
 
 
     public BvB_GUI(Stage window, int x, int y, Scene sceneOld){
@@ -42,8 +52,10 @@ public class BvB_GUI {
         int[] add=Bot.calcships(x,y);
         b1=new Bot_lvl_2(x,y);
         b1.shipSizesToAdd(add);
+        b1.getDasSpiel().setVerbose(false);
         b2=new Bot_lvl_2(x,y);
         b2.shipSizesToAdd(add);
+        b2.getDasSpiel().setVerbose(false);
         feld=b1.dasSpiel.getFeld();
         initPlayerGrids();
         updatePlayerGrids();
@@ -63,8 +75,11 @@ public class BvB_GUI {
             window.setTitle("load error");
             return;
         }
+        Random random=new Random();
         b1=ss.bots[0];
+        b1.rdm=new Random(b1.rdm.nextInt()% random.nextInt());
         b2=ss.bots[1];
+        b2.rdm=new Random(b2.rdm.nextInt()% random.nextInt());
         init(window,b1.dasSpiel.getSizeX(),b1.dasSpiel.getSizeY(),sceneOld);
         feld=b1.dasSpiel.getFeld();
         initPlayerGrids();
@@ -125,20 +140,16 @@ public class BvB_GUI {
         if(b1.dasSpiel.isOver())
             gameOver();
         //shoot();
-        oneSecondsWonder = new Timeline(
-                new KeyFrame(Duration.millis(speed),
-                        new EventHandler<ActionEvent>() {
-
-                            @Override
-                            public void handle(ActionEvent event) {
-                                if(!b1.dasSpiel.isOver() && !b2.isFinOver())
-                                    shoot();
-                                else
-                                    oneSecondsWonder.stop();
-                            }
-                        }));
-        oneSecondsWonder.setCycleCount(Timeline.INDEFINITE);
+        oneSecondsWonder=new Timeline(new KeyFrame(Duration.millis(speed),e->{
+            if(b1.dasSpiel.isOver() || b2.isFinOver()){
+                oneSecondsWonder.stop();
+            }else {
+                shoot();
+            }
+        }));
+        oneSecondsWonder.setCycleCount(Animation.INDEFINITE);
         oneSecondsWonder.play();
+
 
     }
 
@@ -146,7 +157,7 @@ public class BvB_GUI {
      * lässt den Bott schießen!
      */
     private void shoot(){
-        System.out.println("shoot");
+        //System.out.println("shoot");
         //int s=dasSpiel.getAbschussSpieler();
         //while(s==0 && !dasSpiel.isOver()){
 
@@ -154,7 +165,6 @@ public class BvB_GUI {
             int[] xy=b2.getSchuss();
             if(!b1.dasSpiel.shoot(xy[0],xy[1],0,0,false))
                 return;
-
             b2.setSchussFeld(xy[0],xy[1],feld[0][xy[0]][xy[1]],b1.dasSpiel.istVersenkt());
         }else{
             int[] xy=b1.getSchuss();
@@ -181,14 +191,14 @@ public class BvB_GUI {
                 b1.slayY=xy[1];
             }
         }
-
+        //Event.fireEvent(Event);
         setLabelAbschuss();
         updatePlayerGrids();
-        try {
+        /*try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
         if(b1.dasSpiel.isOver() || b2.isFinOver()){
