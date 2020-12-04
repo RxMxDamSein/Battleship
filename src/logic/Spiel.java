@@ -31,6 +31,10 @@ public class Spiel implements Serializable {
         schiffe=new ArrayList<Schiff>();
     }
 
+    public void setAbschussSpieler(int abschussSpieler) {
+        this.abschussSpieler = abschussSpieler;
+    }
+
     /**
      * Lädt das Spiel anhand der ID
      * @param id die Id des zu laden dem Objekts

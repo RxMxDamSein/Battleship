@@ -13,8 +13,8 @@ public abstract class Bot implements Serializable {
     public Spiel dasSpiel;
     protected int x,y;
     protected Random rdm;
-    protected boolean slayship=false; //true if you hit ship and not sunk
-    protected int slayX,slayY;
+    public boolean slayship=false; //true if you hit ship and not sunk
+    public int slayX,slayY;
 
     /**
      * gibt zurück ob der Bot verloren hat!
@@ -128,6 +128,11 @@ public abstract class Bot implements Serializable {
     public void setSchussFeld(int x,int y,int wert,boolean versenkt){
         int[][][] f=dasSpiel.getFeld();
         f[1][x][y]=wert;
+        if(wert==2){
+            dasSpiel.setAbschussSpieler(1);
+        }else{
+            dasSpiel.setAbschussSpieler(0);
+        }
         if(versenkt){//make water around ship
             slayship=false;
             Bot.waterAround(x,y,f,this.x,this.y);
@@ -293,136 +298,169 @@ public abstract class Bot implements Serializable {
         return new int[]{zx, zy};
     }
 
-    public static void waterAround(int x, int y, int[][][] f,int width,int height){
+    public static void waterAround(int s,int x, int y, int[][][] f,int width,int height){
         boolean up,down,left,right;
         up=down=left=right=false;
-        if(y+1<height && f[1][x][y+1]==2){
+        if(y+1<height && f[s][x][y+1]==2){
             down=true;
         }
-        if(y-1>=0 && f[1][x][y-1]==2){
+        if(y-1>=0 && f[s][x][y-1]==2){
             up=true;
         }
-        if(x+1<width && f[1][x+1][y]==2){
+        if(x+1<width && f[s][x+1][y]==2){
             right=true;
         }
-        if(x-1>=0 && f[1][x-1][y]==2){
+        if(x-1>=0 && f[s][x-1][y]==2){
             left=true;
         }
         int i;
         if(up){
-            for(i=0;y-i>=0&&f[1][x][y-i]==2;i++){
+            for(i=0;y-i>=0&&f[s][x][y-i]==2;i++){
                 if(x+1<width)
-                    f[1][x+1][y-i]=3;
+                    f[s][x+1][y-i]=3;
                 if(x-1>=0)
-                    f[1][x-1][y-i]=3;
+                    f[s][x-1][y-i]=3;
             }
             if(y-i>=0){
                 if(x+1<width)
-                    f[1][x+1][y-i]=3;
+                    f[s][x+1][y-i]=3;
                 if(x-1>=0)
-                    f[1][x-1][y-i]=3;
-                f[1][x][y-i]=3;
+                    f[s][x-1][y-i]=3;
+                f[s][x][y-i]=3;
             }
             if(!down){
                 if(y+1<height){
                     if(x+1<width)
-                        f[1][x+1][y+1]=3;
+                        f[s][x+1][y+1]=3;
                     if(x-1>=0)
-                        f[1][x-1][y+1]=3;
-                    f[1][x][y+1]=3;
+                        f[s][x-1][y+1]=3;
+                    f[s][x][y+1]=3;
                 }
             }
         }
         if(down){
-            for(i=0;y+i<height&&f[1][x][y+i]==2;i++){
+            for(i=0;y+i<height&&f[s][x][y+i]==2;i++){
                 if(x+1<width)
-                    f[1][x+1][y+i]=3;
+                    f[s][x+1][y+i]=3;
                 if(x-1>=0)
-                    f[1][x-1][y+i]=3;
+                    f[s][x-1][y+i]=3;
             }
             if(y+i<height){
                 if(x+1<width)
-                    f[1][x+1][y+i]=3;
+                    f[s][x+1][y+i]=3;
                 if(x-1>=0)
-                    f[1][x-1][y+i]=3;
-                f[1][x][y+i]=3;
+                    f[s][x-1][y+i]=3;
+                f[s][x][y+i]=3;
             }
             if(!up){
                 if(y-1>=0){
                     if(x+1<width)
-                        f[1][x+1][y-1]=3;
+                        f[s][x+1][y-1]=3;
                     if(x-1>=0)
-                        f[1][x-1][y-1]=3;
-                    f[1][x][y-1]=3;
+                        f[s][x-1][y-1]=3;
+                    f[s][x][y-1]=3;
                 }
             }
         }
         if(left){
-            for(i=0;x-i>=0&&f[1][x-i][y]==2;i++){
+            for(i=0;x-i>=0&&f[s][x-i][y]==2;i++){
                 if(y+1<height)
-                    f[1][x-i][y+1]=3;
+                    f[s][x-i][y+1]=3;
                 if(y-1>=0)
-                    f[1][x-i][y-1]=3;
+                    f[s][x-i][y-1]=3;
             }
             if(x-i>=0){
                 if(y+1<height)
-                    f[1][x-i][y+1]=3;
+                    f[s][x-i][y+1]=3;
                 if(y-1>=0)
-                    f[1][x-i][y-1]=3;
-                f[1][x-i][y]=3;
+                    f[s][x-i][y-1]=3;
+                f[s][x-i][y]=3;
             }
             if(!right){
                 if(x+1<width){
                     if(y+1<height)
-                        f[1][x+1][y+1]=3;
+                        f[s][x+1][y+1]=3;
                     if(y-1>=0)
-                        f[1][x+1][y-1]=3;
-                    f[1][x+1][y]=3;
+                        f[s][x+1][y-1]=3;
+                    f[s][x+1][y]=3;
                 }
             }
         }
         if(right){
-            for(i=0;x+i<width&&f[1][x+i][y]==2;i++){
+            for(i=0;x+i<width&&f[s][x+i][y]==2;i++){
                 if(y+1<height)
-                    f[1][x+i][y+1]=3;
+                    f[s][x+i][y+1]=3;
                 if(y-1>=0)
-                    f[1][x+i][y-1]=3;
+                    f[s][x+i][y-1]=3;
             }
             if(x+i<width){
                 if(y+1<height)
-                    f[1][x+i][y+1]=3;
+                    f[s][x+i][y+1]=3;
                 if(y-1>=0)
-                    f[1][x+i][y-1]=3;
-                f[1][x+i][y]=3;
+                    f[s][x+i][y-1]=3;
+                f[s][x+i][y]=3;
             }
             if(!left){
                 if(x-1>=0){
                     if(y+1<height)
-                        f[1][x-1][y+1]=3;
+                        f[s][x-1][y+1]=3;
                     if(y-1>=0)
-                        f[1][x-1][y-1]=3;
-                    f[1][x-1][y]=3;
+                        f[s][x-1][y-1]=3;
+                    f[s][x-1][y]=3;
                 }
             }
         }
         if(!up && !down && !right && !left){
             if(x>0 && y>0)
-                f[1][x-1][y-1]=3;
+                f[s][x-1][y-1]=3;
             if( y>0)
-                f[1][x][y-1]=3;
+                f[s][x][y-1]=3;
             if(x+1<width && y>0)
-                f[1][x+1][y-1]=3;
+                f[s][x+1][y-1]=3;
             if(x>0)
-                f[1][x-1][y]=3;
+                f[s][x-1][y]=3;
             if(x+1<width )
-                f[1][x+1][y]=3;
+                f[s][x+1][y]=3;
             if(x>0 && y+1<height)
-                f[1][x-1][y+1]=3;
+                f[s][x-1][y+1]=3;
             if( y+1<height)
-                f[1][x][y+1]=3;
+                f[s][x][y+1]=3;
             if(x+1<width && y+1<height)
-                f[1][x+1][y+1]=3;
+                f[s][x+1][y+1]=3;
         }
+    }
+    public static void waterAround(int x, int y, int[][][] f,int width,int height){
+        waterAround(1,x,y,f,width,height);
+    }
+
+    public static int[] calcships(int x,int y){
+        int res=x*y;
+        if((res>=100)&&(x>=5 || y>=5)){
+            return new int[]{5,4,4,3,3,3,2,2,2,2};
+        }
+        int max=(x>y)?x:y;
+        if(max>5)
+            max=5;
+        ArrayList<Integer> s=new ArrayList<Integer>();
+        int used=0;
+        Random rdm=new Random();
+        while(used<res*0.7){
+            int next=rdm.nextInt(max)+1;
+            s.add(next);
+            used+=(next+2)*3;
+        }
+
+        int[] ret=new int[s.size()];
+        for (int i=0;i<s.size();i++){
+            ret[i]=s.get(i);
+        }
+        return ret;
+    }
+
+    public static void main(String[] args) {
+        int[] t=calcships(7,5);
+        for(int i=0;i<t.length;i++)
+            System.out.println(t[i]);
     }
 }
 

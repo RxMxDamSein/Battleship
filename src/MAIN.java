@@ -22,6 +22,8 @@ public class MAIN extends Application  {
     Button buttonSubmitBot;
     Button buttonLoad2P;
     Button buttonLoadRDMBot;
+    Button buttonBvB;
+    Button buttonLoadBvB;
     public static void main(String[] args) {
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
@@ -47,7 +49,10 @@ public class MAIN extends Application  {
         buttonLoad2P.setOnAction(e->load2P());
         buttonLoadRDMBot=new Button("LOAD RDM");
         buttonLoadRDMBot.setOnAction(e->loadRDM());
-
+        buttonBvB=new Button("BvB");
+        buttonBvB.setOnAction(e->submitBvb());
+        buttonLoadBvB=new Button(("LOAD BvB"));
+        buttonLoadBvB.setOnAction(e->loadBvb());
         /*MenuBar menuBar=new MenuBar();
         Menu m1=new Menu("Stift!");
         MenuItem mi1=new MenuItem("GROß!");
@@ -59,12 +64,23 @@ public class MAIN extends Application  {
         vBox.setSpacing(5);
         //vBox.getChildren().addAll(menuBar,inputFieldX,inputFieldY,buttonSubmit);
         HBox hBox=new HBox(5);
-        hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot,buttonLoadRDMBot);
+        hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot,buttonLoadRDMBot,buttonBvB,buttonLoadBvB);
         vBox.getChildren().addAll(inputFieldX,inputFieldY,hBox);
 
         scene_sizeS=new Scene(vBox);
         window.setScene(scene_sizeS);
         window.show();
+    }
+
+    private void loadBvb(){
+        new BvB_GUI(window,scene_sizeS,"bvb");
+    }
+
+    private void submitBvb(){
+        int[] xy=checkXY();
+        int x=xy[0];
+        int y=xy[1];
+        new BvB_GUI(window,x,y,scene_sizeS);
     }
 
     private void load2P(){
@@ -106,9 +122,9 @@ public class MAIN extends Application  {
 
         }finally {
             if(x<=0)
-                x=5;
+                x=10;
             if(y<=0)
-                y=5;
+                y=10;
         }
         return new int[]{x,y};
     }
