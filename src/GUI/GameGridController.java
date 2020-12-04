@@ -60,13 +60,13 @@ public class GameGridController implements Initializable, Serializable {
         Gridinit();
         Spielinit();
     }
-    public void gameloader (String id1,String id2) {
-        Bot b =(Bot) Bot.load(id2);
-        Spiel s = Spiel.load(id1);
+    public void gameloader (String id) {
+        SaveGame save = (SaveGame) SaveGame.load(id);
+        Spiel s = save.g;
+        Bot b = save.b;
         /*
         Bot b =(Bot) Bot.load(id+"-B");
         Spiel s = Spiel.load(id+"-S");
-
          */
         x = s.getSizeX();
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = s;
@@ -503,8 +503,11 @@ public class GameGridController implements Initializable, Serializable {
         Save.setOnAction(event1 -> {
             String name = String.valueOf(DateiName.getText());
             System.out.println("Name: "+name);
+            new SaveGame(GOETTLICHESSPIELDERVERNICHTUNGMITbot,ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST,name);
+            /*
             GOETTLICHESSPIELDERVERNICHTUNGMITbot.saveGame(name+"-S");
             ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.saveGame(name+"-B");
+             */
             newStage.close();
         });
         comp.getChildren().add(DateiName);

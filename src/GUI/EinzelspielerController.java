@@ -57,8 +57,10 @@ public class EinzelspielerController implements Initializable {
         System.out.println("Wähle Spiel Datei!");
         File file = fileChooser.showOpenDialog(theStage);
         //System.out.println("Path: "+file.getAbsolutePath());
-        String id1 = file.getName();
+        String id = file.getName();
         //System.out.println("Name: "+id1);
+
+        /*
         //Id für Bot Datei
         fileChooser.setTitle("Wähle Bot Datei!");
         fileChooser.setInitialDirectory(new File("C:\\Users\\Dennis\\Documents\\Hochschule Aalen\\Semester 3\\ProgrammierPraktikum\\Battleship\\save"));
@@ -67,10 +69,12 @@ public class EinzelspielerController implements Initializable {
         String id2 = i.getName();
         System.out.println("");
 
+         */
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GameGrid.fxml"));
         Parent r = loader.load();
         GameGridController controller = loader.getController();
-        controller.gameloader(id1,id2);
+        controller.gameloader(id);
         Scene s = new Scene(r);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
