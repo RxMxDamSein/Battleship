@@ -148,7 +148,7 @@ public class BotGrid {
         setLabelAbschuss();
         updatePlayerGrids();
         if(dasSpiel.isOver() || derBot.isFinOver()){
-            if(!dasSpiel.isOver())
+            if(dasSpiel.getAbschussSpieler()==1)
                 dasSpiel.setGameOver();
             //dasSpiel.setGameOver();
             gameOver();
@@ -159,6 +159,8 @@ public class BotGrid {
      * Geht vom Schiff hinzufügen Modus in Spiel(Shoot) Modus über
      */
     private void buttonSpielStart(){
+        if(dasSpiel.isStarted())
+            return;
         derBot.shipSizesToAdd(Bot.getShipSizes(dasSpiel.schiffe));
         if(dasSpiel.starteSpiel(1)){
             setLabelAbschuss();
@@ -267,7 +269,8 @@ public class BotGrid {
             setLabelAbschuss();
             updatePlayerGrids();
             if(dasSpiel.isOver() || derBot.isFinOver()){
-                dasSpiel.setGameOver();
+                if(dasSpiel.getAbschussSpieler()==1)
+                    dasSpiel.setGameOver();
                 gameOver();
             }
         } else if(!dasSpiel.isStarted()&& !dasSpiel.isOver() && !derBot.isFinOver()) {              //Schiff Hinzufügen!

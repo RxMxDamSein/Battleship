@@ -174,7 +174,7 @@ public class Spiel implements Serializable {
             if(verbose)
                 System.err.println("You can only set GameOver while playing remote!");
             return false;
-        }else if(abschussSpieler==1){
+        }else if(abschussSpieler==0){
             if(verbose)
                 System.err.println("Only remote can set GameOver!");
             return false;
@@ -394,7 +394,7 @@ public class Spiel implements Serializable {
     /**
      * fügt ein Schiff dem Feld hinzu!
      */
-    private void feldAddSchiff(Schiff s){
+    public void feldAddSchiff(Schiff s){
         for(int i=0;i<s.schifflaenge;i++){
             if(s.horizontal){
                 feld[s.spieler][s.xOPos+i][s.yOPos]=(s.getroffen[i]==false)?1:2;
@@ -403,12 +403,22 @@ public class Spiel implements Serializable {
             }
         }
     }
+
+    public void feldDELSchiff(Schiff s){
+        for(int i=0;i<s.schifflaenge;i++){
+            if(s.horizontal){
+                feld[s.spieler][s.xOPos+i][s.yOPos]=0;
+            }else{
+                feld[s.spieler][s.xOPos][s.yOPos+i]=0;
+            }
+        }
+    }
     /**
      * Soll überprüfen ob man das Schiff in das Spiel einfügen darf
      * @param s das zu überprüfende Schiff
      * @return true ist in Ordnung, false illegal!
      */
-    private boolean checkLegalSchiff(Schiff s){
+    public boolean checkLegalSchiff(Schiff s){
         if(s.xOPos<0 || s.xOPos>=x || s.yOPos<0 || s.yOPos>=y || (s.horizontal && s.xOPos+s.schifflaenge>x) || (!s.horizontal && s.yOPos+s.schifflaenge>y))
             return false;
         /*if(s.horizontal){

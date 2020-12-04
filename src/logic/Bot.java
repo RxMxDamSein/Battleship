@@ -113,6 +113,7 @@ public abstract class Bot implements Serializable {
         for(int i=0;i<sizes.length;i++){
             sizes[i]=s.get(i).schifflaenge;
         }
+        java.util.Arrays.sort(sizes);
         return sizes;
     }
 
@@ -164,12 +165,28 @@ public abstract class Bot implements Serializable {
         return null;
     }
 
+
+    public static boolean addbiggestship(int[] s,boolean[] sa,Spiel dasSpiel,int x,int y,boolean h, int j){
+        int i;
+        for(i=j;i>=0;i--){
+            if(sa[i])
+                continue;
+            if(dasSpiel.addShip(x,y,h,s[i],0)){
+                sa[i]=true;
+                break;
+            }
+
+        }
+        if(i==j)
+            return true;
+        return false;
+    }
     public static boolean addShipsRDMly(int[] s,Spiel dasSpiel,Random rdm,int width,int height){
         boolean v=dasSpiel.getVerbose();
         dasSpiel.setVerbose(false);
         boolean added=false;
         int count=0;
-        while (!added && count<300){
+        while (!added && count<60){
             count++;
             dasSpiel.schiffe=new ArrayList<Schiff>();
             //added=true;
@@ -182,17 +199,90 @@ public abstract class Bot implements Serializable {
                     zx=rdm.nextInt(width);
                     zy=rdm.nextInt(height);
                     added=dasSpiel.addShip(zx,zy, rdm.nextInt(2) == 0,s[i],0);
-                }while (added==false && count2<60);
+                }while (added==false && count2<120);
                 if(!added)
                     break;
             }
         }
+        if(!added){
+            resetFeld(dasSpiel.getFeld(), 0);
+            dasSpiel.schiffe=new ArrayList<>();
+            int x=0,y=0;
+            boolean h=(width>height)?true:false;
+            boolean step=true;
+            boolean sa[]=new boolean[s.length];
+            boolean fill=false;
+            for(int i=s.length-1;i>=0;i--){
+                if(sa[i])
+                    continue;
+                //step=dasSpiel.addShip(x,y, (fill)?!h:h,s[i],0);
+                //logicOUTput.printFeld(dasSpiel.getFeld(),true);
+                step=addbiggestship(s,sa,dasSpiel,x,y,(fill)?!h:h,i);
+                if(h){
+                    if(fill){
+                        y--;
+                    }else {
+                        x+=s[i]+1;
+                        if(x>=width){
+                            x=0;
+                            y+=2;
+                        }
+                        if(y>=height){
+                            y=height-1;
+                            x=width-1;
+                            fill=true;
+                        }
+                    }
+                }else {
+                    if(fill){
+                        x--;
+                    }else {
+                        y+=s[i]+1;
+                        if(y>=height){
+                            y=0;
+                            x+=2;
+                        }
+                        if(x>=width){
+                            x=width-1;
+                            y=height-1;
+                            fill=true;
+                        }
+                    }
+                }
+                if(!step)
+                    i++;
+                else
+                    sa[i]=true;
+            }
+            for(int i=0;i<dasSpiel.schiffe.size();i++){
+                Schiff ss=dasSpiel.schiffe.get(i);
+                dasSpiel.feldDELSchiff(ss);
+                int xo=ss.xOPos;
+                int yo=ss.yOPos;
+                boolean ho=ss.horizontal;
+                count=0;
+                boolean ok;
+                do {
+                    ss.xOPos = rdm.nextInt(width);
+                    ss.yOPos = rdm.nextInt(height);
+                    ss.horizontal = rdm.nextBoolean();
+                    count++;
+                    ok=dasSpiel.checkLegalSchiff(ss);
+                }while (!ok && count<20);
+                if (!ok) {
+                    ss.xOPos = xo;
+                    ss.yOPos = yo;
+                    ss.horizontal = ho;
+                }
+                dasSpiel.feldAddSchiff(ss);
+            }
+        }
+
         logicOUTput.printFeld(dasSpiel.getFeld(),true);
-        System.out.println(added);
-        if(added)
-            dasSpiel.starteSpiel();
+
+        dasSpiel.starteSpiel();
         dasSpiel.setVerbose(v);
-        return added;
+        return true;
     }
     protected static int[] rdmSchuss(Spiel dasSpiel, Random rdm,int width,int height){
         int zx=0,zy=0,count=0;
