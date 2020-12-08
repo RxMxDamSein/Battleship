@@ -19,11 +19,13 @@ public class Spiel implements Serializable {
     private boolean fin=false;
     private boolean versenkt=false;
     public ArrayList<Schiff> schiffe;
+    private int enemyS;
     private Random random=new Random();
     private int abschussSpieler =-1;
     private boolean verbose=true;
     //if remote -> both sides are known; !remote -> only your side is known! and you are player 0(1)
     private boolean remote;
+
     /**
      * make Spiel object
      */
@@ -130,6 +132,10 @@ public class Spiel implements Serializable {
         logicOUTput.printFeld(feld,true);
         System.out.println("Der Sieger der Partie ist Spieler "+((abschussSpieler==0)?"2(1)":"1(0)"));
     }
+
+    private boolean chekEnemyLost(){
+        return false;
+    }
     /**
      * checks if a winner is decided
      * @return true if one player has won!
@@ -151,17 +157,7 @@ public class Spiel implements Serializable {
             if(!spieler1TOT && !spieler2TOT)
                 break;
         }
-        if(remote){//you are player 0(1)
-            //System.out.println("spieler 1 "+spieler1TOT);
-            if (spieler1TOT){
-                //System.out.println("Spieler 1 Ausgelöscht!");
-                fin=true;
-                /*To Do! tell enemy you lost!
-                can also be done in GameOVer function or with fin Attribute
-                 */
-                return true;
-            }
-        }else if(spieler1TOT || spieler2TOT){
+        if(spieler1TOT || spieler2TOT){
             fin=true;
             return true;
         }
@@ -210,6 +206,19 @@ public class Spiel implements Serializable {
                 System.err.println("Das Spiel ist bereits im Gange!");
             return false;
         }
+        //wenn remote müssen jetzt die unwissenden Gegner schiffe kreiert werden!
+        if(remote){
+            int len=schiffe.size();
+            enemyS=len;
+            for(int i=0;i<len;i++){
+                Schiff s=new Schiff();
+                s.schifflaenge=schiffe.get(i).schifflaenge;
+                s.spieler=1;
+                s.schifflebt=true;
+                schiffe.add(s);
+            }
+        }
+
         started=true;
         if(abschussSpieler <0){
             abschussSpieler =random.nextInt(2);
@@ -271,8 +280,16 @@ public class Spiel implements Serializable {
             return false;
         }
         boolean ret=abstractShoot(x,y,spieler,p_hit);
-        if(ret && spieler==1)
+        if(ret && spieler==1){
             versenkt=p_versenkt;
+            //kill ships in schiffe for player 1
+            if(versenkt){
+                if(!killEnemyShipfromPos(x,y)&&verbose){
+                    System.err.println("ship could not sink!!!");
+                }
+                checkGameOver();
+            }
+        }
         return  ret;
     }
 
@@ -351,6 +368,76 @@ public class Spiel implements Serializable {
         return true;
     }
 
+    
+    private boolean killEnemyShipfromPos(int x, int y){
+        int horizontal=2;  //-1 undefined, 0 horizontal, 1 vertical, 2 shipsize=1(both)
+        if((x>0 && feld[1][x-1][y]==1 )||(x>0 && feld[1][x-1][y]==2 )|| (x<this.x-1 && feld[1][x+1][y]==1 )|| (x<this.x-1 && feld[1][x+1][y]==2 )){
+            horizontal=0;
+        }else if((y>0 && feld[1][x][y-1]==1 )||(y>0 && feld[1][x][y-1]==2 )|| (y<this.y-1 && feld[1][x][y+1]==1 )|| (y<this.y-1 && feld[1][x][y+1]==2 )){
+            horizontal=1;
+        }
+        boolean deleted=false;
+        Schiff s=null;
+        int size=1;
+        switch (horizontal) {
+            default:
+                return false;
+            case 2:
+                for (int i=enemyS;i<schiffe.size();i++){
+                    s = schiffe.get(i);
+                    if(s.schifflaenge==size && s.schifflebt){
+                        s.schifflebt=false;
+                        deleted=true;
+                        break;
+                    }
+                }
+                break;
+            case 0://vertical
+                int xz=x-1;
+                while (xz>=0 && (feld[1][xz][y]==2)){
+                    size++;
+                    xz--;
+                }
+                xz=x+1;
+                while (xz<this.x && (feld[1][xz][y]==2)){
+                    size++;
+                    xz++;
+                }
+                for (int i=enemyS;i<schiffe.size();i++){
+                    s = schiffe.get(i);
+                    if(s.schifflaenge==size && s.schifflebt){
+                        s.schifflebt=false;
+                        deleted=true;
+                        break;
+                    }
+                }
+                break;
+            case 1://horizontal
+                int yz=y-1;
+                while (yz>=0 && (feld[1][x][yz]==2)){
+                    size++;
+                    yz--;
+                }
+                yz=y+1;
+                while (yz<this.x && (feld[1][x][yz]==2)){
+                    size++;
+                    yz++;
+                }
+                for (int i=enemyS;i<schiffe.size();i++){
+                    s = schiffe.get(i);
+                    if(s.schifflaenge==size && s.schifflebt){
+                        s.schifflebt=false;
+                        deleted=true;
+                        break;
+                    }
+                }
+                break;
+        }
+
+        if(!deleted)
+            return false;
+        return true;
+    }
     /**
      * ermöglicht ein Schiff Objekt zu erhalten anhand einer Postion und dem Spieler
      * @param x X Koordinate eines Teiles des Schiffes
