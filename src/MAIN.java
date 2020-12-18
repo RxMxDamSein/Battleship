@@ -43,11 +43,12 @@ public class MAIN extends Application  {
         dasSpiel.shoot(1,0,0);
         dasSpiel.shoot(1,0,1);
         logicOUTput.printFeld(dasSpiel.getFeld(),true);*/
+        System.out.println("Working Directory = " +
+                System.getProperty("user.dir"));
         GUImain.main(args);
 
 
-        System.out.println("Working Directory = " +
-                System.getProperty("user.dir"));
+
         //launch(args);
     }
 

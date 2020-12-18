@@ -8,8 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,7 +16,7 @@ import java.util.ResourceBundle;
 
 public class NeuesSpielMenuController implements Initializable {
     @FXML private TextField GridSize;
-    @FXML private ChoiceBox choiceBox;
+    @FXML private ChoiceBox<String> choiceBox;
     public Integer x=0,bot=0;
 
     @Override

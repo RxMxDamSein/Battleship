@@ -53,7 +53,8 @@ public class EinzelspielerController implements Initializable {
         //Id für Spiel Datei
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Wähle Spiel Datei!");
-        fileChooser.setInitialDirectory(new File("C:\\Users\\Dennis\\Documents\\Hochschule Aalen\\Semester 3\\ProgrammierPraktikum\\Battleship\\save"));
+        new File("./save/").mkdirs();
+        fileChooser.setInitialDirectory(new File("./save"));
         System.out.println("Wähle Spiel Datei!");
         File file = fileChooser.showOpenDialog(theStage);
         //System.out.println("Path: "+file.getAbsolutePath());
