@@ -6,14 +6,17 @@ import java.io.InputStreamReader;
 
 public class RemoteGameClient {
     public Spiel dasSpiel;
-    private BufferedReader inRead;
+
+    /**
+     * kreiert ein Spielobjekt mit Groeße 10x10 kann verändert werden!
+     */
     public RemoteGameClient(){
-        inRead = new BufferedReader(new InputStreamReader(System.in));
         dasSpiel=new Spiel(10,10,true);
     }
 
     /**
      * Setzt die Spielgröße
+     * und legt diese damit fest, sollte man also immer aufrufen. Außer man verwendet das Spiel Objekt selbst und init ed dann auch selbst
      * @param x
      * @param y
      * @return null wenn Fehler "next" bei Erfolg
@@ -26,7 +29,7 @@ public class RemoteGameClient {
     }
 
     /**
-     * fügt die Schifee dem Clienten hinzu
+     * fügt die Schiffe dem Clienten hinzu mittels der Konsole mit der untigen Hilfsfunktion
      * @param schiffe {5,4,4,3,3,3,2,2,2,2} int Array mit Schiffslängen
      * @return "done" on success null on failure
      */
@@ -44,6 +47,7 @@ public class RemoteGameClient {
      * @return true on success false on failure
      */
     private boolean shipsAddConsole(int len){
+        BufferedReader inRead=new BufferedReader(new InputStreamReader(System.in));
         int x,y,horizontal;
         try {
             System.out.print("Füge ein Schiff der Länge "+len+" hinzu!");

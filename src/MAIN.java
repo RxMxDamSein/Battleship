@@ -29,7 +29,10 @@ public class MAIN extends Application  {
     Button buttonLoadRDMBot;
     Button buttonBvB;
     Button buttonLoadBvB;
+    Button buttonNightmare;
+    Button buttonLoadNightmare;
     public static void main(String[] args) {
+
 
         System.out.println("THIS IS GAME LOGIC!");
         //logicOUTput.console2SpielerSpiel();
@@ -52,6 +55,7 @@ public class MAIN extends Application  {
 
 
         //launch(args);
+
     }
 
     @Override
@@ -77,6 +81,11 @@ public class MAIN extends Application  {
         buttonBvB.setOnAction(e->submitBvb());
         buttonLoadBvB=new Button(("LOAD BvB"));
         buttonLoadBvB.setOnAction(e->loadBvb());
+        buttonNightmare=new Button(("Nightmare!"));
+        buttonNightmare.setOnAction(e->submitNightmare());
+        buttonLoadNightmare=new Button(("LOAD Nightmare"));
+        buttonLoadNightmare.setOnAction(e->loadNightmare());
+        //buttonNightmare
         /*MenuBar menuBar=new MenuBar();
         Menu m1=new Menu("Stift!");
         MenuItem mi1=new MenuItem("GROß!");
@@ -88,7 +97,7 @@ public class MAIN extends Application  {
         vBox.setSpacing(5);
         //vBox.getChildren().addAll(menuBar,inputFieldX,inputFieldY,buttonSubmit);
         HBox hBox=new HBox(5);
-        hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot,buttonLoadRDMBot,buttonBvB,buttonLoadBvB);
+        hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot,buttonLoadRDMBot,buttonBvB,buttonLoadBvB,buttonNightmare,buttonLoadNightmare);
         vBox.getChildren().addAll(inputFieldX,inputFieldY,hBox);
 
         scene_sizeS=new Scene(vBox);
@@ -105,6 +114,17 @@ public class MAIN extends Application  {
         int x=xy[0];
         int y=xy[1];
         new BvB_GUI(window,x,y,scene_sizeS);
+    }
+
+    private void submitNightmare(){
+        int[] xy=checkXY();
+        int x=xy[0];
+        int y=xy[1];
+        new NightmareGrid(window,x,y,scene_sizeS);
+    }
+
+    private void loadNightmare(){
+        new NightmareGrid(window,scene_sizeS,"NightBOT-");
     }
 
     private void load2P(){

@@ -42,7 +42,7 @@ public class BvB_GUI {
     private Label Lversenkt;
     private boolean started=false;
     private Timeline oneSecondsWonder;
-    private int speed=100;
+    private int speed=10;
 
 
 
@@ -104,7 +104,7 @@ public class BvB_GUI {
         this.labels=new Label[2][x][y];
 
 
-        Button buttonZuruck=new Button("Zurück");
+        Button buttonZuruck=new Button("Zur\u00FCck");
         buttonZuruck.setOnAction(e->sceneZutuck());
         Button buttonStart=new Button("Start Shooting!");
         buttonStart.setOnAction(e->buttonSpielStart());
@@ -141,7 +141,7 @@ public class BvB_GUI {
             gameOver();
         //shoot();
         oneSecondsWonder=new Timeline(new KeyFrame(Duration.millis(speed),e->{
-            if(b1.dasSpiel.isOver() || b2.isFinOver()){
+            if(b1.dasSpiel.isOver() /*|| b2.isFinOver()*/){
                 oneSecondsWonder.stop();
             }else {
                 shoot();
@@ -201,9 +201,11 @@ public class BvB_GUI {
         }*/
 
 
-        if(b1.dasSpiel.isOver() || b2.isFinOver()){
-            if(b1.dasSpiel.getAbschussSpieler()==1)
+        if(b1.dasSpiel.isOver() /*|| b2.isFinOver()*/){
+            /*if(b1.dasSpiel.getAbschussSpieler()==1)
                 b1.dasSpiel.setGameOver();
+
+             */
             gameOver();
         }
 
