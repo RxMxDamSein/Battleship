@@ -20,11 +20,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import logic.Bot;
+import logic.*;
 
-import logic.Bot_lvl_2;
-import logic.RDM_Bot;
-import logic.Spiel;
 import logic.save.ResourceManager;
 import logic.save.SaveData;
 
@@ -128,7 +125,7 @@ public class GameGridController implements Initializable, Serializable {
         //}
 
     }
-
+    //Initialisiert das Spiel und den Bot
     public void Spielinit() {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
         switch (bot) {
@@ -139,7 +136,7 @@ public class GameGridController implements Initializable, Serializable {
                 ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_lvl_2(x,x);
                 break;
             case 3:
-                //ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x,x);
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_nightmare(x,x,GOETTLICHESSPIELDERVERNICHTUNGMITbot);
                 break;
             default:
                 System.err.println("Bot Auswahl Fehler!!");
@@ -248,6 +245,9 @@ public class GameGridController implements Initializable, Serializable {
 
     private void Botschiesst() {
         //Bot schießt auf Spieler
+        if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 1) {
+            return;
+        }
         System.out.println("Bot schießt");
         int[] xy = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getSchuss();
         System.out.println("Bot schießt auf: x: "+xy[0]+" y: "+xy[1]);
@@ -285,6 +285,9 @@ public class GameGridController implements Initializable, Serializable {
                     Platform.exit();
 
                      */
+                }
+                if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
+                    Botschiesst();
                 }
                 logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
                 return;
@@ -471,7 +474,6 @@ public class GameGridController implements Initializable, Serializable {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
-
         window.show();
     }
     @Override

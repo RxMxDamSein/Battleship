@@ -17,13 +17,13 @@ import java.util.ResourceBundle;
 public class NeuesSpielMenuController implements Initializable {
     @FXML private TextField GridSize;
     @FXML private ChoiceBox<String> choiceBox;
-    public Integer x=0,bot=0;
+    private Integer x=0,bot=0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         choiceBox.getItems().add("Einfach");
         choiceBox.getItems().add("Mittel");
-        choiceBox.getItems().add("Schwer");
+        choiceBox.getItems().add("Nightmare");
         choiceBox.setValue("Einfach");
 
     }
@@ -44,7 +44,7 @@ public class NeuesSpielMenuController implements Initializable {
         if (ch.equals("Mittel")) {
             bot = 2;
         }
-        if (ch.equals("Schwer")) {
+        if (ch.equals("Nightmare")) {
             bot = 3;
         }
         System.out.println("_______________");
