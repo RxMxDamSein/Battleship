@@ -9,8 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import logic.save.ResourceManager;
-import logic.save.SaveData;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +31,6 @@ public class EinzelspielerController implements Initializable {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
-
         window.show();
     }
 
@@ -42,7 +40,6 @@ public class EinzelspielerController implements Initializable {
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.show();
-
     }
 
     public void spielladen(ActionEvent event) throws IOException {
@@ -69,7 +66,6 @@ public class EinzelspielerController implements Initializable {
         File i = fileChooser.showOpenDialog(theStage);
         String id2 = i.getName();
         System.out.println("");
-
          */
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GameGrid.fxml"));
@@ -77,6 +73,14 @@ public class EinzelspielerController implements Initializable {
         GameGridController controller = loader.getController();
         controller.gameloader(id);
         Scene s = new Scene(r);
+        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(s);
+        window.show();
+    }
+
+    public void BOTvsBOT(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("BOTgegenBOTMenu.fxml"));
+        Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.show();
