@@ -104,7 +104,7 @@ public class BvB_GUI {
         this.labels=new Label[2][x][y];
 
 
-        Button buttonZuruck=new Button("Zurück");
+        Button buttonZuruck=new Button("Zur\u00FCck");
         buttonZuruck.setOnAction(e->sceneZutuck());
         Button buttonStart=new Button("Start Shooting!");
         buttonStart.setOnAction(e->buttonSpielStart());

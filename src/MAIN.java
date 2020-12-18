@@ -25,6 +25,7 @@ public class MAIN extends Application  {
     Button buttonBvB;
     Button buttonLoadBvB;
     public static void main(String[] args) {
+        System.setProperty("file.encoding", "UTF-8");
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
 
