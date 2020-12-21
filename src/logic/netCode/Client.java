@@ -2,12 +2,14 @@ package logic.netCode;
 
 import java.io.*;
 import java.net.Socket;
+import logic.Spiel;
+import java.lang.*;
 
 public class Client
 {
+    public Spiel dasSpiel;
 
-
-    public static void main (String [] args) throws IOException{
+    public void main (String [] args) throws IOException{
         System.out.println("Connecting to a server ...");
         Socket s = new Socket("127.0.0.1", 420);
         System.out.println("Connected!");
@@ -17,7 +19,6 @@ public class Client
 
         String antwort="";
         String nachricht;
-        int versenkt = 0;
 
         while(true)
         {
@@ -30,8 +31,19 @@ public class Client
             if(nachricht.contains("size"))
             {
                 String sizeVariablen = nachricht.substring(5);
-                String sizeX = sizeVariablen.substring(0, 1);
-                String sizeY = sizeVariablen.substring(2);
+                String sizeX = "";
+                String sizeY = "";
+                int l = 0;
+                l =nachricht.length();
+                switch(l)
+                {
+                    case 7: sizeX = sizeVariablen.substring(0, 1);
+                        sizeY = sizeVariablen.substring(2);
+                        break;
+                    case 8: sizeX = sizeVariablen.substring(0, 2);
+                        sizeY = sizeVariablen.substring(3, 4);
+                        break;
+                }
 
                 antwort = size(sizeX, sizeY);
             }
@@ -43,21 +55,36 @@ public class Client
                 antwort = ships(shipsAnz);
             }
 
-            if(nachricht.contains("ready"))
-            {
-                ready();
-                antwort = tIn.readLine();
-            }
-
             if(nachricht.contains("shot"))
             {
-                String shotKordinaten = nachricht.substring(5);
-                System.out.println(shotKordinaten);
-                String kordX = shotKordinaten.substring(0, 1);
-                System.out.println("X-Koordinate: " + kordX);
-                String kordY = shotKordinaten.substring(2);
-                System.out.println("Y-Koordinate: " + kordY);
-
+                String shotKoordinaten = nachricht.substring(5);
+                String kordX = "";
+                String kordY = "";
+                int tr = 0;
+                int l = 0;
+                l = nachricht.length();
+                switch (l)
+                {
+                    case 7: kordX = shotKoordinaten.substring(0, 1);
+                        kordY = shotKoordinaten.substring(2);
+                        break;
+                    case 8: tr = shotKoordinaten.indexOf(" ");
+                        switch(tr)
+                        {
+                            case 1: kordX = shotKoordinaten.substring(0, 1);
+                                kordY = shotKoordinaten.substring(2, 3);
+                                break;
+                            case 2: kordX = shotKoordinaten.substring(0, 2);
+                                kordY = shotKoordinaten.substring(3);
+                                break;
+                            case -1: //Falsche Eingabe
+                                break;
+                        }
+                        break;
+                    case 9: kordX = shotKoordinaten.substring(0, 2);
+                        kordY = shotKoordinaten.substring(3, 4);
+                        break;
+                }
                 antwort = shot(kordX, kordY);
             }
 
@@ -69,64 +96,38 @@ public class Client
                         break;
                     case "answer 1": antwort = tIn.readLine();
                         break;
-                    case "answer 2": versenkt++;
-                        System.out.println("Schiffe versenkt: " + versenkt);
-                        antwort = tIn.readLine();
+                    case "answer 2": antwort = tIn.readLine();
                         break;
                 }
             }
 
-            System.out.print("Zu Server: " + antwort + "\n");
+            System.out.print("Zu Server: " + antwort);
             out.write(String.format("%s%n", antwort));
             out.flush();
         }
 
     }
 
-    public static String shot(String x, String y)
+    public String shot(String sx, String sy)
     {
-        System.out.println("Shot funktion wurde ausgeführt!");
-        //System.out.println("Shot auf " + x + " " + y);
-        if(x.equals("1") && y.equals("2"))
-            return "answer 1";
-        if(x.equals("1") && y.equals("3"))
-            return "answer 2";
-        if(x.equals("3") && y.equals("3"))
-            return "answer 1";
-        else
-            return "answer 0";
+        int x = Integer.parseInt(sx);
+        int y = Integer.parseInt(sy);
+        dasSpiel.shoot(x,y,0);
+        return "";
     }
 
-    public static String size(String x, String y)
+    public String size(String sx, String sy)
     {
-        System.out.println("Size funktion wurde ausgeführt!");
-        System.out.println("Feldgröße ist nun " + x + " * " + y);
+        int x = Integer.parseInt(sx);
+        int y = Integer.parseInt(sy);
+        dasSpiel.setSize(x, y);
         return "next";
     }
 
-    public static String ships(String shipsString)
+    public String ships(String shipsString)
     {
-        char[] shipsArray = shipsString.toCharArray();
-        int count = 0;
-        for (char c : shipsArray) {
-            if (c != ' ')
-                count++;
-        }
 
-        //System.out.println(count);
-
-        for(int k = 0;k < count;k++)
-        {
-            System.out.println("Schiff Nr." + k + " hat die Größe " + shipsArray[k * 2]);
-        }
-
-        System.out.println("Ships funktion wurde ausgeführt!");
         return "done";
-    }
-
-    public static void ready()
-    {
-        System.out.println("Ready funktion wurde ausgeführt!");
     }
 
 }

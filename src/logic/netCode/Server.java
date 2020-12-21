@@ -1,13 +1,17 @@
 package logic.netCode;
 
+import logic.Spiel;
+import java.lang.*;
 import java.net.*;
 import java.io.*;
 
 
 public class Server
 {
+public Spiel dasSpiel;
 
-    public static void main (String [] args) throws IOException{
+
+    public void main(String[] args) throws IOException{
         ServerSocket ss = new ServerSocket(420);
         System.out.println("Waiting for client ...");
         Socket s = ss.accept();
@@ -20,7 +24,6 @@ public class Server
         String antwort="";
         String nachricht="";
         int sCount = 0;
-        int versenkt = 0;
 
         while(true)
         {
@@ -32,11 +35,37 @@ public class Server
 
             if(nachricht.contains("shot"))
             {
-                String shotKordinaten = nachricht.substring(5);
-                System.out.println(shotKordinaten);
-                String kordX = shotKordinaten.substring(0, 1);
-                String kordY = shotKordinaten.substring(2);
-
+                String shotKoordinaten = "";
+                String kordX = "";
+                String kordY = "";
+                int tr = 0;
+                int l = 0;
+                l = nachricht.length();
+                switch (l)
+                {
+                    case 8: shotKoordinaten = nachricht.substring(5);
+                            kordX = shotKoordinaten.substring(0, 1);
+                            kordY = shotKoordinaten.substring(2);
+                        break;
+                    case 9: shotKoordinaten = nachricht.substring(5);
+                            tr = shotKoordinaten.indexOf(" ");
+                            switch(tr)
+                            {
+                                case 1: kordX = shotKoordinaten.substring(0, 1);
+                                        kordY = shotKoordinaten.substring(2, 3);
+                                    break;
+                                case 2: kordX = shotKoordinaten.substring(0, 2);
+                                        kordY = shotKoordinaten.substring(3);
+                                    break;
+                                case -1: //Falsche Eingabe
+                                    break;
+                            }
+                        break;
+                    case 10: shotKoordinaten = nachricht.substring(5);
+                             kordX = shotKoordinaten.substring(0, 2);
+                             kordY = shotKoordinaten.substring(3, 4);
+                        break;
+                }
                 antwort = shot(kordX, kordY);
             }
 
@@ -48,9 +77,7 @@ public class Server
                         break;
                     case "answer 1": antwort = tIn.readLine();
                         break;
-                    case "answer 2": versenkt++;
-                        System.out.println(versenkt);
-                        antwort = tIn.readLine();
+                    case "answer 2": antwort = tIn.readLine();
                         break;
                 }
             }
@@ -62,12 +89,6 @@ public class Server
 
             if(nachricht.equals("done"))
             {
-                antwort = tIn.readLine();
-            }
-
-            if(nachricht.equals("ready"))
-            {
-                ready();
                 antwort = tIn.readLine();
             }
 
@@ -86,23 +107,12 @@ public class Server
     }
 
 
-    public static String shot(String x, String y)
+    public String shot(String sx, String sy)
     {
-        System.out.println("Shot funktion wurde ausgeführt!");
-        System.out.println("Shot auf " + x + " " + y);
-        if(x.equals("4") && y.equals("4"))
-            return "answer 1";
-        if(x.equals("3") && y.equals("1"))
-            return "answer 1";
-        if(x.equals("5") && y.equals("3"))
-            return "answer 2";
-        else
-            return "answer 0";
-    }
-
-    public static void ready()
-    {
-        System.out.println("Ready funktion wurde ausgeführt!");
+        int x = Integer.parseInt(sx);
+        int y = Integer.parseInt(sy);
+        dasSpiel.shoot(x,y,0);
+        return "";
     }
 
 }
