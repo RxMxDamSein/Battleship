@@ -128,6 +128,7 @@ public class GameGridController implements Initializable, Serializable {
     //Initialisiert das Spiel und den Bot
     public void Spielinit() {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot.setVerbose(false);
         switch (bot) {
             case 1:
                 ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x,x);
@@ -142,18 +143,19 @@ public class GameGridController implements Initializable, Serializable {
                 System.err.println("Bot Auswahl Fehler!!");
 
         }
+        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getDasSpiel().setVerbose(false);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
     public double minsizeberechner() {
         Rectangle2D screen = Screen.getPrimary().getBounds();
-        System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
+        //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
         //return -((double)x-10)+50;
         //return -(0.75* (double) x-7.5)+50;
         //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
         double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
         zahl*= 0.7;
         zahl = (zahl/2)/x;
-        System.out.println("Wundervolle Zahl: "+zahl);
+        //System.out.println("Wundervolle Zahl: "+zahl);
         return zahl;
     }
 

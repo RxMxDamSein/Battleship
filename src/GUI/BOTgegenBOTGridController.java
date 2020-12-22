@@ -197,14 +197,15 @@ public class BOTgegenBOTGridController  implements Initializable  {
     }
     public double minsizeberechner() {
         Rectangle2D screen = Screen.getPrimary().getBounds();
-        System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
+        //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
         //return -((double)x-10)+50;
         //return -(0.75* (double) x-7.5)+50;
         //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
         double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
         zahl*= 0.7;
         zahl = (zahl/2)/x;
-        System.out.println("Wundervolle Zahl: "+zahl);
+        //System.out.println("Wundervolle Zahl: "+zahl);
+        if (zahl > 200) zahl=200;
         return zahl;
     }
 
