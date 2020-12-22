@@ -478,12 +478,19 @@ public class GameGridController implements Initializable, Serializable {
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
         GameTopLabel1.setText("Du schießt jetzt hier:");
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
         if(!ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.shipSizesToAdd(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe))) {
             System.err.println("Bot Schiffe fehler");
             return;
         }
-        //placebutton.setVisible(false);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel();
+        /*
+        System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
+        int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);
+        System.out.println("Schiff anzahl: "+penis.length);
+        for (int i = 0;i != penis.length;i++) {
+        System.out.println("Schiff "+i+" größe: "+penis[i]);
+        }
+         */
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         //System.out.println("Spieler: "+spieler);
         System.out.println("Spieler: "+spieler);
@@ -543,9 +550,5 @@ public class GameGridController implements Initializable, Serializable {
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
-
-
-
-
     }
 }
