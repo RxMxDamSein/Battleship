@@ -439,7 +439,8 @@ public abstract class Bot implements Serializable {
 
     public static int[] calcships(int x,int y){
         int res=x*y;
-        if((res>=100)&&(x>=5 || y>=5)){
+        //Change von Dennis von >= zu ==
+        if((res==100)&&(x>=5 || y>=5)){
             return new int[]{5,4,4,3,3,3,2,2,2,2};
         }
         int max=(x>y)?x:y;

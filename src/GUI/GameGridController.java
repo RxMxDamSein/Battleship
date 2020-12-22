@@ -6,19 +6,19 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import logic.*;
 
@@ -144,6 +144,18 @@ public class GameGridController implements Initializable, Serializable {
         }
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
+    public double minsizeberechner() {
+        Rectangle2D screen = Screen.getPrimary().getBounds();
+        System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
+        //return -((double)x-10)+50;
+        //return -(0.75* (double) x-7.5)+50;
+        //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
+        double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
+        zahl*= 0.7;
+        zahl = (zahl/2)/x;
+        System.out.println("Wundervolle Zahl: "+zahl);
+        return zahl;
+    }
 
     //Grid und Labels initialisieren
     public void Gridinit() {
@@ -159,8 +171,20 @@ public class GameGridController implements Initializable, Serializable {
 
                 //Game Labels (1)
                 labels [a] [b] = new Label();
-                labels[a][b].setMinSize(50,50);
+                //labels[a][b].setMinSize(50,50);
+                labels[a][b].setMinSize(minsizeberechner(),minsizeberechner());
                 labels[a][b].setStyle("-fx-background-color: #03fcf4");
+
+                //lustige bilder zu den Labels
+                /*
+                Image img = new Image("GUI/Textures/42.jpg");
+                ImageView view = new ImageView(img);
+                view.setFitHeight(100);
+                view.setPreserveRatio(true);
+                labels[a][b].setGraphic(view);
+
+                 */
+
                 //final int ca=a,cb=b;
                 int ca=a,cb=b;
                labels[a][b].setOnMouseClicked(e -> labelclick(ca,cb) );
@@ -169,7 +193,8 @@ public class GameGridController implements Initializable, Serializable {
 
                 //Game Labels (2)
                 labels2 [a] [b] = new Label();
-                labels2[a][b].setMinSize(50,50);
+                //labels2[a][b].setMinSize(50,50);
+                labels2[a][b].setMinSize(minsizeberechner(),minsizeberechner());
                 labels2[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels2 [a][b].setOnMouseClicked(e -> label2click(ca,cb));
 
@@ -461,6 +486,7 @@ public class GameGridController implements Initializable, Serializable {
         //placebutton.setVisible(false);
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         //System.out.println("Spieler: "+spieler);
+        System.out.println("Spieler: "+spieler);
         GameTopLabel.setText("Spieler: "+spieler);
         if (spieler == 0) {
             GameTopLabel.setText("Bot schießt");

@@ -10,13 +10,16 @@
 
 <AnchorPane style="-fx-background-color: DARKCYAN;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.BOTgegenBOTGridController">
    <children>
-      <HBox alignment="CENTER" maxHeight="1080.0" maxWidth="1920.0" prefHeight="617.0" prefWidth="1200.0" spacing="52.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER" spacing="52.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox alignment="CENTER" maxHeight="1080.0" maxWidth="1920.0" prefHeight="603.0" prefWidth="574.0">
+            <VBox alignment="CENTER">
                <children>
                   <Label fx:id="GameTopLabel" prefWidth="85.0" text="Spieler 1" textFill="#fbf8f8" />
-                  <StackPane fx:id="StackPane" maxHeight="1080.0" maxWidth="1920.0" prefHeight="576.0" prefWidth="574.0" />
-                  <HBox alignment="CENTER" maxHeight="1080.0" maxWidth="1920.0" prefHeight="49.0" prefWidth="572.0" spacing="130.0">
+                  <StackPane fx:id="StackPane" prefHeight="576.0" prefWidth="574.0">
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin></StackPane>
+                  <HBox alignment="CENTER" prefHeight="49.0" prefWidth="572.0" spacing="130.0">
                      <children>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
@@ -43,10 +46,13 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox alignment="CENTER" maxHeight="1080.0" maxWidth="1920.0" prefHeight="603.0" prefWidth="574.0">
+            <VBox alignment="CENTER" prefHeight="603.0" prefWidth="574.0">
                <children>
                   <Label fx:id="GameTopLabel1" text="Spieler 2" textFill="WHITE" />
-                  <StackPane fx:id="StackPane2" prefHeight="576.0" prefWidth="574.0" />
+                  <StackPane fx:id="StackPane2" prefHeight="576.0" prefWidth="574.0">
+                     <VBox.margin>
+                        <Insets right="5.0" />
+                     </VBox.margin></StackPane>
                   <HBox alignment="CENTER" prefHeight="48.0" prefWidth="572.0" spacing="130.0">
                      <children>
                         <VBox prefHeight="200.0" prefWidth="100.0">
