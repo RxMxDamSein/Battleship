@@ -87,7 +87,7 @@ public class BOTgegenBOTMenuController implements Initializable {
         System.out.println("Bot 1: "+ch1+" Bot 2: "+ch2);
         System.out.println("_______________");
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("BotgegenBotGrid.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("BotgegenBOTGrid.fxml"));
         Parent r = loader.load();
         BOTgegenBOTGridController controller = loader.getController();
         controller.setInteger(x,bot1,bot2);

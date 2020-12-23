@@ -156,6 +156,7 @@ public class GameGridController implements Initializable, Serializable {
         zahl*= 0.7;
         zahl = (zahl/2)/x;
         //System.out.println("Wundervolle Zahl: "+zahl);
+        if (zahl > 200) zahl=200;
         return zahl;
     }
 
