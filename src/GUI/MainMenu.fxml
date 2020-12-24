@@ -37,7 +37,7 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="44.0" prefWidth="400.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="87.0" text="Einstellungen" />
+                  <Button mnemonicParsing="false" onAction="#einstellungen" prefHeight="25.0" prefWidth="87.0" text="Einstellungen" />
                </children>
             </HBox>
          </children>

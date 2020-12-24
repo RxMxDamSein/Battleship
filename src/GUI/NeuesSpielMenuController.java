@@ -35,7 +35,7 @@ public class NeuesSpielMenuController implements Initializable {
 
         //für test zwecke
         if (sx.equals("")) {
-            sx = "4";
+            sx = "10";
         }
         x = Integer.parseInt(sx);
         if (ch.equals("Einfach")) {

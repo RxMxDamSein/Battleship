@@ -47,11 +47,13 @@ public class GameGridController implements Initializable, Serializable {
     private Integer x,bot,count=0;
     private int sx=-1,sy=-1,ex=-1,ey=-1;
 
+    private nuetzlicheMethoden methoden;
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
     private Bot ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST;
 
     public GameGridController() {}
     public void setInteger(Integer a,Integer b) {
+        methoden = new nuetzlicheMethoden();
         x=a;
         bot = b;
         Gridinit();
@@ -61,6 +63,7 @@ public class GameGridController implements Initializable, Serializable {
         SaveGame save = (SaveGame) SaveGame.load(id);
         Spiel s = save.g;
         Bot b = save.b;
+        methoden = new nuetzlicheMethoden();
         /*
         Bot b =(Bot) Bot.load(id+"-B");
         Spiel s = Spiel.load(id+"-S");
@@ -98,26 +101,32 @@ public class GameGridController implements Initializable, Serializable {
                         default:
                             break;
                         case 1:
-                            labels[a][b].setStyle("-fx-background-color: grey");
+                            //labels[a][b].setStyle("-fx-background-color: grey");
+                            labels[a][b] = methoden.textureSchiff(labels[a][b],x);
                             break;
                         case 2:
-                            labels[a][b].setStyle("-fx-background-color: red");
+                            //labels[a][b].setStyle("-fx-background-color: red");
+                            labels[a][b] = methoden.textureSchiffTreffer(labels[a][b],x);
                             break;
                         case 3:
-                            labels[a][b].setStyle("-fx-background-color: blue");
+                            //labels[a][b].setStyle("-fx-background-color: blue");
+                            labels[a][b] = methoden.textureWasserTreffer(labels[a][b],x);
                             break;
                     }
                     switch (feld[1][a][b]) {
                         default:
                             break;
                         case 1:
-                            labels2[a][b].setStyle("-fx-background-color: black");
+                            //labels2[a][b].setStyle("-fx-background-color: black");
+                            labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
                             break;
                         case 2:
-                            labels2[a][b].setStyle("-fx-background-color: red");
+                            //labels2[a][b].setStyle("-fx-background-color: red");
+                            labels2[a][b] = methoden.textureSchiffTreffer(labels2[a][b],x);
                             break;
                         case 3:
-                            labels2[a][b].setStyle("-fx-background-color: blue");
+                            //labels2[a][b].setStyle("-fx-background-color: blue");
+                            labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
                             break;
                     }
                 }
@@ -146,6 +155,7 @@ public class GameGridController implements Initializable, Serializable {
         ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getDasSpiel().setVerbose(false);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
+    /*
     public double minsizeberechner() {
         Rectangle2D screen = Screen.getPrimary().getBounds();
         //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
@@ -158,6 +168,7 @@ public class GameGridController implements Initializable, Serializable {
         //System.out.println("Wundervolle Zahl: "+zahl);
         return zahl;
     }
+     */
 
     //Grid und Labels initialisieren
     public void Gridinit() {
@@ -174,8 +185,9 @@ public class GameGridController implements Initializable, Serializable {
                 //Game Labels (1)
                 labels [a] [b] = new Label();
                 //labels[a][b].setMinSize(50,50);
-                labels[a][b].setMinSize(minsizeberechner(),minsizeberechner());
-                labels[a][b].setStyle("-fx-background-color: #03fcf4");
+                labels[a][b].setMinSize(methoden.minsizeberechner(x),methoden.minsizeberechner(x));
+                //labels[a][b].setStyle("-fx-background-color: #03fcf4");
+                labels[a][b] = methoden.textureWasser(labels[a][b],x);
 
                 //lustige bilder zu den Labels
                 /*
@@ -184,7 +196,6 @@ public class GameGridController implements Initializable, Serializable {
                 view.setFitHeight(100);
                 view.setPreserveRatio(true);
                 labels[a][b].setGraphic(view);
-
                  */
 
                 //final int ca=a,cb=b;
@@ -196,8 +207,9 @@ public class GameGridController implements Initializable, Serializable {
                 //Game Labels (2)
                 labels2 [a] [b] = new Label();
                 //labels2[a][b].setMinSize(50,50);
-                labels2[a][b].setMinSize(minsizeberechner(),minsizeberechner());
-                labels2[a][b].setStyle("-fx-background-color: #03fcf4");
+                labels2[a][b].setMinSize(methoden.minsizeberechner(x),methoden.minsizeberechner(x));
+                //labels2[a][b].setStyle("-fx-background-color: #03fcf4");
+                labels2[a][b] = methoden.textureWasser(labels2[a][b],x);
                 labels2 [a][b].setOnMouseClicked(e -> label2click(ca,cb));
 
 
@@ -234,11 +246,13 @@ public class GameGridController implements Initializable, Serializable {
                 //System.out.println("Botfeld: ");
                 if (phit == 4) {
                     GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),1,true);
-                    labels2[a][b].setStyle("-fx-background-color: black");
+                    //labels2[a][b].setStyle("-fx-background-color: black");
+                    labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
                     System.out.println("TREFFER VERSENKT!!");
                     if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.isFinOver()) {
                         //GOETTLICHESSPIELDERVERNICHTUNGMITbot.setGameOver();
                         System.out.println("DU HAST GEWONNEN!!");
+                        GameTopLabel1.setStyle("-fx-background-color: red");
                         GameTopLabel1.setText("DU HAST GEWONNEN!!!");
                         /*
                         try {
@@ -253,13 +267,15 @@ public class GameGridController implements Initializable, Serializable {
                 } else {
                     GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),phit,false);
                     if (phit == 1) {
-                        labels2[a][b].setStyle("-fx-background-color: red");
+                        //labels2[a][b].setStyle("-fx-background-color: red");
+                        labels2[a][b] = methoden.textureSchiffTreffer(labels2[a][b],x);
                         System.out.println("TREFFER!!");
                     }
                     if (phit == 3 || phit == 0) {
                         //Treffer auf Wasser
                         System.out.println("TREFFER WASSER!!");
-                        labels2[a][b].setStyle("-fx-background-color: blue");
+                        //labels2[a][b].setStyle("-fx-background-color: blue");
+                        labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
                     }
                 }
             }
@@ -289,19 +305,21 @@ public class GameGridController implements Initializable, Serializable {
         System.out.println("Bot Hit: "+hit);
         if (hit == 3 || hit == 0) {
             //Treffer auf Wasser
-
-            labels[xy[0]][xy[1]].setStyle("-fx-background-color: blue");
+            labels[xy[0]][xy[1]] = methoden.textureWasserTreffer(labels[xy[0]][xy[1]],x);
+            //labels[xy[0]][xy[1]].setStyle("-fx-background-color: blue");
             logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
             return;
         }
         //Treffer auf Schiff
         if (hit == 2 || hit == 1) {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.istVersenkt()) {
-                labels[xy[0]][xy[1]].setStyle("-fx-background-color: black");
+                labels[xy[0]][xy[1]] = methoden.textureversenkt(labels[xy[0]][xy[1]],x);
+                //labels[xy[0]][xy[1]].setStyle("-fx-background-color: black");
                 System.out.println("BOT: TREFFER VERSENKT!!");
                 if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
                     //Bot hat gewonnen
                     System.out.println("BOT HAT GEWONNEN!!");
+                    GameTopLabel1.setStyle("-fx-background-color: red");
                     GameTopLabel1.setText("BOT HAT GEWONNEN!!!");
                     /*
                     try {
@@ -319,8 +337,8 @@ public class GameGridController implements Initializable, Serializable {
                 logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
                 return;
             }
-
-            labels[xy[0]][xy[1]].setStyle("-fx-background-color: red");
+            labels[xy[0]][xy[1]] = methoden.textureSchiffTreffer(labels[xy[0]][xy[1]],x);
+            //labels[xy[0]][xy[1]].setStyle("-fx-background-color: red");
             System.out.println("BOT: TREFFER!!");
             logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
             Botschiesst();
@@ -340,8 +358,10 @@ public class GameGridController implements Initializable, Serializable {
         //sonst fail
         if (sx == -1 || sy == -1 || ex == -1 || ey == -1) {
             System.err.println("Ungültiges Schiff");
-            labels[sx][sy].setStyle("-fx-background-color: blue");
-            labels[ex][ey].setStyle("-fx-background-color: blue");
+            //labels[sx][sy].setStyle("-fx-background-color: blue");
+            //labels[ex][ey].setStyle("-fx-background-color: blue");
+            labels[sx][sy] = methoden.textureWasser(labels[sx][sy],x);
+            labels[ex][ey] = methoden.textureWasser(labels[ex][ey],x);
             sx=-1;
             sy=-1;
             ex=-1;
@@ -364,7 +384,8 @@ public class GameGridController implements Initializable, Serializable {
                 for (int i = ey; i != sy-1; i--) {
                     //System.out.println("PENIS 1");
                     //System.out.println("i= " + i);
-                    labels[sx][i].setStyle("-fx-background-color: grey");
+                    labels[sx][i] = methoden.textureSchiff(labels[sx][i],x);
+                    //labels[sx][i].setStyle("-fx-background-color: grey");
                 }
             }
             if (sy > ey) {
@@ -379,7 +400,8 @@ public class GameGridController implements Initializable, Serializable {
                 for (int i = sy; i != ey-1; i--) {
                     //System.out.println("PENIS 2");
                     //System.out.println("i= "+i);
-                    labels[sx][i].setStyle("-fx-background-color: grey");
+                    //labels[sx][i].setStyle("-fx-background-color: grey");
+                    labels[sx][i] = methoden.textureSchiff(labels[sx][i],x);
                 }
             }
             sx=-1;
@@ -402,7 +424,8 @@ public class GameGridController implements Initializable, Serializable {
                 for (int i = ex; i != sx-1; i--) {
                     //System.out.println("i= " + i);
                     //System.out.println("KAKA 1");
-                    labels[i][sy].setStyle("-fx-background-color: grey");
+                    //labels[i][sy].setStyle("-fx-background-color: grey");
+                    labels[i][sy] = methoden.textureSchiff(labels[i][sy],x);
                 }
             }
             if (ex < sx) {
@@ -417,7 +440,8 @@ public class GameGridController implements Initializable, Serializable {
                 for (int i = sx; i != ex-1; i--) {
                     //System.out.println("KAKA 2");
                     //System.out.println("i= "+i);
-                    labels[i][sy].setStyle("-fx-background-color: grey");
+                    //labels[i][sy].setStyle("-fx-background-color: grey");
+                    labels[i][sy] = methoden.textureSchiff(labels[i][sy],x);
                 }
             }
             sx=-1;
@@ -432,8 +456,10 @@ public class GameGridController implements Initializable, Serializable {
 
     private void illegalesSchiff() {
         System.err.println("Ungültiges Schiff");
-        labels[sx][sy].setStyle("-fx-background-color: #03fcf4");
-        labels[ex][ey].setStyle("-fx-background-color: #03fcf4");
+        //labels[sx][sy].setStyle("-fx-background-color: #03fcf4");
+        //labels[ex][ey].setStyle("-fx-background-color: #03fcf4");
+        labels[sx][sy] = methoden.textureWasser(labels[sx][sy],x);
+        labels[ex][ey] = methoden.textureWasser(labels[ex][ey],x);
         sx=-1;
         sy=-1;
         ex=-1;
@@ -450,14 +476,16 @@ public class GameGridController implements Initializable, Serializable {
             if (count == 0) {
                 sx = a;
                 sy = b;
-                labels[a][b].setStyle("-fx-background-color: white");
+                //labels[a][b].setStyle("-fx-background-color: white");
+                labels[a][b] = methoden.textureauswahlWasser(labels[a][b],x);
                 count++;
                 return;
             }
             if (count == 1) {
                 ex = a;
                 ey = b;
-                labels[a][b].setStyle("-fx-background-color: white");
+                //labels[a][b].setStyle("-fx-background-color: white");
+                labels[a][b] = methoden.textureauswahlWasser(labels[a][b],x);
                 count = 0;
                 shippplace();
             }

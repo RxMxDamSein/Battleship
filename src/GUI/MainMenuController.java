@@ -39,4 +39,12 @@ public class MainMenuController implements Initializable  {
         window.setScene(s);
         window.show();
     }
+
+    public void einstellungen(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("Einstellungen.fxml"));
+        Scene s = new Scene(root);
+        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        window.setScene(s);
+        window.show();
+    }
 }
