@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 
 public  class nuetzlicheMethoden {
-    private int texture=1;
+    private int texture=0;
 
 
     public nuetzlicheMethoden(){}

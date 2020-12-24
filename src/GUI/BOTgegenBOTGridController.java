@@ -85,7 +85,7 @@ public class BOTgegenBOTGridController  implements Initializable  {
                         //labels2[a][b].setStyle("-fx-background-color: red");
                         break;
                     case 3:
-                        labels2[a][b] = methoden.textureWasser(labels2[a][b],x);
+                        labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
                         //labels2[a][b].setStyle("-fx-background-color: blue");
                         break;
                     case 4:
