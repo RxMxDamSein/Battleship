@@ -50,9 +50,13 @@ public class Client
 
             if(nachricht.contains("ships"))
             {
-                String shipsAnz = nachricht.substring(6);
+                String shipsAnzML = nachricht.substring(6);
+                String shipsAnz = shipsAnzML.replace(" ", "");
+                int l = shipsAnz.length();
+                char[] shipsArray = new char[l];
+                shipsArray = shipsAnz.toCharArray();
 
-                antwort = ships(shipsAnz);
+                antwort = ships(shipsArray);
             }
 
             if(nachricht.contains("shot"))
@@ -88,18 +92,18 @@ public class Client
                 antwort = shot(kordX, kordY);
             }
 
-            if(nachricht.equals("answer 0") || nachricht.equals("answer 1") || nachricht.equals("answer 2"))
-            {
-                switch(nachricht)
-                {
-                    case "answer 0": antwort = "next";
-                        break;
-                    case "answer 1": antwort = tIn.readLine();
-                        break;
-                    case "answer 2": antwort = tIn.readLine();
-                        break;
-                }
-            }
+            //if(nachricht.equals("answer 0") || nachricht.equals("answer 1") || nachricht.equals("answer 2"))
+            //{
+            //    switch(nachricht)
+            //    {
+            //        case "answer 0": antwort = "next";
+            //            break;
+            //        case "answer 1": antwort = tIn.readLine();
+            //            break;
+            //        case "answer 2": antwort = tIn.readLine();
+            //            break;
+            //    }
+            //}
 
             System.out.print("Zu Server: " + antwort);
             out.write(String.format("%s%n", antwort));
@@ -124,7 +128,7 @@ public class Client
         return "next";
     }
 
-    public String ships(String shipsString)
+    public String ships(char[] shipsArray)
     {
 
         return "done";
