@@ -12,11 +12,16 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import logic.Spiel;
 
+import javax.sound.sampled.Port;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 
 /**
  * Klasse die das 2Spieler spielen Schiffeversenken Spiel erlaubt mit spicken!
  */
-public class Grid_NET {
+public class Grid_NET{
     private Stage window;
     private Scene sceneOld;
     private Spiel dasSpiel;
@@ -25,6 +30,9 @@ public class Grid_NET {
     private int[][][] feld;
     private Label[][][] labels;
     private Label[] lToShoot;
+    private boolean Server;
+    private boolean Bot;
+    private Socket s;
 
 
     public Grid_NET(Stage window, Scene sceneOld, String id){
@@ -46,7 +54,10 @@ public class Grid_NET {
      * @param y Spielbretthöhe
      * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
      */
-    public Grid_NET(Stage window, int x, int y, Scene sceneOld)  {
+    public Grid_NET(Stage window, int x, int y, Scene sceneOld,String IP,int PORT,boolean Server,boolean Bot) throws IOException {
+        this.Server=Server;
+        this.Bot=Bot;
+
         init(window,x,y,sceneOld);
     }
 
@@ -63,7 +74,7 @@ public class Grid_NET {
         GridPane.setConstraints(lToShoot[1],0,y,x+1,y,HPos.CENTER,VPos.CENTER);
         this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
-        this.dasSpiel=new Spiel(x,y);
+        this.dasSpiel=new Spiel(x,y,true);
         if(!dasSpiel.init())
             sceneZutuck();
         this.feld=dasSpiel.getFeld();
