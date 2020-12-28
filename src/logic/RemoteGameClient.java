@@ -1,5 +1,7 @@
 package logic;
 
+import sun.security.provider.ConfigFile;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -33,9 +35,9 @@ public class RemoteGameClient {
      * @param schiffe {5,4,4,3,3,3,2,2,2,2} int Array mit Schiffslängen
      * @return "done" on success null on failure
      */
-    public String ships(int[] schiffe){
+    public static String ships(int[] schiffe, Spiel dasSpiel){
         for(int i=0;i<schiffe.length;i++){
-            if (schiffe[i]<1 || !shipsAddConsole(schiffe[i]))//this should be done with console in future!
+            if (schiffe[i]<1 || !shipsAddConsole(schiffe[i],dasSpiel))//this should be done with console in future!
                 return null;
         }
         return "done";
@@ -46,7 +48,7 @@ public class RemoteGameClient {
      * @param len Schiffslänge
      * @return true on success false on failure
      */
-    private boolean shipsAddConsole(int len){
+    public static boolean shipsAddConsole(int len,Spiel dasSpiel){
         BufferedReader inRead=new BufferedReader(new InputStreamReader(System.in));
         int x,y,horizontal;
         try {

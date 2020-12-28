@@ -4,6 +4,7 @@ import logic.Spiel;
 import java.lang.*;
 import java.net.*;
 import java.io.*;
+import logic.logicOUTput;
 
 
 public class Server
@@ -12,6 +13,7 @@ public Spiel dasSpiel;
 
 
     public void main(String[] args) throws IOException{
+        dasSpiel=new Spiel(10,10,true);
         ServerSocket ss = new ServerSocket(420);
         System.out.println("Waiting for client ...");
         Socket s = ss.accept();
@@ -25,100 +27,115 @@ public Spiel dasSpiel;
         String nachricht="";
         int sCount = 0;
 
+        int lx,ly;
+        lx=ly=-1;
         while(true)
         {
-            if(sCount == 0)
-            antwort = tIn.readLine();
+            if(!antwort.contains("ready") && !antwort.contains("shot")&& !antwort.contains("next")&& !antwort.contains("answer")){
+                if(nachricht.contains("next") && antwort.contains("answer 0")){
 
-            if(nachricht.equals("exit"))
-                break;
+                }else{
+                    antwort = tIn.readLine();
+                }
+            }
 
-            if(nachricht.contains("size"))
-            {
-                String sizeVariablen = nachricht.substring(5);
-                String sizeX = "";
-                String sizeY = "";
-                int l = 0;
-                l =nachricht.length();
-                switch(l)
+
+            if(antwort.contains("size") || antwort.equals("exit") || antwort.contains("ships") ){
+                if(antwort.equals("exit"))
+                    break;
+                else if(antwort.contains("size"))
                 {
-                    case 7: sizeX = sizeVariablen.substring(0, 1);
+                    String sizeVariablen = antwort.substring(5);
+                    String sizeX = "";
+                    String sizeY = "";
+                    int l = 0;
+                    l =antwort.length();
+                    if(l<=8) {
+                        sizeX = sizeVariablen.substring(0, 1);
                         sizeY = sizeVariablen.substring(2);
-                        break;
-                    case 8: sizeX = sizeVariablen.substring(0, 2);
-                        sizeY = sizeVariablen.substring(3, 4);
-                        break;
+
+                    }else{
+                        sizeX = sizeVariablen.substring(0, 2);
+                        sizeY = sizeVariablen.substring(3);
+                    }
+                    Methods.size(sizeX, sizeY,dasSpiel);
                 }
-
-                antwort = size(sizeX, sizeY);
-            }
-
-            if(nachricht.contains("ships"))
-            {
-                String shipsAnzML = nachricht.substring(6);
-                String shipsAnz = shipsAnzML.replace(" ", "");
-                int l = shipsAnz.length();
-                char[] shipsArray = new char[l];
-                shipsArray = shipsAnz.toCharArray();
-
-                antwort = ships(shipsArray);
-            }
-
-            if(nachricht.contains("shot"))
-            {
-                String shotKoordinaten = nachricht.substring(5);
-                String kordX = "";
-                String kordY = "";
-                int tr = 0;
-                int l = 0;
-                l = nachricht.length();
-                switch (l)
+                else if(antwort.contains("ships"))
                 {
-                    case 7: kordX = shotKoordinaten.substring(0, 1);
-                        kordY = shotKoordinaten.substring(2);
+                    String shipsAnzML = antwort.substring(6);
+                    String[] shipsAnz = shipsAnzML.split(" ");
+
+                    Methods.ships(shipsAnz,dasSpiel);
+                    System.out.print("Zu Client: " + antwort + "\n");
+                    out.write(String.format("%s%n", antwort));
+                    out.flush();
+
+                    nachricht = in.readLine();
+                    System.out.println("Von Client: " + nachricht);
+                    if(!nachricht.contains("done"))
                         break;
-                    case 8: tr = shotKoordinaten.indexOf(" ");
-                        switch(tr)
-                        {
-                            case 1: kordX = shotKoordinaten.substring(0, 1);
-                                kordY = shotKoordinaten.substring(2, 3);
-                                break;
-                            case 2: kordX = shotKoordinaten.substring(0, 2);
-                                kordY = shotKoordinaten.substring(3);
-                                break;
-                            case -1: //Falsche Eingabe
-                                break;
-                        }
-                        break;
-                    case 9: kordX = shotKoordinaten.substring(0, 2);
-                        kordY = shotKoordinaten.substring(3, 4);
-                        break;
+                    dasSpiel.starteSpiel(1);
+                    antwort="ready";
                 }
-                antwort = shot(kordX, kordY);
+
+            }else{
+                if(nachricht.contains("shot"))
+                {
+                    String shotKoordinaten = nachricht.substring(5);
+                    String kordX = "";
+                    String kordY = "";
+                    int tr = 0;
+                    int l = 0;
+                    l = nachricht.length();
+                    switch (l)
+                    {
+                        case 7: kordX = shotKoordinaten.substring(0, 1);
+                            kordY = shotKoordinaten.substring(2);
+                            break;
+                        case 8: tr = shotKoordinaten.indexOf(" ");
+                            switch(tr)
+                            {
+                                case 1: kordX = shotKoordinaten.substring(0, 1);
+                                    kordY = shotKoordinaten.substring(2, 3);
+                                    break;
+                                case 2: kordX = shotKoordinaten.substring(0, 2);
+                                    kordY = shotKoordinaten.substring(3);
+                                    break;
+                                case -1: //Falsche Eingabe
+                                    break;
+                            }
+                            break;
+                        case 9: kordX = shotKoordinaten.substring(0, 2);
+                            kordY = shotKoordinaten.substring(3, 4);
+                            break;
+                    }
+                    antwort = Methods.shot(kordX, kordY,dasSpiel);
+                }
+
+                if(nachricht.contains("next")||nachricht.contains("ready") || nachricht.contains("answer 1") || nachricht.contains("answer 2")){
+                    if(nachricht.contains("answer 1") || nachricht.contains("answer 2")){
+                        boolean versenkt=false;
+                        if(nachricht.contains("answer 2"))
+                            versenkt=true;
+                        dasSpiel.shoot(lx,ly,1,1,versenkt);
+                        if(dasSpiel.isOver())
+                            break;
+                    }
+                    logicOUTput.printFeld(dasSpiel.getFeld(),true);
+                    System.out.println("x&y to shoot: ");
+                    lx=Integer.parseInt(tIn.readLine());
+                    ly=Integer.parseInt(tIn.readLine());
+                    antwort="shot "+lx+" "+ly;
+                }
+                else if(nachricht.contains("answer 0")){
+                    dasSpiel.shoot(lx,ly,1,0,false);
+                    logicOUTput.printFeld(dasSpiel.getFeld(),true);
+                    antwort="next";
+                }
             }
 
-            //if(nachricht.equals("answer 0") || nachricht.equals("answer 1") || nachricht.equals("answer 2"))
-            //{
-            //    switch(nachricht)
-            //    {
-            //        case "answer 0": antwort = "next";
-            //            break;
-            //        case "answer 1": antwort = tIn.readLine();
-            //            break;
-            //        case "answer 2": antwort = tIn.readLine();
-            //            break;
-            //    }
-            //}
 
-            if(nachricht.equals("next"))
-            {
-                antwort = tIn.readLine();
-            }
 
-            if(nachricht.equals("done"))
-            {
-                antwort = tIn.readLine();
-            }
 
             System.out.print("Zu Client: " + antwort + "\n");
             out.write(String.format("%s%n", antwort));
@@ -126,34 +143,17 @@ public Spiel dasSpiel;
 
             nachricht = in.readLine();
             System.out.println("Von Client: " + nachricht);
-
+            if(nachricht==null)
+                break;
             sCount++;
         }
 
         s.close();
-        System.out.println("Connection closed!");
+        System.out.println("Connection closed! "+sCount);
     }
 
-    public String size(String sx, String sy)
-    {
-        int x = Integer.parseInt(sx);
-        int y = Integer.parseInt(sy);
-        dasSpiel.setSize(x, y);
-        return "next";
-    }
 
-    public String ships(char[] shipsArray)
-    {
 
-        return "done";
-    }
 
-    public String shot(String sx, String sy)
-    {
-        int x = Integer.parseInt(sx);
-        int y = Integer.parseInt(sy);
-        dasSpiel.shoot(x,y,0);
-        return "";
-    }
 
 }
