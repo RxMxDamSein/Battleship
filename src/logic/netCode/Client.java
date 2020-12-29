@@ -51,7 +51,7 @@ public class Client
                     sizeX = sizeVariablen.substring(0, 2);
                     sizeY = sizeVariablen.substring(3);
                 }
-
+                System.out.println("x: "+sizeX+"Y: "+sizeY);
                 antwort = Methods.size(sizeX, sizeY,dasSpiel);
             }
 

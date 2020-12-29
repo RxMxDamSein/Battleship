@@ -133,7 +133,7 @@ public class MAIN extends Application  {
         if(ip.isEmpty())
             ip="127.0.0.1";
 
-        new Grid_NET(window,x,y,scene_sizeS,ip,p,Server,Bot);
+        new Grid_NET(window,x,y,scene_sizeS,ip,p,Bot);
     }
 
     private void loadBvb(){

@@ -14,21 +14,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import logic.Bot;
 import logic.Spiel;
 import logic.logicOUTput;
 import logic.netCode.Server_Thread;
 
-import javax.sound.sampled.Port;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 
 /**
  * Klasse die das 2Spieler spielen Schiffeversenken Spiel erlaubt mit spicken!
  */
-public class Grid_NET{
+public class Grid_NET_Client {
     private Stage window;
     private Scene sceneOld;
     private Spiel dasSpiel;
@@ -47,7 +43,7 @@ public class Grid_NET{
     private int speed=250;
 
 
-    public Grid_NET(Stage window, Scene sceneOld, String id){
+    public Grid_NET_Client(Stage window, Scene sceneOld, String id){
         Spiel s=Spiel.load(id);
         init(window,s.getSizeX(), s.getSizeY(), sceneOld);
         dasSpiel=s;
@@ -66,7 +62,7 @@ public class Grid_NET{
      * @param y Spielbretthöhe
      * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
      */
-    public Grid_NET(Stage window, int x, int y, Scene sceneOld,String IP,int PORT,boolean Bot) throws IOException {
+    public Grid_NET_Client(Stage window, int x, int y, Scene sceneOld, String IP, int PORT, boolean Bot) throws IOException {
         this.Bot=Bot;
         sT=new Server_Thread(x,y,PORT);
         T=new Thread(sT);
