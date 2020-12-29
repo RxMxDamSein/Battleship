@@ -66,7 +66,7 @@ public class Grid_NET{
      * @param y Spielbretthöhe
      * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
      */
-    public Grid_NET(Stage window, int x, int y, Scene sceneOld,String IP,int PORT,boolean Bot) throws IOException {
+    public Grid_NET(Stage window, int x, int y, Scene sceneOld,int PORT,boolean Bot) throws IOException {
         this.Bot=Bot;
         sT=new Server_Thread(x,y,PORT);
         T=new Thread(sT);
@@ -180,6 +180,14 @@ public class Grid_NET{
     private void sceneZutuck(){
         if(nachrichtChecker!=null)
             nachrichtChecker.stop();
+        try {
+            if(sT.s!=null)
+                sT.s.close();
+            sT.ss.close();
+        } catch (IOException e) {
+            System.err.println("can not close Socket");
+            e.printStackTrace();
+        }
         window.setScene(sceneOld);
         window.setTitle("ENTER GRID SIZE");
     }
@@ -320,7 +328,7 @@ public class Grid_NET{
             ly=y;
             sentReceiveTRun("shot "+lx+" "+ly);
 
-        } else if(!dasSpiel.isStarted()){              //Schiff Hinzufügen!
+        } else if(!dasSpiel.isStarted() && s==0){              //Schiff Hinzufügen!
             if(selected){                     //altes Feld zurücksetzen
                 labels[s_old][x_old][y_old].setTextFill(paint_old);
                 if(s_old==s && x_old==x ){       //vertical ship!

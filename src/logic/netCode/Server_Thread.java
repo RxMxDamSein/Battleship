@@ -17,11 +17,12 @@ public class Server_Thread extends Thread
     private int port;
     private int x,y;
     public boolean wait;
+    public ServerSocket ss;
 
     @Override
     public void run() {
         super.run();
-        ServerSocket ss = null;
+        ss = null;
         try {
             ss = new ServerSocket(port);
             System.out.println("Waiting for client ...");
@@ -188,7 +189,7 @@ public class Server_Thread extends Thread
 
 
 
-    public void sendSocket(String antwort){
+    public  void sendSocket(String antwort){
         System.out.print("Zu Client: " + antwort + "\n");
         try {
             out.write(String.format("%s%n", antwort));
