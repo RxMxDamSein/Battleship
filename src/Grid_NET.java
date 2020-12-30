@@ -40,11 +40,12 @@ public class Grid_NET{
     private boolean Bot;
     private Server_Thread sT;
     private Thread T;
-    private String nachricht;
+    private String nachricht="";
     private int lx,ly;
-    private boolean shooting=false;
+    private boolean shooting=true;
     private Timeline nachrichtChecker;
     private int speed=250;
+    private Button buttonStart;
 
 
     public Grid_NET(Stage window, Scene sceneOld, String id){
@@ -95,7 +96,7 @@ public class Grid_NET{
 
         Button buttonZuruck=new Button("Zurück");
         buttonZuruck.setOnAction(e->sceneZutuck());
-        Button buttonStart=new Button("Start Shooting!");
+        buttonStart=new Button("Send Ships");
         buttonStart.setOnAction(e->buttonSpielStart());
 
         Button buttonSave=new Button("SAVE");
@@ -128,12 +129,24 @@ public class Grid_NET{
     private void gameOver(){
         lToShoot[dasSpiel.getAbschussSpieler()].setText("Verlierer!");
         lToShoot[(dasSpiel.getAbschussSpieler()==0)?1:0].setText("Sieger!");
-        try {
-            sT.s.close();
-        } catch (IOException e) {
-            System.err.println("can not close Socket");
-            e.printStackTrace();
-        }
+        Runnable runnable=()->{
+            try {
+                Thread.sleep(5000);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                sT.s.close();
+            } catch (IOException e) {
+                System.err.println("can not close Socket");
+                e.printStackTrace();
+            }
+
+        };
+        Thread z=new Thread(runnable);
+        z.start();
+
     }
 
     /**
@@ -154,7 +167,7 @@ public class Grid_NET{
 
         int[] ships=logic.Bot.getShipSizes(dasSpiel.schiffe);
         String antwort="ships";
-        for(int i=0;i<ships.length;i++){
+        for(int i=ships.length-1;i>=0;i--){
             antwort+=" "+ships[i];
         }
 
@@ -163,13 +176,78 @@ public class Grid_NET{
             setLabelAbschuss();
             if(dasSpiel.isOver())
                 gameOver();
-            try {
-                T.join();
-                sentReceiveTRun(antwort);
-            } catch (InterruptedException e) {
-                System.err.println("Socket won't join!");
-                e.printStackTrace();
+            //try {
+                //T.join();
+            sentReceiveTRun(antwort);
+            if(nachrichtChecker==null){
+                nachrichtChecker=new Timeline(new KeyFrame(Duration.millis(speed), e->{
+                    if(dasSpiel.isOver() /*|| b2.isFinOver()*/){
+                        nachrichtChecker.stop();
+                    }else {
+                        String nachricht=this.nachricht;
+                        this.nachricht="";
+                        if(nachricht.contains("next")||nachricht.contains("ready") || nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
+                            if (nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
+                                boolean versenkt = false;
+                                if (nachricht.contains("answer 2"))
+                                    versenkt = true;
+                                dasSpiel.shoot(lx, ly, 1, 1, versenkt);
+                                setLabelAbschuss();
+                                updatePlayerGrids();
+                                if(dasSpiel.isOver())
+                                    gameOver();
+                                shooting=false;
+                            }else if (nachricht.contains("ready")){
+                                shooting=false;
+                                buttonStart.setText("start shooting");
+                            }
+                        }else if(nachricht.contains("answer 0")){
+                            dasSpiel.shoot(lx,ly,1,0,false);
+                            setLabelAbschuss();
+                            updatePlayerGrids();
+                            if(dasSpiel.isOver())
+                                gameOver();
+                            if(srT.isAlive())
+                                System.err.println("WTF warum gibts denn srT?!");
+                            sentReceiveTRun("next");
+                            shooting=false;
+                        }else if(nachricht.contains("shot")){
+                            int x_ = Integer.parseInt(nachricht.split(" ")[1]);
+                            int y_ = Integer.parseInt(nachricht.split(" ")[2]);
+                            dasSpiel.shoot(x_,y_,0,0,false);
+                            setLabelAbschuss();
+                            updatePlayerGrids();
+                            if(dasSpiel.isOver())
+                                gameOver();
+                            String z="";
+                            System.out.println("("+x_+"|"+y_+") "+dasSpiel.getFeld()[0][x_][y_]);
+                            switch (dasSpiel.getFeld()[0][x_][y_]){
+                                case 2:
+                                    if(dasSpiel.istVersenkt()){
+                                        z="answer 2";
+                                    }else{
+                                        z= "answer 1";
+                                    }
+                                    break;
+                                default:
+                                    z= "answer 0";
+                                    break;
+                            }
+                            if(srT.isAlive())
+                                System.err.println("WTF warum gibts denn srT?!");
+                            sentReceiveTRun(z);
+                        } else if(nachricht.contains("done")){
+                            sentReceiveTRun("ready");
+                        }
+                    }
+                }));
+                nachrichtChecker.setCycleCount(Animation.INDEFINITE);
+                nachrichtChecker.play();
             }
+            //} catch (InterruptedException e) {
+            //    System.err.println("Socket won't join!");
+            //    e.printStackTrace();
+            //}
         }
     }
 
@@ -180,6 +258,9 @@ public class Grid_NET{
     private void sceneZutuck(){
         if(nachrichtChecker!=null)
             nachrichtChecker.stop();
+
+
+
         try {
             if(sT.s!=null)
                 sT.s.close();
@@ -260,66 +341,7 @@ public class Grid_NET{
         System.out.println("Clicked Label "+s+": "+x+" | "+y );
         if(dasSpiel.isStarted() && !dasSpiel.isOver() && s==1 && dasSpiel.getAbschussSpieler()==1 && !shooting){
             shooting=true;
-            if(nachrichtChecker==null){
-                nachrichtChecker=new Timeline(new KeyFrame(Duration.millis(speed), e->{
-                    if(dasSpiel.isOver() /*|| b2.isFinOver()*/){
-                        nachrichtChecker.stop();
-                    }else {
-                        String nachricht=this.nachricht;
-                        this.nachricht="";
-                        if(nachricht.contains("next")||nachricht.contains("ready") || nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
-                            if (nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
-                                boolean versenkt = false;
-                                if (nachricht.contains("answer 2"))
-                                    versenkt = true;
-                                dasSpiel.shoot(lx, ly, 1, 1, versenkt);
-                                setLabelAbschuss();
-                                updatePlayerGrids();
-                                if(dasSpiel.isOver())
-                                    gameOver();
-                                shooting=false;
-                            }
-                        }else if(nachricht.contains("answer 0")){
-                            dasSpiel.shoot(lx,ly,1,0,false);
-                            setLabelAbschuss();
-                            updatePlayerGrids();
-                            if(dasSpiel.isOver())
-                                gameOver();
-                            if(srT.isAlive())
-                                System.err.println("WTF warum gibts denn srT?!");
-                            sentReceiveTRun("next");
-                            shooting=false;
-                        }else if(nachricht.contains("shot")){
-                            int x_ = Integer.parseInt(nachricht.split(" ")[1]);
-                            int y_ = Integer.parseInt(nachricht.split(" ")[2]);
-                            dasSpiel.shoot(x_,y_,0,0,false);
-                            setLabelAbschuss();
-                            updatePlayerGrids();
-                            if(dasSpiel.isOver())
-                                gameOver();
-                            String z="";
-                            System.out.println("("+x_+"|"+y_+") "+dasSpiel.getFeld()[0][x_][y_]);
-                            switch (dasSpiel.getFeld()[0][x_][y_]){
-                                case 2:
-                                    if(dasSpiel.istVersenkt()){
-                                        z="answer 2";
-                                    }else{
-                                        z= "answer 1";
-                                    }
-                                    break;
-                                default:
-                                    z= "answer 0";
-                                    break;
-                            }
-                            if(srT.isAlive())
-                                System.err.println("WTF warum gibts denn srT?!");
-                            sentReceiveTRun(z);
-                        }
-                    }
-                }));
-                nachrichtChecker.setCycleCount(Animation.INDEFINITE);
-                nachrichtChecker.play();
-            }
+
 
 
             logicOUTput.printFeld(dasSpiel.getFeld(),true);

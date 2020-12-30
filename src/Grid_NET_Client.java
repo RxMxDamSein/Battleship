@@ -45,6 +45,7 @@ public class Grid_NET_Client {
     private BufferedReader in;
     private Writer out;
     private int[] ships;
+    private Button buttonStart;
 
 
 
@@ -80,13 +81,73 @@ public class Grid_NET_Client {
             }else {
                 String nachricht=this.nachricht;
                 this.nachricht="";
-                if(nachricht.contains("ships")){
+                if(nachricht.contains("next") || nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
+                    if (nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
+                        boolean versenkt = false;
+                        if (nachricht.contains("answer 2"))
+                            versenkt = true;
+                        dasSpiel.shoot(lx, ly, 1, 1, versenkt);
+                        setLabelAbschuss();
+                        updatePlayerGrids();
+                        if(dasSpiel.isOver())
+                            gameOver();
+                        shooting=false;
+                    }else if (nachricht.contains("ready")){
+                        shooting=false;
+                        buttonStart.setText("start shooting");
+                    }
+                }else if(nachricht.contains("answer 0")){
+                    dasSpiel.shoot(lx,ly,1,0,false);
+                    setLabelAbschuss();
+                    updatePlayerGrids();
+                    if(dasSpiel.isOver())
+                        gameOver();
+                    if(srT.isAlive())
+                        System.err.println("WTF warum gibts denn srT?!");
+                    sentReceiveTRun("next");
+                    shooting=false;
+                }else if(nachricht.contains("shot")){
+                    int x_ = Integer.parseInt(nachricht.split(" ")[1]);
+                    int y_ = Integer.parseInt(nachricht.split(" ")[2]);
+                    dasSpiel.shoot(x_,y_,0,0,false);
+                    setLabelAbschuss();
+                    updatePlayerGrids();
+                    if(dasSpiel.isOver())
+                        gameOver();
+                    String z="";
+                    System.out.println("("+x_+"|"+y_+") "+dasSpiel.getFeld()[0][x_][y_]);
+                    switch (dasSpiel.getFeld()[0][x_][y_]){
+                        case 2:
+                            if(dasSpiel.istVersenkt()){
+                                z="answer 2";
+                            }else{
+                                z= "answer 1";
+                            }
+                            break;
+                        default:
+                            z= "answer 0";
+                            break;
+                    }
+                    if(srT.isAlive())
+                        System.err.println("WTF warum gibts denn srT?!");
+                    sentReceiveTRun(z);
+                }
+                else if(nachricht.contains("ships")){
                     String[] z=nachricht.split(" ");
                     int[] s=new int[z.length-1];
                     for(int i=0;i<z.length-1;i++){
                         s[i]=Integer.parseInt(z[i+1]);
                     }
                     ships=s;
+                } else if(nachricht.contains("ready")){
+                    if( dasSpiel.starteSpiel(0) ){
+
+                        setLabelAbschuss();
+                        if(dasSpiel.isOver())
+                            gameOver();
+                        sentReceiveTRun("ready");
+                        buttonStart.setText("start shooting");
+                    }
                 }
 
             }
@@ -117,7 +178,7 @@ public class Grid_NET_Client {
 
         Button buttonZuruck=new Button("Zurück");
         buttonZuruck.setOnAction(e->sceneZutuck());
-        Button buttonStart=new Button("Start Shooting!");
+        buttonStart=new Button("Bestätige Schiffe");
         buttonStart.setOnAction(e->buttonSpielStart());
 
         Button buttonSave=new Button("SAVE");
@@ -150,12 +211,24 @@ public class Grid_NET_Client {
     private void gameOver(){
         lToShoot[dasSpiel.getAbschussSpieler()].setText("Verlierer!");
         lToShoot[(dasSpiel.getAbschussSpieler()==0)?1:0].setText("Sieger!");
-        try {
-            s.close();
-        } catch (IOException e) {
-            System.err.println("can not close Socket");
-            e.printStackTrace();
-        }
+        Runnable runnable=()->{
+            try {
+                Thread.sleep(5000);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                //srT.join();
+                s.close();
+            } catch (IOException e) {
+                System.err.println("can not close Socket");
+                e.printStackTrace();
+            }
+
+        };
+        Thread z=new Thread(runnable);
+        z.start();
     }
 
     /**
@@ -173,16 +246,12 @@ public class Grid_NET_Client {
     private void buttonSpielStart(){
         if(dasSpiel.isStarted())
             return;
+        for(int i=0;i<ships.length ;i++)
+            if(ships[i]>-1)
+                return;
 
+        sentReceiveTRun("done");
 
-
-        if(dasSpiel.starteSpiel(1)){
-
-            setLabelAbschuss();
-            if(dasSpiel.isOver())
-                gameOver();
-
-        }
     }
 
     /**
@@ -281,8 +350,15 @@ public class Grid_NET_Client {
             if(selected){                     //altes Feld zurücksetzen
                 labels[s_old][x_old][y_old].setTextFill(paint_old);
                 if(s_old==s && x_old==x ){       //vertical ship!
-                    dasSpiel.addShip(x_old,(y_old<y)?y_old:y,false,(y_old-y<1)?y-y_old+1:y_old-y+1,s);
-                        selectDone=true;
+                    int len=(y_old-y<1)?y-y_old+1:y_old-y+1;
+                    int idx=inShips(len);
+                    if(idx>-1){
+                        if(dasSpiel.addShip(x_old,(y_old<y)?y_old:y,false,(y_old-y<1)?y-y_old+1:y_old-y+1,s)){
+                            ships[idx]=-1;
+                        }
+                    }
+
+                    selectDone=true;
                 }else if(s_old==s && y_old==y){ //horizontales Schiff
                     int len=(x_old-x<1)?x-x_old+1:x_old-x+1;
                     int idx=inShips(len);
@@ -310,6 +386,8 @@ public class Grid_NET_Client {
         }
     }
     private int inShips(int len){
+        if(ships==null)
+            return -1;
         for(int i=0;i<ships.length;i++)
             if(len==ships[i])
                 return i;
