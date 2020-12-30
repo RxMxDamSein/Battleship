@@ -15,20 +15,18 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.Bot;
+import logic.Bot_lvl_2;
 import logic.Spiel;
 import logic.logicOUTput;
 import logic.netCode.Server_Thread;
 
-import javax.sound.sampled.Port;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 
 /**
  * Klasse die das 2Spieler spielen Schiffeversenken Spiel erlaubt mit spicken!
  */
-public class Grid_NET{
+public class Grid_NET_B {
     private Stage window;
     private Scene sceneOld;
     private Spiel dasSpiel;
@@ -45,9 +43,10 @@ public class Grid_NET{
     private Timeline nachrichtChecker;
     private int speed=250;
     private Button buttonStart;
+    private Bot derBot;
 
 
-    public Grid_NET(Stage window, Scene sceneOld, String id){
+    public Grid_NET_B(Stage window, Scene sceneOld, String id){
         Spiel s=Spiel.load(id);
         init(window,s.getSizeX(), s.getSizeY(), sceneOld);
         dasSpiel=s;
@@ -66,8 +65,12 @@ public class Grid_NET{
      * @param y Spielbretthöhe
      * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
      */
-    public Grid_NET(Stage window, int x, int y, Scene sceneOld,int PORT) throws IOException {
+    public Grid_NET_B(Stage window, int x, int y, Scene sceneOld, int PORT) throws IOException {
         sT=new Server_Thread(x,y,PORT);
+        derBot=new Bot_lvl_2(x,y);
+        sT.dasSpiel=derBot.dasSpiel;
+        int[] add=Bot.calcships(x,y);
+        derBot.shipSizesToAdd(add);
         T=new Thread(sT);
         T.start();
         init(window,x,y,sceneOld);
@@ -87,6 +90,7 @@ public class Grid_NET{
         GridPane.setConstraints(lToShoot[1],0,y,x+1,y,HPos.CENTER,VPos.CENTER);
         this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
+
         this.dasSpiel=sT.dasSpiel;
         this.feld=dasSpiel.getFeld();
         this.labels=new Label[feld.length][feld[0].length][feld[0][0].length];
@@ -156,6 +160,13 @@ public class Grid_NET{
         lToShoot[(s==1)?0:1].setText("Spieler "+(((s==1)?0:1)+1));
     }
 
+
+    private void botschuss(){
+        int[] xy=derBot.getSchuss();
+        lx=xy[0];
+        ly=xy[1];
+        sentReceiveTRun("shot "+lx+" "+ly);
+    }
     /**
      * Geht vom Schiff hinzufügen Modus in Spiel(Shoot) Modus über
      */
@@ -190,14 +201,17 @@ public class Grid_NET{
                                 if (nachricht.contains("answer 2"))
                                     versenkt = true;
                                 dasSpiel.shoot(lx, ly, 1, 1, versenkt);
+                                derBot.setSchussFeld(lx,ly,2,versenkt);
                                 setLabelAbschuss();
                                 updatePlayerGrids();
                                 if(dasSpiel.isOver())
                                     gameOver();
-                                shooting=false;
-                            }else if (nachricht.contains("ready")){
-                                shooting=false;
+                                botschuss();
+                            }else if (nachricht.contains("ready") ){
                                 buttonStart.setText("start shooting");
+                                botschuss();
+                            }else if(nachricht.contains("next")){
+                                botschuss();
                             }
                         }else if(nachricht.contains("answer 0")){
                             dasSpiel.shoot(lx,ly,1,0,false);
@@ -208,7 +222,7 @@ public class Grid_NET{
                             if(srT.isAlive())
                                 System.err.println("WTF warum gibts denn srT?!");
                             sentReceiveTRun("next");
-                            shooting=false;
+                            derBot.setSchussFeld(lx,ly,3,false);
                         }else if(nachricht.contains("shot")){
                             int x_ = Integer.parseInt(nachricht.split(" ")[1]);
                             int y_ = Integer.parseInt(nachricht.split(" ")[2]);
@@ -338,7 +352,7 @@ public class Grid_NET{
      */
     private void labelClick(int s,int x,int y){
         System.out.println("Clicked Label "+s+": "+x+" | "+y );
-        if(dasSpiel.isStarted() && !dasSpiel.isOver() && s==1 && dasSpiel.getAbschussSpieler()==1 && !shooting){
+        /*if(dasSpiel.isStarted() && !dasSpiel.isOver() && s==1 && dasSpiel.getAbschussSpieler()==1 && !shooting){
             shooting=true;
 
 
@@ -371,7 +385,7 @@ public class Grid_NET{
                 //logicOUTput.printFeld(feld,true);
                 selected=selectDone=false;
             }
-        }
+        }*/
     }
 
     private void sentReceiveTRun(String antwort){
