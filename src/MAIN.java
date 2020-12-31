@@ -26,9 +26,12 @@ public class MAIN extends Application  {
     TextField inputFieldY;
     TextField inputIP;
     TextField inputPort;
+    TextField inputID;
     Button buttonServer;
+    Button buttonServer_Load;
     Button buttonKlient;
     Button buttonServer_Bot;
+    Button buttonServer_Bot_Load;
     Button buttonKlient_Bot;
     Button buttonSubmit;
     Button buttonSubmitBot;
@@ -80,6 +83,8 @@ public class MAIN extends Application  {
         inputIP.setPromptText("127.0.0.1");
         inputPort=new TextField();
         inputPort.setPromptText("420");
+        inputID=new TextField();
+        inputID.setPromptText("195858270");
         buttonSubmit=new Button("SUBMIT 2P");
         buttonSubmit.setOnAction(e->submitFunc());
         buttonSubmitBot=new Button("BOT");
@@ -92,6 +97,10 @@ public class MAIN extends Application  {
         buttonBvB.setOnAction(e->submitBvb());
         buttonLoadBvB=new Button(("LOAD BvB"));
         buttonLoadBvB.setOnAction(e->loadBvb());
+        buttonServer_Load=new Button("LOAD HOST");
+        buttonServer_Load.setOnAction(e->loadNET(false));
+        buttonServer_Bot_Load=new Button("LOAD BOT HOST");
+        buttonServer_Bot_Load.setOnAction(e->loadNET(true));
 
         buttonServer=new Button("Host");
         buttonServer.setOnAction(e-> {
@@ -146,7 +155,9 @@ public class MAIN extends Application  {
         hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot,buttonLoadRDMBot,buttonBvB,buttonLoadBvB,buttonNightmare,buttonLoadNightmare);
         HBox hBox_IP=new HBox(5);
         hBox_IP.getChildren().addAll(buttonServer,buttonKlient,inputIP,inputPort,buttonServer_Bot,buttonKlient_Bot);
-        vBox.getChildren().addAll(inputFieldX,inputFieldY,hBox,hBox_IP);
+        HBox hBox_load_Host=new HBox(5);
+        hBox_load_Host.getChildren().addAll(buttonServer_Load,buttonServer_Bot_Load,inputID);
+        vBox.getChildren().addAll(inputFieldX,inputFieldY,hBox,hBox_IP,hBox_load_Host);
 
 
 
@@ -154,6 +165,21 @@ public class MAIN extends Application  {
         scene_sizeS=new Scene(vBox);
         window.setScene(scene_sizeS);
         window.show();
+    }
+
+    private void loadNET(boolean Bot){
+        String port=inputPort.getText();
+        int p=420;
+        try{
+            p=Integer.parseInt(port);
+        }catch (NumberFormatException e){
+
+        }
+        if(Bot){
+            new Grid_NET_B(window,scene_sizeS,p,inputID.getText());
+        }else {
+            new Grid_NET(window,scene_sizeS,p,inputID.getText());
+        }
     }
 
     private void submitNET(boolean Server,boolean Bot) throws IOException {

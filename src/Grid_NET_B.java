@@ -46,7 +46,7 @@ public class Grid_NET_B {
     private Bot derBot;
 
 
-    public Grid_NET_B(Stage window, Scene sceneOld, String id){
+    public Grid_NET_B(Stage window, Scene sceneOld, int PORT, String id){
         Spiel s=Spiel.load(id);
         init(window,s.getSizeX(), s.getSizeY(), sceneOld);
         dasSpiel=s;

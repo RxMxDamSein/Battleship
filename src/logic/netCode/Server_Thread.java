@@ -11,8 +11,8 @@ import java.net.Socket;
 public class Server_Thread extends Thread
 {
     public Spiel dasSpiel;
-    private BufferedReader in;
-    private Writer out;
+    public BufferedReader in;
+    public Writer out;
     public Socket s;
     private int port;
     private int x,y;

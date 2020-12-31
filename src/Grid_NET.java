@@ -18,11 +18,16 @@ import logic.Bot;
 import logic.Spiel;
 import logic.logicOUTput;
 import logic.netCode.Server_Thread;
+import logic.save.SAFE_SOME;
 
 import javax.sound.sampled.Port;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 
 
 /**
@@ -45,13 +50,50 @@ public class Grid_NET{
     private Timeline nachrichtChecker;
     private int speed=250;
     private Button buttonStart;
+    private Button buttonSave;
 
 
-    public Grid_NET(Stage window, Scene sceneOld, String id){
-        Spiel s=Spiel.load(id);
-        init(window,s.getSizeX(), s.getSizeY(), sceneOld);
+    public Grid_NET(Stage window, Scene sceneOld,int PORT, String id){
+        SAFE_SOME safe_some=SAFE_SOME.load(id);
+        if(safe_some.game!=4){
+            System.err.println("you loaded not a ServerHost game!");
+            return;
+        }
+        Spiel s=safe_some.spiele[0];
         dasSpiel=s;
-        feld=s.getFeld();
+        sT=new Server_Thread(s.getSizeX(), s.getSizeY(),PORT);
+        Runnable runnable= () -> {
+            ServerSocket ss = null;
+            try {
+                ss = new ServerSocket(PORT);
+                System.out.println("Waiting for client ...");
+                sT.s = ss.accept();
+                System.out.println("Connection established");
+
+            } catch (IOException e) {
+                System.err.println("Can not create Socket!");
+                e.printStackTrace();
+                sceneZutuck();
+            }
+            try {
+                sT.in = new BufferedReader(new InputStreamReader(sT.s.getInputStream()));
+                sT.out = new OutputStreamWriter(sT.s.getOutputStream());
+            } catch (IOException e) {
+                System.err.println("can not create IO Stream!");
+            }
+            lx = ly = -1;
+            sT.sendSocket("load "+id);
+            if(!sT.receiveSocket().contains("done")){
+                System.err.println("Klient spricht wirres Zeug");
+            }
+            sT.sendSocket("ready");
+            nachricht=sT.receiveSocket();
+            initNChecker();
+        };
+        Thread t=new Thread(runnable);
+        t.start();
+        init(window,s.getSizeX(), s.getSizeY(), sceneOld,s);
+        dasSpiel=s;
         updatePlayerGrids();
         if(dasSpiel.isStarted() && !dasSpiel.isOver()) {
             setLabelAbschuss();
@@ -70,10 +112,10 @@ public class Grid_NET{
         sT=new Server_Thread(x,y,PORT);
         T=new Thread(sT);
         T.start();
-        init(window,x,y,sceneOld);
+        init(window,x,y,sceneOld,sT.dasSpiel);
     }
 
-    private void init(Stage window, int x, int y, Scene sceneOld){
+    private void init(Stage window, int x, int y, Scene sceneOld,Spiel s){
         lx=ly=-1;
         this.window=window;
         this.sceneOld=sceneOld;
@@ -87,7 +129,9 @@ public class Grid_NET{
         GridPane.setConstraints(lToShoot[1],0,y,x+1,y,HPos.CENTER,VPos.CENTER);
         this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
-        this.dasSpiel=sT.dasSpiel;
+
+        this.dasSpiel=s;
+
         this.feld=dasSpiel.getFeld();
         this.labels=new Label[feld.length][feld[0].length][feld[0][0].length];
         initPlayerGrids();
@@ -97,7 +141,7 @@ public class Grid_NET{
         buttonStart=new Button("Send Ships");
         buttonStart.setOnAction(e->buttonSpielStart());
 
-        Button buttonSave=new Button("SAVE");
+        buttonSave=new Button("SAVE");
         buttonSave.setOnAction(e->buttonSave());
 
         HBox hBox=new HBox(10);
@@ -115,8 +159,14 @@ public class Grid_NET{
     }
 
     private void buttonSave(){
-
-
+        if(dasSpiel.getAbschussSpieler()==1){
+            String saveID=""+this.hashCode();
+            sentReceiveTRun("save "+saveID);
+            SAFE_SOME safe_some=new SAFE_SOME(null,new Spiel[]{dasSpiel},4,saveID);
+            buttonSave.setText("SAVED!");
+        }else {
+            buttonSave.setText("SAVE on your turn!");
+        }
 
     }
 
@@ -177,75 +227,85 @@ public class Grid_NET{
             //try {
                 //T.join();
             sentReceiveTRun(antwort);
-            if(nachrichtChecker==null){
-                nachrichtChecker=new Timeline(new KeyFrame(Duration.millis(speed), e->{
-                    if(dasSpiel.isOver() /*|| b2.isFinOver()*/){
-                        nachrichtChecker.stop();
-                    }else {
-                        String nachricht=this.nachricht;
-                        this.nachricht="";
-                        if(nachricht.contains("next")||nachricht.contains("ready") || nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
-                            if (nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
-                                boolean versenkt = false;
-                                if (nachricht.contains("answer 2"))
-                                    versenkt = true;
-                                dasSpiel.shoot(lx, ly, 1, 1, versenkt);
-                                setLabelAbschuss();
-                                updatePlayerGrids();
-                                if(dasSpiel.isOver())
-                                    gameOver();
-                                shooting=false;
-                            }else if (nachricht.contains("ready")){
-                                shooting=false;
-                                buttonStart.setText("start shooting");
-                            }
-                        }else if(nachricht.contains("answer 0")){
-                            dasSpiel.shoot(lx,ly,1,0,false);
-                            setLabelAbschuss();
-                            updatePlayerGrids();
-                            if(dasSpiel.isOver())
-                                gameOver();
-                            if(srT.isAlive())
-                                System.err.println("WTF warum gibts denn srT?!");
-                            sentReceiveTRun("next");
-                            shooting=false;
-                        }else if(nachricht.contains("shot")){
-                            int x_ = Integer.parseInt(nachricht.split(" ")[1]);
-                            int y_ = Integer.parseInt(nachricht.split(" ")[2]);
-                            dasSpiel.shoot(x_,y_,0,0,false);
-                            setLabelAbschuss();
-                            updatePlayerGrids();
-                            if(dasSpiel.isOver())
-                                gameOver();
-                            String z="";
-                            System.out.println("("+x_+"|"+y_+") "+dasSpiel.getFeld()[0][x_][y_]);
-                            switch (dasSpiel.getFeld()[0][x_][y_]){
-                                case 2:
-                                    if(dasSpiel.istVersenkt()){
-                                        z="answer 2";
-                                    }else{
-                                        z= "answer 1";
-                                    }
-                                    break;
-                                default:
-                                    z= "answer 0";
-                                    break;
-                            }
-                            if(srT.isAlive())
-                                System.err.println("WTF warum gibts denn srT?!");
-                            sentReceiveTRun(z);
-                        } else if(nachricht.contains("done")){
-                            sentReceiveTRun("ready");
-                        }
-                    }
-                }));
-                nachrichtChecker.setCycleCount(Animation.INDEFINITE);
-                nachrichtChecker.play();
-            }
+            initNChecker();
             //} catch (InterruptedException e) {
             //    System.err.println("Socket won't join!");
             //    e.printStackTrace();
             //}
+        }
+    }
+
+    private void initNChecker(){
+        if(nachrichtChecker==null){
+            nachrichtChecker=new Timeline(new KeyFrame(Duration.millis(speed), e->{
+                if(dasSpiel.isOver() /*|| b2.isFinOver()*/){
+                    nachrichtChecker.stop();
+                }else {
+                    String nachricht=this.nachricht;
+                    this.nachricht="";
+                    if(nachricht.contains("next")||nachricht.contains("ready") || nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
+                        if (nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
+                            boolean versenkt = false;
+                            if (nachricht.contains("answer 2"))
+                                versenkt = true;
+                            dasSpiel.shoot(lx, ly, 1, 1, versenkt);
+                            setLabelAbschuss();
+                            updatePlayerGrids();
+                            if(dasSpiel.isOver())
+                                gameOver();
+                            shooting=false;
+                        }else if (nachricht.contains("ready")){
+                            shooting=false;
+                            buttonStart.setText("start shooting");
+                        }
+                    }else if(nachricht.contains("answer 0")){
+                        dasSpiel.shoot(lx,ly,1,0,false);
+                        setLabelAbschuss();
+                        updatePlayerGrids();
+                        if(dasSpiel.isOver())
+                            gameOver();
+                        if(srT.isAlive())
+                            System.err.println("WTF warum gibts denn srT?!");
+                        sentReceiveTRun("next");
+                        shooting=false;
+                    }else if(nachricht.contains("shot")){
+                        int x_ = Integer.parseInt(nachricht.split(" ")[1]);
+                        int y_ = Integer.parseInt(nachricht.split(" ")[2]);
+                        dasSpiel.shoot(x_,y_,0,0,false);
+                        setLabelAbschuss();
+                        updatePlayerGrids();
+                        if(dasSpiel.isOver())
+                            gameOver();
+                        String z="";
+                        System.out.println("("+x_+"|"+y_+") "+dasSpiel.getFeld()[0][x_][y_]);
+                        switch (dasSpiel.getFeld()[0][x_][y_]){
+                            case 2:
+                                if(dasSpiel.istVersenkt()){
+                                    z="answer 2";
+                                }else{
+                                    z= "answer 1";
+                                }
+                                break;
+                            default:
+                                z= "answer 0";
+                                break;
+                        }
+                        if(srT.isAlive())
+                            System.err.println("WTF warum gibts denn srT?!");
+                        sentReceiveTRun(z);
+                    } else if(nachricht.contains("done")){
+                        sentReceiveTRun("ready");
+                    }
+                    else if(nachricht.contains("save")){
+                        String saveID=""+nachricht.split(" ")[1];
+
+                        SAFE_SOME safe_some=new SAFE_SOME(null,new Spiel[]{dasSpiel},4,saveID);
+                        sT.sendSocket("done");
+                    }
+                }
+            }));
+            nachrichtChecker.setCycleCount(Animation.INDEFINITE);
+            nachrichtChecker.play();
         }
     }
 
@@ -287,6 +347,21 @@ public class Grid_NET{
                     labels[s][i][j].setOnMouseClicked(e->labelClick(sz,iz,jz));
                     GridPane.setConstraints(labels[s][i][j],i,j,1,1,HPos.CENTER,VPos.CENTER);
                     gridPanes[s].getChildren().add(labels[s][i][j]);
+                    switch (feld[s][i][j]){
+                        default:
+                            labels[s][i][j].setTextFill(Color.web("grey"));
+                            break;
+                        case 1:
+                            labels[s][i][j].setTextFill(Color.web("black"));
+                            break;
+                        case 2:
+                            labels[s][i][j].setTextFill(Color.web("red"));
+                            break;
+                        case 3:
+                            labels[s][i][j].setTextFill(Color.web("blue"));
+                            break;
+
+                    }
                 }
             }
         }

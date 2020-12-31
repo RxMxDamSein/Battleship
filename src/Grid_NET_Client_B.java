@@ -15,6 +15,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.*;
+import logic.save.SAFE_SOME;
 
 import java.io.*;
 import java.net.Socket;
@@ -41,21 +42,11 @@ public class Grid_NET_Client_B {
     private Writer out;
     private Button buttonStart;
     private Bot derBot;
+    private Button buttonSave;
 
 
 
-    public Grid_NET_Client_B(Stage window, Scene sceneOld, String id){
-        Spiel s=Spiel.load(id);
-        init(window,s.getSizeX(), s.getSizeY(), sceneOld);
-        dasSpiel=s;
-        feld=s.getFeld();
-        updatePlayerGrids();
-        if(dasSpiel.isStarted() && !dasSpiel.isOver()) {
-            setLabelAbschuss();
-        }else if(dasSpiel.isOver()){
-            gameOver();
-        }
-    }
+
 
     private void botschuss(){
         int[] xy=derBot.getSchuss();
@@ -74,11 +65,35 @@ public class Grid_NET_Client_B {
         in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         out = new OutputStreamWriter(s.getOutputStream());
         nachricht=receiveSocket();
-        int x=Integer.parseInt(nachricht.split(" ")[1]);
-        int y=Integer.parseInt(nachricht.split(" ")[2]);
-        derBot= new Bot_lvl_2(x,y);
-        init(window,x,y,sceneOld);
-        sentReceiveTRun("next");
+        if(nachricht.contains("load")){
+            SAFE_SOME safe_some=SAFE_SOME.load(nachricht.split(" ")[1]+"C");
+            if(safe_some.game!=7){
+                System.err.println("you loaded not a ClientBot game!");
+                return;
+            }
+            Runnable runnable=() -> {
+                sendSocket("done");
+                if(!receiveSocket().contains("ready")){
+                    System.err.println("Server labert wirr");
+                }
+                sendSocket("ready");
+                //System.out.println("pre recieve: "+nachricht);
+                nachricht=receiveSocket();
+                //System.out.println("runnable nachricht: "+nachricht);
+            };
+            Thread t=new Thread(runnable);
+            t.start();
+            derBot=safe_some.bots[0];
+            dasSpiel=safe_some.spiele[0];
+            init(window,dasSpiel.getSizeX(),dasSpiel.getSizeY(),sceneOld);
+        }else{
+            int x=Integer.parseInt(nachricht.split(" ")[1]);
+            int y=Integer.parseInt(nachricht.split(" ")[2]);
+            derBot= new Bot_lvl_2(x,y);
+            init(window,x,y,sceneOld);
+            sentReceiveTRun("next");
+        }
+
         nachrichtChecker=new Timeline(new KeyFrame(Duration.millis(speed), e->{
             if(dasSpiel.isOver() /*|| b2.isFinOver()*/){
                 nachrichtChecker.stop();
@@ -96,9 +111,6 @@ public class Grid_NET_Client_B {
                         updatePlayerGrids();
                         if(dasSpiel.isOver())
                             gameOver();
-                        botschuss();
-                    }else if (nachricht.contains("ready")){
-                        buttonStart.setText("start shooting");
                         botschuss();
                     }else if(nachricht.contains("next")){
                         botschuss();
@@ -135,7 +147,7 @@ public class Grid_NET_Client_B {
                             z= "answer 0";
                             break;
                     }
-                    if(srT.isAlive())
+                    if(srT!=null && srT.isAlive())
                         System.err.println("WTF warum gibts denn srT?!");
                     sentReceiveTRun(z);
                 }
@@ -147,6 +159,7 @@ public class Grid_NET_Client_B {
                     }
                     if(derBot.shipSizesToAdd(s)){
                         sentReceiveTRun("done");
+                        updatePlayerGrids();
                     }else {
                         System.err.println("Es ist nicht möglich die Schiffe hinzuzufügen!");
                     }
@@ -161,6 +174,13 @@ public class Grid_NET_Client_B {
                         sentReceiveTRun("ready");
                         buttonStart.setText("start shooting");
                     }
+                } else if(nachricht.contains("save")){
+                    String saveID=""+nachricht.split(" ")[1]+"C";
+
+                    SAFE_SOME safe_some=new SAFE_SOME(new Bot[]{derBot},new Spiel[]{dasSpiel},7,saveID);
+                    sendSocket("done");
+                }else if(nachricht.contains("done")){//Server hat gespeichert eigentlich jetzt schließen
+
                 }
 
             }
@@ -194,7 +214,7 @@ public class Grid_NET_Client_B {
         buttonStart=new Button("Bestätige Schiffe");
         buttonStart.setOnAction(e->buttonSpielStart());
 
-        Button buttonSave=new Button("SAVE");
+        buttonSave=new Button("SAVE");
         buttonSave.setOnAction(e->buttonSave());
 
         HBox hBox=new HBox(10);
@@ -212,8 +232,14 @@ public class Grid_NET_Client_B {
     }
 
     private void buttonSave(){
-
-
+        if(dasSpiel.getAbschussSpieler()==1){
+            String saveID=""+this.hashCode();
+            sentReceiveTRun("save "+saveID);
+            SAFE_SOME safe_some=new SAFE_SOME(null,new Spiel[]{dasSpiel},7,saveID+"C");
+            buttonSave.setText("SAVED!");
+        }else {
+            buttonSave.setText("SAVE on your turn!");
+        }
 
     }
 
@@ -384,6 +410,7 @@ public class Grid_NET_Client_B {
     }
 
     private String receiveSocket(){
+        String nachricht="";
         try {
             nachricht = in.readLine();
             System.out.println("Von Server: " + nachricht);

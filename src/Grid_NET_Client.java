@@ -14,9 +14,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import logic.Bot;
 import logic.Spiel;
 import logic.logicOUTput;
 import logic.netCode.Server_Thread;
+import logic.save.SAFE_SOME;
 
 import javax.sound.sampled.Port;
 import java.io.*;
@@ -45,21 +47,11 @@ public class Grid_NET_Client {
     private Writer out;
     private int[] ships;
     private Button buttonStart;
+    private Button buttonSave;
 
 
 
-    public Grid_NET_Client(Stage window, Scene sceneOld, String id){
-        Spiel s=Spiel.load(id);
-        init(window,s.getSizeX(), s.getSizeY(), sceneOld);
-        dasSpiel=s;
-        feld=s.getFeld();
-        updatePlayerGrids();
-        if(dasSpiel.isStarted() && !dasSpiel.isOver()) {
-            setLabelAbschuss();
-        }else if(dasSpiel.isOver()){
-            gameOver();
-        }
-    }
+
     /**
      * Konstruktor initialisiert alles
      * @param window Das Fenster indem das Spiel angezeigt wird
@@ -71,8 +63,34 @@ public class Grid_NET_Client {
         in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         out = new OutputStreamWriter(s.getOutputStream());
         nachricht=receiveSocket();
-        init(window,Integer.parseInt(nachricht.split(" ")[1]),Integer.parseInt(nachricht.split(" ")[2]),sceneOld);
-        sentReceiveTRun("next");
+        if(nachricht.contains("load")){
+            SAFE_SOME safe_some=SAFE_SOME.load(nachricht.split(" ")[1]);
+            if(safe_some.game!=5){
+                System.err.println("you loaded not a ClientBot game!");
+                return;
+            }
+            Runnable runnable=() -> {
+                sendSocket("done");
+                if(!receiveSocket().contains("ready")){
+                    System.err.println("Server labert wirr");
+                }
+                sendSocket("ready");
+                //System.out.println("pre recieve: "+nachricht);
+                nachricht=receiveSocket();
+                //System.out.println("runnable nachricht: "+nachricht);
+            };
+            Thread t=new Thread(runnable);
+            t.start();
+            dasSpiel=safe_some.spiele[0];
+            init(window,dasSpiel.getSizeX(),dasSpiel.getSizeY(),sceneOld,dasSpiel);
+        }else{
+            int x=Integer.parseInt(nachricht.split(" ")[1]);
+            int y=Integer.parseInt(nachricht.split(" ")[2]);
+            dasSpiel=new Spiel(x,y,true);
+            init(window,x,y,sceneOld,dasSpiel);
+            sentReceiveTRun("next");
+        }
+
         nachrichtChecker=new Timeline(new KeyFrame(Duration.millis(speed), e->{
             if(dasSpiel.isOver() /*|| b2.isFinOver()*/){
                 nachrichtChecker.stop();
@@ -126,7 +144,7 @@ public class Grid_NET_Client {
                             z= "answer 0";
                             break;
                     }
-                    if(srT.isAlive())
+                    if(srT!=null &&srT.isAlive())
                         System.err.println("WTF warum gibts denn srT?!");
                     sentReceiveTRun(z);
                 }
@@ -146,6 +164,11 @@ public class Grid_NET_Client {
                         sentReceiveTRun("ready");
                         buttonStart.setText("start shooting");
                     }
+                }else if(nachricht.contains("save")){
+                    String saveID=""+nachricht.split(" ")[1];
+
+                    SAFE_SOME safe_some=new SAFE_SOME(null,new Spiel[]{dasSpiel},5,saveID);
+                    sendSocket("done");
                 }
 
             }
@@ -154,7 +177,7 @@ public class Grid_NET_Client {
         nachrichtChecker.play();
     }
 
-    private void init(Stage window, int x, int y, Scene sceneOld){
+    private void init(Stage window, int x, int y, Scene sceneOld,Spiel s){
         lx=ly=-1;
         this.window=window;
         this.sceneOld=sceneOld;
@@ -168,8 +191,7 @@ public class Grid_NET_Client {
         GridPane.setConstraints(lToShoot[1],0,y,x+1,y,HPos.CENTER,VPos.CENTER);
         this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
-        this.dasSpiel=new Spiel(x,y,true);
-        this.dasSpiel.init();
+        this.dasSpiel=s;
         this.feld=dasSpiel.getFeld();
         this.labels=new Label[feld.length][feld[0].length][feld[0][0].length];
         initPlayerGrids();
@@ -179,7 +201,7 @@ public class Grid_NET_Client {
         buttonStart=new Button("Bestätige Schiffe");
         buttonStart.setOnAction(e->buttonSpielStart());
 
-        Button buttonSave=new Button("SAVE");
+        buttonSave=new Button("SAVE");
         buttonSave.setOnAction(e->buttonSave());
 
         HBox hBox=new HBox(10);
@@ -197,7 +219,14 @@ public class Grid_NET_Client {
     }
 
     private void buttonSave(){
-
+        if(dasSpiel.getAbschussSpieler()==1){
+            String saveID=""+this.hashCode();
+            sentReceiveTRun("save "+saveID);
+            SAFE_SOME safe_some=new SAFE_SOME(null,new Spiel[]{dasSpiel},5,saveID);
+            buttonSave.setText("SAVED!");
+        }else {
+            buttonSave.setText("SAVE on your turn!");
+        }
 
 
     }
