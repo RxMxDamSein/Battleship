@@ -10,13 +10,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import logic.*;
+import logic.Bot;
+import logic.Bot_lvl_2;
+import logic.Bot_nightmare;
+import logic.Spiel;
 
 
 /**
  * Klasse die das 2Spieler spielen Schiffeversenken Spiel erlaubt mit spicken!
  */
-public class BotGrid {
+public class NightmareGrid {
     private Stage window;
     private Scene sceneOld;
     private Spiel dasSpiel;
@@ -29,11 +32,12 @@ public class BotGrid {
     private Label Lversenkt;
 
 
-    public BotGrid(Stage window,Scene sceneOld,String id){
-        Bot b=(Bot) Bot.load(id+"B");
+    public NightmareGrid(Stage window, Scene sceneOld, String id){
+        Bot_nightmare b=(Bot_nightmare) Bot.load(id+"B");
         Spiel s=Spiel.load(id+"S");
         init(window,s.getSizeX(),s.getSizeY(),sceneOld);
         derBot=b;
+        b.cheat=s;
         dasSpiel=s;
         feld=s.getFeld();
         updatePlayerGrids();
@@ -60,7 +64,7 @@ public class BotGrid {
         this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
         this.dasSpiel=new Spiel(x,y,true);
-        derBot=new Bot_schwer(x,y);
+        derBot=new Bot_nightmare(x,y,dasSpiel);
         if(!dasSpiel.init())
             sceneZutuck();
         this.feld=dasSpiel.getFeld();
@@ -98,14 +102,14 @@ public class BotGrid {
      * @param y Spielbretthöhe
      * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
      */
-    public BotGrid(Stage window, int x, int y, Scene sceneOld)  {
+    public NightmareGrid(Stage window, int x, int y, Scene sceneOld)  {
         init(window,x,y,sceneOld);
     }
 
 
     private void buttonSave(){
-        dasSpiel.saveGame("RDMBOT-S");
-        derBot.saveGame("RDMBOT-B");
+        dasSpiel.saveGame("NightBOT-S");
+        derBot.saveGame("NightBOT-B");
     }
     /**
      * Schreibt in die lToShoot Labels jeweils ob man verloren oder gewonnen hat.

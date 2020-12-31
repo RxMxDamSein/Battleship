@@ -8,8 +8,13 @@ import javafx.stage.Stage;
 import logic.RDM_Bot;
 import logic.Spiel;
 
+
+import GUI.GUImain;
+import logic.*;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
 
 
 public class MAIN extends Application  {
@@ -31,11 +36,33 @@ public class MAIN extends Application  {
     Button buttonLoadRDMBot;
     Button buttonBvB;
     Button buttonLoadBvB;
+    Button buttonNightmare;
+    Button buttonLoadNightmare;
     public static void main(String[] args) {
+
+
+        System.out.println("THIS IS GAME LOGIC!");
+        //logicOUTput.console2SpielerSpiel();
+        //logicOUTput.remoteTestSpiel();
+        //logicOUTput.playagainstRDM_Bot();
+        /*Spiel dasSpiel=new Spiel(10,2);
+        dasSpiel.init();
+        dasSpiel.addShip(0,0,false,2,0);
+        dasSpiel.addShip(3,0,false,2,1);
+        dasSpiel.starteSpiel(0);
+        dasSpiel.shoot(0,0,0);
+        dasSpiel.shoot(0,0,1);
+        dasSpiel.shoot(1,0,0);
+        dasSpiel.shoot(1,0,1);
+        logicOUTput.printFeld(dasSpiel.getFeld(),true);*/
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
+        //GUImain.main(args);
+
+
 
         launch(args);
+
     }
 
     @Override
@@ -65,6 +92,7 @@ public class MAIN extends Application  {
         buttonBvB.setOnAction(e->submitBvb());
         buttonLoadBvB=new Button(("LOAD BvB"));
         buttonLoadBvB.setOnAction(e->loadBvb());
+
         buttonServer=new Button("Host");
         buttonServer.setOnAction(e-> {
             try {
@@ -97,6 +125,13 @@ public class MAIN extends Application  {
                 ioException.printStackTrace();
             }
         });
+
+        buttonNightmare=new Button(("Nightmare!"));
+        buttonNightmare.setOnAction(e->submitNightmare());
+        buttonLoadNightmare=new Button(("LOAD Nightmare"));
+        buttonLoadNightmare.setOnAction(e->loadNightmare());
+        //buttonNightmare
+
         /*MenuBar menuBar=new MenuBar();
         Menu m1=new Menu("Stift!");
         MenuItem mi1=new MenuItem("GROß!");
@@ -108,10 +143,13 @@ public class MAIN extends Application  {
         vBox.setSpacing(5);
         //vBox.getChildren().addAll(menuBar,inputFieldX,inputFieldY,buttonSubmit);
         HBox hBox=new HBox(5);
-        hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot,buttonLoadRDMBot,buttonBvB,buttonLoadBvB);
+        hBox.getChildren().addAll(buttonSubmit,buttonLoad2P,buttonSubmitBot,buttonLoadRDMBot,buttonBvB,buttonLoadBvB,buttonNightmare,buttonLoadNightmare);
         HBox hBox_IP=new HBox(5);
         hBox_IP.getChildren().addAll(buttonServer,buttonKlient,inputIP,inputPort,buttonServer_Bot,buttonKlient_Bot);
         vBox.getChildren().addAll(inputFieldX,inputFieldY,hBox,hBox_IP);
+
+
+
 
         scene_sizeS=new Scene(vBox);
         window.setScene(scene_sizeS);
@@ -158,8 +196,20 @@ public class MAIN extends Application  {
         new BvB_GUI(window,x,y,scene_sizeS);
     }
 
+    private void submitNightmare(){
+        int[] xy=checkXY();
+        int x=xy[0];
+        int y=xy[1];
+        new NightmareGrid(window,x,y,scene_sizeS);
+    }
+
+    private void loadNightmare(){
+        new NightmareGrid(window,scene_sizeS,"NightBOT-");
+    }
+
     private void load2P(){
         new Grid(window,scene_sizeS,"2P");
+//>>>>>>> origin/GAMELLOGIC
     }
 
     private void loadRDM(){

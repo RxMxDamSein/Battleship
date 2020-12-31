@@ -545,8 +545,8 @@ public class Spiel implements Serializable {
     /**
      * Ermöglicht ein Schiff dem Spiel hinzuzufügen.
      * Nach Spielbeginn ist das nicht mehr erlaubt!
-     * @param x X Ankerpunkt
-     * @param y Y Ankerpunkt
+     * @param x X Ankerpunkt (Startpunkt)
+     * @param y Y Ankerpunkt (Startpunkt)
      * @param horizontal true -> das Schiff geht nach rechts weg, false -> das Schiff geht nach unten weg
      * @param len die Länge des Schiffes
      * @param spieler 0 oder 1 (in der Regel) besagt den Spieler dem das Schiff nacher gehört
