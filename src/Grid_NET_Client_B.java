@@ -14,10 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import logic.Bot;
-import logic.Bot_lvl_2;
-import logic.Spiel;
-import logic.logicOUTput;
+import logic.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -37,13 +34,11 @@ public class Grid_NET_Client_B {
     private Label[] lToShoot;
     private String nachricht;
     private int lx,ly;
-    private boolean shooting=false;
     private Timeline nachrichtChecker;
-    private int speed=250;
+    private int speed=10;
     private Socket s;
     private BufferedReader in;
     private Writer out;
-    private int[] ships;
     private Button buttonStart;
     private Bot derBot;
 
@@ -61,6 +56,13 @@ public class Grid_NET_Client_B {
             gameOver();
         }
     }
+
+    private void botschuss(){
+        int[] xy=derBot.getSchuss();
+        lx=xy[0];
+        ly=xy[1];
+        sentReceiveTRun("shot "+lx+" "+ly);
+    }
     /**
      * Konstruktor initialisiert alles
      * @param window Das Fenster indem das Spiel angezeigt wird
@@ -72,8 +74,10 @@ public class Grid_NET_Client_B {
         in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         out = new OutputStreamWriter(s.getOutputStream());
         nachricht=receiveSocket();
-
-        init(window,Integer.parseInt(nachricht.split(" ")[1]),Integer.parseInt(nachricht.split(" ")[2]),sceneOld);
+        int x=Integer.parseInt(nachricht.split(" ")[1]);
+        int y=Integer.parseInt(nachricht.split(" ")[2]);
+        derBot= new Bot_lvl_2(x,y);
+        init(window,x,y,sceneOld);
         sentReceiveTRun("next");
         nachrichtChecker=new Timeline(new KeyFrame(Duration.millis(speed), e->{
             if(dasSpiel.isOver() /*|| b2.isFinOver()*/){
@@ -87,17 +91,21 @@ public class Grid_NET_Client_B {
                         if (nachricht.contains("answer 2"))
                             versenkt = true;
                         dasSpiel.shoot(lx, ly, 1, 1, versenkt);
+                        derBot.setSchussFeld(lx,ly,2,versenkt);
                         setLabelAbschuss();
                         updatePlayerGrids();
                         if(dasSpiel.isOver())
                             gameOver();
-                        shooting=false;
+                        botschuss();
                     }else if (nachricht.contains("ready")){
-                        shooting=false;
                         buttonStart.setText("start shooting");
+                        botschuss();
+                    }else if(nachricht.contains("next")){
+                        botschuss();
                     }
                 }else if(nachricht.contains("answer 0")){
                     dasSpiel.shoot(lx,ly,1,0,false);
+                    derBot.setSchussFeld(lx,ly,3,false);
                     setLabelAbschuss();
                     updatePlayerGrids();
                     if(dasSpiel.isOver())
@@ -105,7 +113,6 @@ public class Grid_NET_Client_B {
                     if(srT.isAlive())
                         System.err.println("WTF warum gibts denn srT?!");
                     sentReceiveTRun("next");
-                    shooting=false;
                 }else if(nachricht.contains("shot")){
                     int x_ = Integer.parseInt(nachricht.split(" ")[1]);
                     int y_ = Integer.parseInt(nachricht.split(" ")[2]);
@@ -138,7 +145,13 @@ public class Grid_NET_Client_B {
                     for(int i=0;i<z.length-1;i++){
                         s[i]=Integer.parseInt(z[i+1]);
                     }
-                    ships=s;
+                    if(derBot.shipSizesToAdd(s)){
+                        sentReceiveTRun("done");
+                    }else {
+                        System.err.println("Es ist nicht möglich die Schiffe hinzuzufügen!");
+                    }
+
+
                 } else if(nachricht.contains("ready")){
                     if( dasSpiel.starteSpiel(0) ){
 
@@ -170,8 +183,8 @@ public class Grid_NET_Client_B {
         GridPane.setConstraints(lToShoot[1],0,y,x+1,y,HPos.CENTER,VPos.CENTER);
         this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
-        this.dasSpiel=new Spiel(x,y,true);
-        this.dasSpiel.init();
+        this.dasSpiel=derBot.dasSpiel;
+        //this.dasSpiel.init();
         this.feld=dasSpiel.getFeld();
         this.labels=new Label[feld.length][feld[0].length][feld[0][0].length];
         initPlayerGrids();
@@ -246,9 +259,7 @@ public class Grid_NET_Client_B {
     private void buttonSpielStart(){
         if(dasSpiel.isStarted())
             return;
-        for(int i=0;i<ships.length ;i++)
-            if(ships[i]>-1)
-                return;
+
 
         sentReceiveTRun("done");
 
@@ -338,7 +349,7 @@ public class Grid_NET_Client_B {
      */
     private void labelClick(int s,int x,int y){
         System.out.println("Clicked Label "+s+": "+x+" | "+y );
-        if(dasSpiel.isStarted() && !dasSpiel.isOver() && s==1 && dasSpiel.getAbschussSpieler()==1 && !shooting){
+        /*if(dasSpiel.isStarted() && !dasSpiel.isOver() && s==1 && dasSpiel.getAbschussSpieler()==1 && !shooting){
             shooting=true;
             logicOUTput.printFeld(dasSpiel.getFeld(),true);
             System.out.println("x&y to shoot: ");
@@ -346,53 +357,9 @@ public class Grid_NET_Client_B {
             ly=y;
             sentReceiveTRun("shot "+lx+" "+ly);
 
-        } else if(!dasSpiel.isStarted() && s==0){              //Schiff Hinzufügen!
-            if(selected){                     //altes Feld zurücksetzen
-                labels[s_old][x_old][y_old].setTextFill(paint_old);
-                if(s_old==s && x_old==x ){       //vertical ship!
-                    int len=(y_old-y<1)?y-y_old+1:y_old-y+1;
-                    int idx=inShips(len);
-                    if(idx>-1){
-                        if(dasSpiel.addShip(x_old,(y_old<y)?y_old:y,false,(y_old-y<1)?y-y_old+1:y_old-y+1,s)){
-                            ships[idx]=-1;
-                        }
-                    }
-
-                    selectDone=true;
-                }else if(s_old==s && y_old==y){ //horizontales Schiff
-                    int len=(x_old-x<1)?x-x_old+1:x_old-x+1;
-                    int idx=inShips(len);
-                    if(idx>-1){
-                        if(dasSpiel.addShip((x_old<x)?x_old:x,y_old,true,len,s))
-                        {
-                            ships[idx]=-1;
-                        }
-                    }
-
-                    selectDone=true;
-                }
-            }
-            if(!selectDone){
-                s_old=s;x_old=x;y_old=y;paint_old=labels[s][x][y].getTextFill();
-                labels[s][x][y].setTextFill(Color.web("green"));
-                selected=true;
-            }else {
-                s_old=x_old=y_old=-1;
-                paint_old=null;
-                updatePlayerGrids();
-                //logicOUTput.printFeld(feld,true);
-                selected=selectDone=false;
-            }
-        }
+        } */
     }
-    private int inShips(int len){
-        if(ships==null)
-            return -1;
-        for(int i=0;i<ships.length;i++)
-            if(len==ships[i])
-                return i;
-        return -1;
-    }
+
 
     private void sentReceiveTRun(String antwort){
         srT=new Thread(new sentReceive(antwort));

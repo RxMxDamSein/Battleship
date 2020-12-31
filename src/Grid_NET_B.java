@@ -41,7 +41,7 @@ public class Grid_NET_B {
     private int lx,ly;
     private boolean shooting=true;
     private Timeline nachrichtChecker;
-    private int speed=250;
+    private int speed=10;
     private Button buttonStart;
     private Bot derBot;
 
