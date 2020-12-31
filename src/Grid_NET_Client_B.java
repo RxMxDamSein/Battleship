@@ -14,11 +14,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import logic.Bot;
+import logic.Bot_lvl_2;
 import logic.Spiel;
 import logic.logicOUTput;
-import logic.netCode.Server_Thread;
 
-import javax.sound.sampled.Port;
 import java.io.*;
 import java.net.Socket;
 
@@ -26,7 +26,7 @@ import java.net.Socket;
 /**
  * Klasse die das 2Spieler spielen Schiffeversenken Spiel erlaubt mit spicken!
  */
-public class Grid_NET_Client {
+public class Grid_NET_Client_B {
     private Stage window;
     private Scene sceneOld;
     private Spiel dasSpiel;
@@ -45,10 +45,11 @@ public class Grid_NET_Client {
     private Writer out;
     private int[] ships;
     private Button buttonStart;
+    private Bot derBot;
 
 
 
-    public Grid_NET_Client(Stage window, Scene sceneOld, String id){
+    public Grid_NET_Client_B(Stage window, Scene sceneOld, String id){
         Spiel s=Spiel.load(id);
         init(window,s.getSizeX(), s.getSizeY(), sceneOld);
         dasSpiel=s;
@@ -65,12 +66,13 @@ public class Grid_NET_Client {
      * @param window Das Fenster indem das Spiel angezeigt wird
      * @param sceneOld In diese Scene kann mittels des Buttons "Zurück" gesprungen werden
      */
-    public Grid_NET_Client(Stage window, Scene sceneOld, String IP, int PORT) throws IOException {
+    public Grid_NET_Client_B(Stage window, Scene sceneOld, String IP, int PORT) throws IOException {
         s = new Socket(IP, PORT);
         System.out.println("Connected!");
         in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         out = new OutputStreamWriter(s.getOutputStream());
         nachricht=receiveSocket();
+
         init(window,Integer.parseInt(nachricht.split(" ")[1]),Integer.parseInt(nachricht.split(" ")[2]),sceneOld);
         sentReceiveTRun("next");
         nachrichtChecker=new Timeline(new KeyFrame(Duration.millis(speed), e->{

@@ -352,40 +352,7 @@ public class Grid_NET_B {
      */
     private void labelClick(int s,int x,int y){
         System.out.println("Clicked Label "+s+": "+x+" | "+y );
-        /*if(dasSpiel.isStarted() && !dasSpiel.isOver() && s==1 && dasSpiel.getAbschussSpieler()==1 && !shooting){
-            shooting=true;
 
-
-
-            logicOUTput.printFeld(dasSpiel.getFeld(),true);
-            System.out.println("x&y to shoot: ");
-            lx=x;
-            ly=y;
-            sentReceiveTRun("shot "+lx+" "+ly);
-
-        } else if(!dasSpiel.isStarted() && s==0){              //Schiff Hinzufügen!
-            if(selected){                     //altes Feld zurücksetzen
-                labels[s_old][x_old][y_old].setTextFill(paint_old);
-                if(s_old==s && x_old==x ){       //vertical ship!
-                    dasSpiel.addShip(x_old,(y_old<y)?y_old:y,false,(y_old-y<1)?y-y_old+1:y_old-y+1,s);
-                        selectDone=true;
-                }else if(s_old==s && y_old==y){ //horizontales Schiff
-                    dasSpiel.addShip((x_old<x)?x_old:x,y_old,true,(x_old-x<1)?x-x_old+1:x_old-x+1,s);
-                        selectDone=true;
-                }
-            }
-            if(!selectDone){
-                s_old=s;x_old=x;y_old=y;paint_old=labels[s][x][y].getTextFill();
-                labels[s][x][y].setTextFill(Color.web("green"));
-                selected=true;
-            }else {
-                s_old=x_old=y_old=-1;
-                paint_old=null;
-                updatePlayerGrids();
-                //logicOUTput.printFeld(feld,true);
-                selected=selectDone=false;
-            }
-        }*/
     }
 
     private void sentReceiveTRun(String antwort){

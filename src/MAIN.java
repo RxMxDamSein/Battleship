@@ -141,7 +141,10 @@ public class MAIN extends Application  {
         }
 
         else
-            new Grid_NET_Client(window,scene_sizeS,ip,p,Bot);
+            if(!Bot)
+                new Grid_NET_Client(window,scene_sizeS,ip,p);
+            else
+                new Grid_NET_Client_B(window,scene_sizeS,ip,p);
     }
 
     private void loadBvb(){
