@@ -103,14 +103,19 @@ public class Grid_NET_Client_B {
                 if(nachricht.contains("next") || nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
                     if (nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
                         boolean versenkt = false;
-                        if (nachricht.contains("answer 2"))
+                        if (nachricht.contains("answer 2")){
+                            if(dasSpiel.isOver()){
+                                gameOver();
+                                return;
+                            }
+
                             versenkt = true;
+                        }
                         dasSpiel.shoot(lx, ly, 1, 1, versenkt);
                         derBot.setSchussFeld(lx,ly,2,versenkt);
                         setLabelAbschuss();
                         updatePlayerGrids();
-                        if(dasSpiel.isOver())
-                            gameOver();
+
                         botschuss();
                     }else if(nachricht.contains("next")){
                         botschuss();
@@ -131,8 +136,6 @@ public class Grid_NET_Client_B {
                     dasSpiel.shoot(x_,y_,0,0,false);
                     setLabelAbschuss();
                     updatePlayerGrids();
-                    if(dasSpiel.isOver())
-                        gameOver();
                     String z="";
                     System.out.println("("+x_+"|"+y_+") "+dasSpiel.getFeld()[0][x_][y_]);
                     switch (dasSpiel.getFeld()[0][x_][y_]){
@@ -150,6 +153,8 @@ public class Grid_NET_Client_B {
                     if(srT!=null && srT.isAlive())
                         System.err.println("WTF warum gibts denn srT?!");
                     sentReceiveTRun(z);
+                    if(dasSpiel.isOver())
+                        gameOver();
                 }
                 else if(nachricht.contains("ships")){
                     String[] z=nachricht.split(" ");

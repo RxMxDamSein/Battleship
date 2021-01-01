@@ -197,6 +197,9 @@ public class Server_Thread extends Thread
         }catch (IOException e){
             System.err.println("Can not send Antwort to Client!");
             e.printStackTrace();
+        }catch (NullPointerException e){
+            System.err.println("can not sent anything if it does not exist!");
+            e.printStackTrace();
         }
     }
 

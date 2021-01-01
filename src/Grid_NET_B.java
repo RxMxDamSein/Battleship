@@ -14,13 +14,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import logic.Bot;
-import logic.Bot_lvl_2;
-import logic.Spiel;
-import logic.logicOUTput;
+import logic.*;
 import logic.netCode.Server_Thread;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -175,9 +173,16 @@ public class Grid_NET_B {
         if(dasSpiel.init==false)
             return;
 
-        int[] ships=logic.Bot.getShipSizes(dasSpiel.schiffe);
+        ArrayList<Schiff> s=new ArrayList<>();
+        for(int i=0;i<dasSpiel.schiffe.size();i++){
+            Schiff z=dasSpiel.schiffe.get(i);
+            if(z.spieler==0){
+                s.add(z);
+            }
+        }
+        int[] ships=logic.Bot.getShipSizes(s);
         String antwort="ships";
-        for(int i=ships.length-1;i>=(ships.length/2)-1;i--){
+        for(int i=ships.length-1;i>=0;i--){
             antwort+=" "+ships[i];
         }
 
@@ -199,14 +204,20 @@ public class Grid_NET_B {
                     if(nachricht.contains("next")||nachricht.contains("ready") || nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
                         if (nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
                             boolean versenkt = false;
-                            if (nachricht.contains("answer 2"))
+                            if (nachricht.contains("answer 2")){
+                                if(dasSpiel.isOver()){
+                                    gameOver();
+                                    return;
+                                }
+
                                 versenkt = true;
+                            }
+
                             dasSpiel.shoot(lx, ly, 1, 1, versenkt);
                             derBot.setSchussFeld(lx,ly,2,versenkt);
                             setLabelAbschuss();
                             updatePlayerGrids();
-                            if(dasSpiel.isOver())
-                                gameOver();
+
                             botschuss();
                         }else if (nachricht.contains("ready") ){
                             buttonStart.setText("start shooting");
@@ -230,8 +241,7 @@ public class Grid_NET_B {
                         dasSpiel.shoot(x_,y_,0,0,false);
                         setLabelAbschuss();
                         updatePlayerGrids();
-                        if(dasSpiel.isOver())
-                            gameOver();
+
                         String z="";
                         System.out.println("("+x_+"|"+y_+") "+dasSpiel.getFeld()[0][x_][y_]);
                         switch (dasSpiel.getFeld()[0][x_][y_]){
@@ -249,6 +259,8 @@ public class Grid_NET_B {
                         if(srT.isAlive())
                             System.err.println("WTF warum gibts denn srT?!");
                         sentReceiveTRun(z);
+                        if(dasSpiel.isOver())
+                            gameOver();
                     } else if(nachricht.contains("done")){
                         sentReceiveTRun("ready");
                     }
