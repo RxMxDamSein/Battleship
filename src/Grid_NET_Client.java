@@ -87,6 +87,7 @@ public class Grid_NET_Client {
             int x=Integer.parseInt(nachricht.split(" ")[1]);
             int y=Integer.parseInt(nachricht.split(" ")[2]);
             dasSpiel=new Spiel(x,y,true);
+            dasSpiel.init();
             init(window,x,y,sceneOld,dasSpiel);
             sentReceiveTRun("next");
         }

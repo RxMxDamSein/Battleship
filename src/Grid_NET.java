@@ -216,6 +216,7 @@ public class Grid_NET{
         int[] ships=logic.Bot.getShipSizes(dasSpiel.schiffe);
         String antwort="ships";
         for(int i=ships.length-1;i>=0;i--){
+
             antwort+=" "+ships[i];
         }
 

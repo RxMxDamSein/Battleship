@@ -373,7 +373,7 @@ public abstract class Bot implements Serializable {
 
         logicOUTput.printFeld(dasSpiel.getFeld(),true);
 
-        //dasSpiel.starteSpiel();
+        dasSpiel.starteSpiel();
         dasSpiel.setVerbose(v);
         return true;
     }

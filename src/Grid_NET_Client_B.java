@@ -158,6 +158,7 @@ public class Grid_NET_Client_B {
                         s[i]=Integer.parseInt(z[i+1]);
                     }
                     if(derBot.shipSizesToAdd(s)){
+                        derBot.dasSpiel.setAbschussSpieler(0);
                         sentReceiveTRun("done");
                         updatePlayerGrids();
                     }else {
@@ -166,14 +167,13 @@ public class Grid_NET_Client_B {
 
 
                 } else if(nachricht.contains("ready")){
-                    if( dasSpiel.starteSpiel(0) ){
 
-                        setLabelAbschuss();
-                        if(dasSpiel.isOver())
-                            gameOver();
-                        sentReceiveTRun("ready");
-                        buttonStart.setText("start shooting");
-                    }
+                    setLabelAbschuss();
+                    if(dasSpiel.isOver())
+                        gameOver();
+                    sentReceiveTRun("ready");
+                    buttonStart.setText("start shooting");
+
                 } else if(nachricht.contains("save")){
                     String saveID=""+nachricht.split(" ")[1]+"C";
 

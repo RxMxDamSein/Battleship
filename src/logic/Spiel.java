@@ -14,7 +14,7 @@ public class Spiel implements Serializable {
     private int x=20,y=20;
     // 0 frei, 1 Schiff, 2 Treffer, 3 Wasser
     private int[][][] feld;
-    private boolean init=false;
+    public boolean init=false;
     private boolean started=false;
     private boolean fin=false;
     private boolean versenkt=false;
@@ -284,7 +284,7 @@ public class Spiel implements Serializable {
             versenkt=p_versenkt;
             //kill ships in schiffe for player 1
             if(versenkt){
-                if(!killEnemyShipfromPos(x,y)&&verbose){
+                if(!killEnemyShipfromPos(x,y)&&verbose){//ToDo some error with this!
                     System.err.println("ship could not sink!!!");
                 }
                 checkGameOver();
