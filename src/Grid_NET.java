@@ -55,7 +55,7 @@ public class Grid_NET{
 
     public Grid_NET(Stage window, Scene sceneOld,int PORT, String id){
         SAFE_SOME safe_some=SAFE_SOME.load(id);
-        if(safe_some.game!=4){
+        if(safe_some.game<4 || safe_some.game>5){
             System.err.println("you loaded not a ServerHost game!");
             return;
         }

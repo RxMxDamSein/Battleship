@@ -66,9 +66,9 @@ public class Grid_NET_Client_B {
         out = new OutputStreamWriter(s.getOutputStream());
         nachricht=receiveSocket();
         if(nachricht.contains("load")){
-            SAFE_SOME safe_some=SAFE_SOME.load(nachricht.split(" ")[1]+"C");
-            if(safe_some.game!=7){
-                System.err.println("you loaded not a ClientBot game!");
+            SAFE_SOME safe_some=SAFE_SOME.load(nachricht.split(" ")[1]);
+            if(safe_some.game!=5){
+                System.err.println("you loaded not a NETBot game!");
                 return;
             }
             Runnable runnable=() -> {
@@ -104,10 +104,7 @@ public class Grid_NET_Client_B {
                     if (nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
                         boolean versenkt = false;
                         if (nachricht.contains("answer 2")){
-                            if(dasSpiel.isOver()){
-                                gameOver();
-                                return;
-                            }
+
 
                             versenkt = true;
                         }
@@ -115,7 +112,10 @@ public class Grid_NET_Client_B {
                         derBot.setSchussFeld(lx,ly,2,versenkt);
                         setLabelAbschuss();
                         updatePlayerGrids();
-
+                        if(dasSpiel.isOver()){
+                            gameOver();
+                            return;
+                        }
                         botschuss();
                     }else if(nachricht.contains("next")){
                         botschuss();
@@ -180,9 +180,9 @@ public class Grid_NET_Client_B {
                     buttonStart.setText("start shooting");
 
                 } else if(nachricht.contains("save")){
-                    String saveID=""+nachricht.split(" ")[1]+"C";
+                    String saveID=""+nachricht.split(" ")[1];
 
-                    SAFE_SOME safe_some=new SAFE_SOME(new Bot[]{derBot},new Spiel[]{dasSpiel},7,saveID);
+                    SAFE_SOME safe_some=new SAFE_SOME(new Bot[]{derBot},new Spiel[]{dasSpiel},5,saveID);
                     sendSocket("done");
                 }else if(nachricht.contains("done")){//Server hat gespeichert eigentlich jetzt schließen
 
@@ -240,7 +240,7 @@ public class Grid_NET_Client_B {
         if(dasSpiel.getAbschussSpieler()==1){
             String saveID=""+this.hashCode();
             sentReceiveTRun("save "+saveID);
-            SAFE_SOME safe_some=new SAFE_SOME(null,new Spiel[]{dasSpiel},7,saveID+"C");
+            SAFE_SOME safe_some=new SAFE_SOME(new Bot[]{derBot},new Spiel[]{dasSpiel},5,saveID);
             buttonSave.setText("SAVED!");
         }else {
             buttonSave.setText("SAVE on your turn!");
