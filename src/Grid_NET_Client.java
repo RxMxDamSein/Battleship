@@ -65,7 +65,7 @@ public class Grid_NET_Client {
         nachricht=receiveSocket();
         if(nachricht.contains("load")){
             SAFE_SOME safe_some=SAFE_SOME.load(nachricht.split(" ")[1]);
-            if(safe_some.game!=5){
+            if(safe_some.game<4 || safe_some.game>5){
                 System.err.println("you loaded not a ClientBot game!");
                 return;
             }
