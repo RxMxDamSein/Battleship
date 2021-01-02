@@ -258,6 +258,10 @@ public class Grid_NET{
                         }else if (nachricht.contains("ready")){
                             shooting=false;
                             buttonStart.setText("start shooting");
+                            buttonStart.setText("start shooting");
+                            if(dasSpiel.getAbschussSpieler()==0){
+                                sentReceiveTRun("next");
+                            }
                         }
                     }else if(nachricht.contains("answer 0")){
                         dasSpiel.shoot(lx,ly,1,0,false);
