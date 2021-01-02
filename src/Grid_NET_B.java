@@ -107,7 +107,7 @@ public class Grid_NET_B {
                     nachrichtChecker.stop();
                 }else {
                     String nachricht=this.nachricht;
-                    System.out.println("Timeline: "+nachricht);
+                    //System.out.println("Timeline: "+nachricht);
                     this.nachricht="";
                     if(nachricht.contains("next")||nachricht.contains("ready") || nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
                         if (nachricht.contains("answer 1") || nachricht.contains("answer 2")) {
@@ -405,7 +405,12 @@ public class Grid_NET_B {
                             labels[s][i][j].setTextFill(Color.web("black"));
                             break;
                         case 2:
-                            labels[s][i][j].setTextFill(Color.web("red"));
+                            if(dasSpiel.istVersenkt()){
+                                labels[s][i][j].setTextFill(Color.web("darkred"));
+                            }else {
+                                labels[s][i][j].setTextFill(Color.web("red"));
+                            }
+
                             break;
                         case 3:
                             labels[s][i][j].setTextFill(Color.web("blue"));
