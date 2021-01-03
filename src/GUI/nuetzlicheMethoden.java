@@ -6,11 +6,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public  class nuetzlicheMethoden {
     private int texture=0;
 
 
-    public nuetzlicheMethoden(){}
+    public nuetzlicheMethoden(){
+        texture = EinstellungenController.skin;
+    }
 
     public double minsizeberechner(int x) {
         Rectangle2D screen = Screen.getPrimary().getBounds();

@@ -60,11 +60,11 @@ public class MAIN extends Application  {
         logicOUTput.printFeld(dasSpiel.getFeld(),true);*/
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
-        //GUImain.main(args);
+        GUImain.main(args);
 
 
 
-        launch(args);
+        //launch(args);
 
     }
 

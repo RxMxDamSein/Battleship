@@ -25,4 +25,7 @@ public class JoinMenuController implements Initializable {
 
         window.show();
     }
+
+    public void StartButton(ActionEvent event) {
+    }
 }
