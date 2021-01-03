@@ -10,10 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import logic.Bot;
-import logic.Bot_lvl_2;
-import logic.RDM_Bot;
-import logic.Spiel;
+import logic.*;
 
 
 /**
@@ -63,7 +60,7 @@ public class BotGrid {
         this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
         this.dasSpiel=new Spiel(x,y,true);
-        derBot=new Bot_lvl_2(x,y);
+        derBot=new Bot_schwer(x,y);
         if(!dasSpiel.init())
             sceneZutuck();
         this.feld=dasSpiel.getFeld();

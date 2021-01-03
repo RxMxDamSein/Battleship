@@ -16,6 +16,92 @@ public abstract class Bot implements Serializable {
     public boolean slayship=false; //true if you hit ship and not sunk
     public int slayX,slayY;
 
+    int[] getSlayShoot(){
+
+        //System.out.println("SLAYSHIP!");
+        int zx=slayX;
+        int zy=slayY;
+        boolean horizontal=false;
+        boolean vertical=false;
+        if(zx>0 && dasSpiel.getFeld()[1][zx-1][zy]==2 || zx<(x-1) && dasSpiel.getFeld()[1][zx+1][zy]==2)
+            horizontal=true;
+        if(zy>0 && dasSpiel.getFeld()[1][zx][zy-1]==2 || zy<(y-1) && dasSpiel.getFeld()[1][zx][zy+1]==2)
+            vertical=true;
+        int schritt=1;
+        if(horizontal ){
+            while(zx+schritt<x){
+                if(dasSpiel.getFeld()[1][zx+schritt][zy]==0){
+                    return new int[]{zx+schritt,zy};
+                }else if(dasSpiel.getFeld()[1][zx+schritt][zy]==2){
+                    schritt++;
+                    continue;
+                }else {
+                    break;
+                }
+            }
+            schritt=-1;
+            while(zx+schritt>=0){
+                if(dasSpiel.getFeld()[1][zx+schritt][zy]==0){
+                    return new int[]{zx+schritt,zy};
+                }else if(dasSpiel.getFeld()[1][zx+schritt][zy]==2){
+                    schritt--;
+                    continue;
+                }else {
+                    break;
+                }
+            }
+        }else if (vertical){
+            while(zy+schritt<y){
+                if(dasSpiel.getFeld()[1][zx][zy+schritt]==0){
+                    return new int[]{zx,zy+schritt};
+                }else if(dasSpiel.getFeld()[1][zx][zy+schritt]==2){
+                    schritt++;
+                    continue;
+                }else {
+                    break;
+                }
+            }
+            schritt=-1;
+            while(zy+schritt>=0){
+                //System.out.println(zx+" "+zy);
+                if(dasSpiel.getFeld()[1][zx][zy+schritt]==0){
+                    return new int[]{zx,zy+schritt};
+                }else if(dasSpiel.getFeld()[1][zx][zy+schritt]==2){
+                    schritt--;
+                    continue;
+                }else {
+                    break;
+                }
+            }
+        }else {//check a postion up down left right rdmly
+            while(true) {
+                switch (rdm.nextInt(4)) {
+                    case 0://up
+                        if (zy - 1 >= 0 && dasSpiel.getFeld()[1][zx][zy - 1] == 0)
+                            return new int[]{zx, zy - 1};
+                        break;
+                    case 1://down
+                        if (zy + 1 < y && dasSpiel.getFeld()[1][zx][zy + 1] == 0)
+                            return new int[]{zx, zy + 1};
+                        break;
+                    case 2://left
+                        if (zx - 1 >= 0 && dasSpiel.getFeld()[1][zx - 1][zy] == 0)
+                            return new int[]{zx - 1, zy};
+                        break;
+                    case 3://right
+                        if (zx + 1 < x && dasSpiel.getFeld()[1][zx + 1][zy] == 0)
+                            return new int[]{zx + 1, zy};
+                        break;
+                }
+            }
+        }
+
+        if(dasSpiel.getVerbose())
+            System.err.println("there should be another ship piece close!");
+        return rdmSchuss(dasSpiel,rdm,x,y);
+
+    }
+
     /**
      * gibt zurück ob der Bot verloren hat!
      * genau wie is Over Function von Spiel
@@ -42,7 +128,8 @@ public abstract class Bot implements Serializable {
 
     /**
      * Funktion die Schiffe dem Bott hinzufügt
-     * @param s {1,2,3,4,5} legt beim Bott 5 Schiffe an mit den Längen(1,2,3,4,5)
+     * Bitte Längen in absteigender Reihenfolge sonst geht Bot_schwer nicht!
+     * @param s {5,4,3,2,1} legt beim Bott 5 Schiffe an mit den Längen(5,4,3,2,1)
      * @return true wenn erfolgreich false wenn fehler
      */
     public abstract boolean shipSizesToAdd(int[] s);
@@ -444,8 +531,12 @@ public abstract class Bot implements Serializable {
             return new int[]{5,4,4,3,3,3,2,2,2,2};
         }
         int max=(x>y)?x:y;
-        if(max>5)
-            max=5;
+        if(max>5){
+            max/=3;
+            if(max<5)
+                max=5;
+        }
+
         ArrayList<Integer> s=new ArrayList<Integer>();
         int used=0;
         Random rdm=new Random();
@@ -466,6 +557,51 @@ public abstract class Bot implements Serializable {
         int[] t=calcships(7,5);
         for(int i=0;i<t.length;i++)
             System.out.println(t[i]);
+    }
+
+    protected int shipLenDestroyed(int x,int y, int s){
+        int size=0;
+        boolean up,down,left,right;
+        up=down=left=right=false;
+        if(y+1<this.y && dasSpiel.getFeld()[s][x][y+1]==2){
+            down=true;
+        }
+        if(y-1>=0 && dasSpiel.getFeld()[s][x][y-1]==2){
+            up=true;
+        }
+        if(x+1<this.x && dasSpiel.getFeld()[s][x+1][y]==2){
+            right=true;
+        }
+        if(x-1>=0 && dasSpiel.getFeld()[s][x-1][y]==2){
+            left=true;
+        }
+        int i;
+        if(up){
+            for(i=0;y-i>=0&&dasSpiel.getFeld()[s][x][y-i]==2;i++){
+                size++;
+            }
+        }
+        if(down){
+            for(i=0;y+i<this.y&&dasSpiel.getFeld()[s][x][y+i]==2;i++){
+                size++;
+            }
+
+        }
+        if(left){
+            for(i=0;x-i>=0&&dasSpiel.getFeld()[s][x-i][y]==2;i++){
+                size++;
+            }
+
+        }
+        if(right){
+            for(i=0;x+i<this.x&&dasSpiel.getFeld()[s][x+i][y]==2;i++){
+                size++;
+            }
+        }
+        if(!up&&!down&&!left&&!right)
+            size=1;
+
+        return size;
     }
 }
 

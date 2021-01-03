@@ -16,6 +16,8 @@ public class SAFE_SOME implements Serializable {
     1 -> 2SP
     2 -> 1SP gegen CPU
     3 -> BVB
+    4 -> PlayerHost
+    5 -> PlayerBotHost
      */
 
     /**

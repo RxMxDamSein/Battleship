@@ -2,8 +2,8 @@ package logic.netCode;
 
 import java.io.IOException;
 
-public class trash {
+public class trashklient {
     public static void main(String[] args) throws IOException {
-        new Server().main(null);
+        new Client().main(args);
     }
 }

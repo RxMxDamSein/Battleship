@@ -19,9 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import logic.Bot;
-import logic.Bot_lvl_2;
-import logic.Spiel;
+import logic.*;
 import logic.save.SAFE_SOME;
 
 import java.util.Random;
@@ -42,7 +40,7 @@ public class BvB_GUI {
     private Label Lversenkt;
     private boolean started=false;
     private Timeline oneSecondsWonder;
-    private int speed=10;
+    private int speed=5;
 
 
 
@@ -50,7 +48,7 @@ public class BvB_GUI {
         init(window,x,y,sceneOld);
 
         int[] add=Bot.calcships(x,y);
-        b1=new Bot_lvl_2(x,y);
+        b1=new Bot_schwer(x,y);
         b1.shipSizesToAdd(add);
         b1.getDasSpiel().setVerbose(false);
         b2=new Bot_lvl_2(x,y);
@@ -201,7 +199,7 @@ public class BvB_GUI {
         }*/
 
 
-        if(b1.dasSpiel.isOver() /*|| b2.isFinOver()*/){
+        if(b1.dasSpiel.isOver() || b2.isFinOver()){
             /*if(b1.dasSpiel.getAbschussSpieler()==1)
                 b1.dasSpiel.setGameOver();
 
@@ -234,10 +232,12 @@ public class BvB_GUI {
         gridPanes[0]=gridPlayer1;
         gridPanes[1]=gridPlayer2;
         for(int s=0;s<2;s++){
+            if(s==1)
+                feld=b2.getDasSpiel().getFeld();
             for (int i=0;i<feld[s].length;i++){
                 for(int j=0;j<feld[s][i].length;j++){
-                    labels[s][i][j].setText(" "+String.valueOf(feld[s][i][j])+" ");
-                    switch (feld[s][i][j]){
+                    labels[s][i][j].setText(" "+String.valueOf(feld[0][i][j])+" ");
+                    switch (feld[0][i][j]){
                         default:
                             labels[s][i][j].setTextFill(Color.web("grey"));
                             break;
@@ -255,6 +255,7 @@ public class BvB_GUI {
                 }
             }
         }
+        feld=b1.getDasSpiel().getFeld();
     }
 
     /**

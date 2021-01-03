@@ -3,11 +3,17 @@ package logic.netCode;
 import java.io.*;
 import java.net.Socket;
 
+import logic.RemoteGameClient;
+import logic.Spiel;
+import logic.logicOUTput;
+import java.lang.*;
+
 public class Client
 {
+    public Spiel dasSpiel;
 
-
-    public static void main (String [] args) throws IOException{
+    public void main (String [] args) throws IOException{
+        dasSpiel=new Spiel(10,10,true);
         System.out.println("Connecting to a server ...");
         Socket s = new Socket("127.0.0.1", 420);
         System.out.println("Connected!");
@@ -17,12 +23,15 @@ public class Client
 
         String antwort="";
         String nachricht;
-        int versenkt = 0;
 
+        int lx,ly;
+        lx=ly=-1;
         while(true)
         {
             nachricht = in.readLine();
             System.out.println("Von Server: " + nachricht);
+            if(nachricht==null)
+                break;
 
             if(nachricht.equals("exit"))
                 break;
@@ -30,103 +39,104 @@ public class Client
             if(nachricht.contains("size"))
             {
                 String sizeVariablen = nachricht.substring(5);
-                String sizeX = sizeVariablen.substring(0, 1);
-                String sizeY = sizeVariablen.substring(2);
+                String sizeX = "";
+                String sizeY = "";
+                int l = 0;
+                l =nachricht.length();
+                if(l<=8) {
+                    sizeX = sizeVariablen.substring(0, 1);
+                    sizeY = sizeVariablen.substring(2);
 
-                antwort = size(sizeX, sizeY);
+                }else{
+                    sizeX = sizeVariablen.substring(0, 2);
+                    sizeY = sizeVariablen.substring(3);
+                }
+                System.out.println("x: "+sizeX+"Y: "+sizeY);
+                antwort = Methods.size(sizeX, sizeY,dasSpiel);
             }
 
             if(nachricht.contains("ships"))
             {
-                String shipsAnz = nachricht.substring(6);
+                String shipsAnzML = nachricht.substring(6);
+                String[] shipsSizes = shipsAnzML.split(" ");
+                //int l = shipsAnz.length();
+                //char[] shipsArray = new char[l];
+                //shipsArray = shipsAnz.toCharArray();
 
-                antwort = ships(shipsAnz);
-            }
-
-            if(nachricht.contains("ready"))
-            {
-                ready();
-                antwort = tIn.readLine();
+                antwort = Methods.ships(shipsSizes,dasSpiel);
             }
 
             if(nachricht.contains("shot"))
             {
-                String shotKordinaten = nachricht.substring(5);
-                System.out.println(shotKordinaten);
-                String kordX = shotKordinaten.substring(0, 1);
-                System.out.println("X-Koordinate: " + kordX);
-                String kordY = shotKordinaten.substring(2);
-                System.out.println("Y-Koordinate: " + kordY);
-
-                antwort = shot(kordX, kordY);
-            }
-
-            if(nachricht.equals("answer 0") || nachricht.equals("answer 1") || nachricht.equals("answer 2"))
-            {
-                switch(nachricht)
+                String shotKoordinaten = nachricht.substring(5);
+                String kordX = "";
+                String kordY = "";
+                int tr = 0;
+                int l = 0;
+                l = nachricht.length();
+                switch (l)
                 {
-                    case "answer 0": antwort = "next";
+                    case 7: kordX = shotKoordinaten.substring(0, 1);
+                        kordY = shotKoordinaten.substring(2);
                         break;
-                    case "answer 1": antwort = tIn.readLine();
+                    case 8: tr = shotKoordinaten.indexOf(" ");
+                        switch(tr)
+                        {
+                            case 1: kordX = shotKoordinaten.substring(0, 1);
+                                kordY = shotKoordinaten.substring(2, 3);
+                                break;
+                            case 2: kordX = shotKoordinaten.substring(0, 2);
+                                kordY = shotKoordinaten.substring(3);
+                                break;
+                            case -1: //Falsche Eingabe
+                                break;
+                        }
                         break;
-                    case "answer 2": versenkt++;
-                        System.out.println("Schiffe versenkt: " + versenkt);
-                        antwort = tIn.readLine();
+                    case 9: kordX = shotKoordinaten.substring(0, 2);
+                        kordY = shotKoordinaten.substring(3, 4);
                         break;
                 }
+                antwort = Methods.shot(kordX, kordY,dasSpiel);
             }
 
-            System.out.print("Zu Server: " + antwort + "\n");
+            if(nachricht.contains("ready")){
+                dasSpiel.starteSpiel(0);
+                antwort="ready";
+            }
+            else if(nachricht.contains("next") || nachricht.contains("answer 1") || nachricht.contains("answer 2")){
+                if(nachricht.contains("answer 1") || nachricht.contains("answer 2")){
+                    boolean versenkt=false;
+                    if(nachricht.contains("answer 2"))
+                        versenkt=true;
+                    dasSpiel.shoot(lx,ly,1,1,versenkt);
+                    if(dasSpiel.isOver())
+                        break;
+                }
+                logicOUTput.printFeld(dasSpiel.getFeld(),true);
+                System.out.println("x&y to shoot: ");
+                lx=Integer.parseInt(tIn.readLine());
+                ly=Integer.parseInt(tIn.readLine());
+                antwort="shot "+lx+" "+ly;
+            }
+            else if(nachricht.contains("answer 0")){
+                dasSpiel.shoot(lx,ly,1,0,false);
+                logicOUTput.printFeld(dasSpiel.getFeld(),true);
+                antwort="next";
+            }
+
+
+            System.out.print("Zu Server: " + antwort);
             out.write(String.format("%s%n", antwort));
             out.flush();
         }
-
+        s.close();
+        System.out.println("Connection closed!");
     }
 
-    public static String shot(String x, String y)
-    {
-        System.out.println("Shot funktion wurde ausgeführt!");
-        //System.out.println("Shot auf " + x + " " + y);
-        if(x.equals("1") && y.equals("2"))
-            return "answer 1";
-        if(x.equals("1") && y.equals("3"))
-            return "answer 2";
-        if(x.equals("3") && y.equals("3"))
-            return "answer 1";
-        else
-            return "answer 0";
-    }
 
-    public static String size(String x, String y)
-    {
-        System.out.println("Size funktion wurde ausgeführt!");
-        System.out.println("Feldgröße ist nun " + x + " * " + y);
-        return "next";
-    }
 
-    public static String ships(String shipsString)
-    {
-        char[] shipsArray = shipsString.toCharArray();
-        int count = 0;
-        for (char c : shipsArray) {
-            if (c != ' ')
-                count++;
-        }
 
-        //System.out.println(count);
 
-        for(int k = 0;k < count;k++)
-        {
-            System.out.println("Schiff Nr." + k + " hat die Größe " + shipsArray[k * 2]);
-        }
 
-        System.out.println("Ships funktion wurde ausgeführt!");
-        return "done";
-    }
-
-    public static void ready()
-    {
-        System.out.println("Ready funktion wurde ausgeführt!");
-    }
 
 }
