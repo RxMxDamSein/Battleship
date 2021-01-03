@@ -541,7 +541,7 @@ public abstract class Bot implements Serializable {
         int used=0;
         Random rdm=new Random();
         while(used<res*0.7){
-            int next=rdm.nextInt(max)+1;
+            int next=rdm.nextInt(max)+3;
             s.add(next);
             used+=(next+2)*3;
         }

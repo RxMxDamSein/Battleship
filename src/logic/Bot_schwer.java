@@ -32,16 +32,16 @@ public class Bot_schwer extends Bot{
             for(int i=0;i<enemyShips.length;i++){
                 if(enemyShips[i]==len){
                     erfolg=true;
-                    if(enemyShips[i]>=longestShip){
-                        for(int j=i+1;j<enemyShips.length;j++){
-                            if(enemyShips[j]>0){    //noch eine richtige Größe
-                                //System.err.println("NEW longeShip "+enemyShips[j]);;
-                                longestShip=enemyShips[j];
-                                break;
-                            }
+                    enemyShips[i]=-1;
+                    longestShip=-1;
+                    for(int j=i+1;j<enemyShips.length;j++){
+                        if(enemyShips[j]>0 && longestShip<enemyShips[j]){    //noch eine richtige Größe
+                            //System.err.println("NEW longeShip "+enemyShips[j]);;
+                            longestShip=enemyShips[j];
                         }
                     }
-                    enemyShips[i]=-1;
+
+
                     break;
                 }
                 if(!erfolg){
