@@ -23,6 +23,7 @@ public class NeuesSpielMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         choiceBox.getItems().add("Einfach");
         choiceBox.getItems().add("Mittel");
+        choiceBox.getItems().add("Schwer");
         choiceBox.getItems().add("Nightmare");
         choiceBox.setValue("Einfach");
 
@@ -46,6 +47,9 @@ public class NeuesSpielMenuController implements Initializable {
         }
         if (ch.equals("Nightmare")) {
             bot = 3;
+        }
+        if (ch.equals("Schwer")) {
+            bot = 4;
         }
         System.out.println("_______________");
         System.out.println("GridSize: "+x);

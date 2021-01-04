@@ -176,6 +176,9 @@ public class BOTgegenBOTGridController  implements Initializable  {
                 //ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_nightmare(x,x,WUNDERVOLLERGEGNERBOT.dasSpiel);
                 ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_nightmare(x,x,null);
                 break;
+            case 4:
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_schwer(x,x);
+                break;
             default:
                 System.err.println("Bot Auswahl Fehler!!");
 
@@ -189,6 +192,9 @@ public class BOTgegenBOTGridController  implements Initializable  {
                 break;
             case 3:
                 WUNDERVOLLERGEGNERBOT = new Bot_nightmare(x,x,ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel);
+                break;
+            case 4:
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_schwer(x,x);
                 break;
             default:
                 System.err.println("Bot Auswahl Fehler!!");
@@ -344,7 +350,9 @@ public class BOTgegenBOTGridController  implements Initializable  {
     }
 
     public void Speichern(ActionEvent event) {
-        //oneSecondsWonder.stop();
+        if (oneSecondsWonder != null) {
+            oneSecondsWonder.stop();
+        }
         //SaveData data = new SaveData();
         //ResourceManager.save(this, "1.save");
         // SAVE POP UP Fenster
@@ -378,7 +386,9 @@ public class BOTgegenBOTGridController  implements Initializable  {
     }
 
     public void BacktoMenu(ActionEvent event) throws IOException {
-        //oneSecondsWonder.stop();
+        if (oneSecondsWonder != null) {
+            oneSecondsWonder.stop();
+        }
         Parent root = FXMLLoader.load(getClass().getResource("BOTgegenBOTMenu.fxml"));
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();

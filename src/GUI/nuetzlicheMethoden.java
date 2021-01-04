@@ -13,44 +13,23 @@ import java.util.Scanner;
 
 public  class nuetzlicheMethoden {
     private int texture=0;
-    private ImageView textureWasser,textureSchiff,textureSchiffTreffer,textureWasserTreffer,textureversenkt,textureauswahlWasser;
+    private Image textureWasser,textureSchiff,textureSchiffTreffer,textureWasserTreffer,textureversenkt,textureauswahlWasser;
 
 
     public nuetzlicheMethoden(int x){
-
-
         //TODO DENNIS MACH SACHEN (NUR IMAGE SPEICHERN)
         texture = EinstellungenController.skin;
-        Image img = new Image("GUI/Textures/WundervollesWasser.png");
-        textureWasser = new ImageView(img);
-        textureWasser.setFitHeight(minsizeberechner(x));
-        textureWasser.setPreserveRatio(true);
+        textureWasser = new Image("GUI/Textures/WundervollesWasser.png");
 
-        img = new Image("GUI/Textures/Schiff.png");
-        textureSchiff = new ImageView(img);
-        textureSchiff.setFitHeight(minsizeberechner(x));
-        textureSchiff.setPreserveRatio(true);
+        textureSchiff = new Image("GUI/Textures/Schiff.png");
 
-         img = new Image("GUI/Textures/trefferSchiff.png");
-        textureSchiffTreffer = new ImageView(img);
-        textureSchiffTreffer.setFitHeight(minsizeberechner(x));
-        textureSchiffTreffer.setPreserveRatio(true);
+        textureSchiffTreffer = new Image("GUI/Textures/trefferSchiff.png");
 
-         img = new Image("GUI/Textures/trefferWasser.png");
-        textureWasserTreffer = new ImageView(img);
-        textureWasserTreffer.setFitHeight(minsizeberechner(x));
-        textureWasserTreffer.setPreserveRatio(true);
+        textureWasserTreffer = new Image("GUI/Textures/trefferWasser.png");
 
-         img = new Image("GUI/Textures/trefferSchiff.png");
-        textureversenkt = new ImageView(img);
-        textureversenkt.setFitHeight(minsizeberechner(x));
-        textureversenkt.setPreserveRatio(true);
+        textureversenkt = new Image("GUI/Textures/trefferSchiff.png");
 
-         img = new Image("GUI/Textures/ausgeaehltesWasser.png");
-        textureauswahlWasser= new ImageView(img);
-        textureauswahlWasser.setFitHeight(minsizeberechner(x));
-        textureauswahlWasser.setPreserveRatio(true);
-
+        textureauswahlWasser = new Image("GUI/Textures/ausgeaehltesWasser.png");
     }
 
     public double minsizeberechner(int x) {
@@ -72,8 +51,11 @@ public  class nuetzlicheMethoden {
                 z.setStyle("-fx-background-color: #03fcf4");
                 break;
             case 1:
-                z.setGraphic(textureWasser);
-            break;
+                ImageView view = new ImageView(textureWasser);
+                view.setFitHeight(minsizeberechner(x));
+                view.setPreserveRatio(true);
+                z.setGraphic(view);
+                break;
 
         }
         return z;
@@ -84,7 +66,10 @@ public  class nuetzlicheMethoden {
                 z.setStyle("-fx-background-color: grey");
                 break;
             case 1:
-                z.setGraphic(textureSchiff);
+                ImageView view = new ImageView(textureSchiff);
+                view.setFitHeight(minsizeberechner(x));
+                view.setPreserveRatio(true);
+                z.setGraphic(view);
                 break;
 
         }
@@ -96,7 +81,10 @@ public  class nuetzlicheMethoden {
                 z.setStyle("-fx-background-color: red");
                 break;
             case 1:
-                z.setGraphic(textureSchiffTreffer);
+                ImageView view = new ImageView(textureSchiffTreffer);
+                view.setFitHeight(minsizeberechner(x));
+                view.setPreserveRatio(true);
+                z.setGraphic(view);
                 break;
 
         }
@@ -108,7 +96,10 @@ public  class nuetzlicheMethoden {
                 z.setStyle("-fx-background-color: blue");
                 break;
             case 1:
-                z.setGraphic(textureWasserTreffer);
+                ImageView view = new ImageView(textureWasserTreffer);
+                view.setFitHeight(minsizeberechner(x));
+                view.setPreserveRatio(true);
+                z.setGraphic(view);
                 break;
 
         }
@@ -120,7 +111,10 @@ public  class nuetzlicheMethoden {
                 z.setStyle("-fx-background-color: black");
                 break;
             case 1:
-                z.setGraphic(textureversenkt);
+                ImageView view = new ImageView(textureversenkt);
+                view.setFitHeight(minsizeberechner(x));
+                view.setPreserveRatio(true);
+                z.setGraphic(view);
                 break;
 
         }
@@ -132,7 +126,10 @@ public  class nuetzlicheMethoden {
                 z.setStyle("-fx-background-color: white");
                 break;
             case 1:
-                z.setGraphic(textureauswahlWasser);
+                ImageView view = new ImageView(textureauswahlWasser);
+                view.setFitHeight(minsizeberechner(x));
+                view.setPreserveRatio(true);
+                z.setGraphic(view);
                 break;
 
         }

@@ -148,6 +148,9 @@ public class GameGridController implements Initializable, Serializable {
             case 3:
                 ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_nightmare(x,x,GOETTLICHESSPIELDERVERNICHTUNGMITbot);
                 break;
+            case 4:
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_schwer(x,x);
+                break;
             default:
                 System.err.println("Bot Auswahl Fehler!!");
 
