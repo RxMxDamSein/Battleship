@@ -10,8 +10,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import logic.save.SAFE_SOME;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,35 +53,70 @@ public class HostMenuController implements Initializable {
         window.show();
     }
 
-    public void ladenbutton(ActionEvent event) {
-    }
+    public void ladenbutton(ActionEvent event) throws IOException {
+        Node source = (Node) event.getSource();
+        Window theStage = source.getScene().getWindow();
+        //Id für Spiel Datei
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Wähle Spiel Datei!");
+        new File("./save/").mkdirs();
+        fileChooser.setInitialDirectory(new File("./save"));
+        System.out.println("Wähle Spiel Datei!");
+        File file = fileChooser.showOpenDialog(theStage);
+        //System.out.println("Path: "+file.getAbsolutePath());
+        String id = file.getName();
 
-    public void StartButton(ActionEvent event) throws IOException {
-        /*
-        String sx = String.valueOf(GridSize.getText()); //Text aus der Benutzereingabe
-        Object value = choiceBox.getValue();
-        String ch = (String) value;
-
-        //für test zwecke
-        if (sx.equals("")) {
-            sx = "10";
+        SAFE_SOME SAFE = SAFE_SOME.load(id);
+        if (SAFE.game < 4 || SAFE.game > 5) {
+            System.err.println("Falsche speicher Datei!!");
+            return;
         }
-        x = Integer.parseInt(sx);
+
+        Integer p;
+        try {
+            p = Integer.parseInt(PortText.getText());
+        } catch (NumberFormatException e) {
+            p = 420;
+        }
+
+        String ausw = SpielartChoice.getValue();
+        String ch = BotChoice.getValue();
+        int bot=2;
+
         if (ch.equals("Einfach")) {
             bot = 1;
         }
         if (ch.equals("Mittel")) {
             bot = 2;
         }
-        if (ch.equals("Nightmare")) {
+        if (ch.equals("Schwer")) {
             bot = 3;
         }
-        System.out.println("_______________");
-        System.out.println("GridSize: "+x);
-        System.out.println("Bot: "+ch);
-        System.out.println("_______________");
 
-         */
+        if (ausw.equals("Spieler")) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
+            Parent r = loader.load();
+            MultiHostSpielerController controller = loader.getController();
+            controller.setVariables(p,SAFE,id);
+            Scene s = new Scene(r);
+            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            window.setScene(s);
+            window.show();
+        } else if (ausw.equals("Bot")) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
+            Parent r = loader.load();
+            MultiHostBotController controller = loader.getController();
+            controller.setVariables(p,SAFE,id,bot);
+            Scene s = new Scene(r);
+            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            window.setScene(s);
+            window.show();
+
+        }
+
+    }
+
+    public void StartButton(ActionEvent event) throws IOException {
         Integer p;
         try {
             p = Integer.parseInt(PortText.getText());
@@ -90,18 +129,34 @@ public class HostMenuController implements Initializable {
         } catch (NumberFormatException e) {
             g = 10;
         }
-
-
-
-
         String ausw = SpielartChoice.getValue();
-        String bot = BotChoice.getValue();
+        String ch = BotChoice.getValue();
+        int bot=2;
+
+        if (ch.equals("Einfach")) {
+            bot = 1;
+        }
+        if (ch.equals("Mittel")) {
+            bot = 2;
+        }
+        if (ch.equals("Schwer")) {
+            bot = 3;
+        }
 
         if (ausw.equals("Spieler")) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
             controller.setVariables(p,g);
+            Scene s = new Scene(r);
+            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            window.setScene(s);
+            window.show();
+        } else if (ausw.equals("Bot")) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
+            Parent r = loader.load();
+            MultiHostBotController controller = loader.getController();
+            controller.setVariables(p,g,bot);
             Scene s = new Scene(r);
             Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(s);

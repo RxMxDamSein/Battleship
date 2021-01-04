@@ -58,7 +58,7 @@ public class BOTgegenBOTGridController  implements Initializable  {
     }
 
     public void setInteger(Integer a, Integer b1, Integer b2) {
-        methoden = new nuetzlicheMethoden();
+        methoden = new nuetzlicheMethoden(a);
         x=a;
         bot1 = b2;
         bot2 = b1;

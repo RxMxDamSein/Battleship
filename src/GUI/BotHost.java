@@ -1,5 +1,6 @@
 package GUI;
 
+import logic.Bot;
 import logic.Spiel;
 import logic.netCode.Server;
 import logic.save.SAFE_SOME;
@@ -11,7 +12,7 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Host {
+public class BotHost {
 
     private ServerSocket ss;
     private Socket s;
@@ -23,17 +24,20 @@ public class Host {
     public boolean Connected=false,change=false,load=false;
     public String nachricht="",id;
     private Spiel dasSpiel;
+    private Bot derBot;
 
-    public Host (int p,int g,Spiel dasSpiel) {
+    public BotHost (int p,int g,Bot derBot) {
         port=p;
         Feldg=g;
-        this.dasSpiel = dasSpiel;
+        this.dasSpiel = derBot.getDasSpiel();
+        this.derBot = derBot;
     }
-    public Host (int p,int g,Spiel dasSpiel,String id) {
+    public BotHost (int p,int g,Bot derBot,String id) {
         load = true;
         port=p;
         Feldg=g;
-        this.dasSpiel = dasSpiel;
+        this.dasSpiel = derBot.getDasSpiel();
+        this.derBot = derBot;
         this.id = id;
     }
 
@@ -48,7 +52,9 @@ public class Host {
                 Connected=true;
                 in = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 out = new OutputStreamWriter(s.getOutputStream());
-                // LADEN
+
+
+                // NICHT LADEN
                 if (!load) {
                     sendSocket("size " + Feldg + " " + Feldg);
                     String z = receiveSocket();
@@ -56,7 +62,10 @@ public class Host {
                         CutConnection();
                         return;
                     }
+                    senships(Bot.calcships(dasSpiel.getSizeX(),dasSpiel.getSizeY()));
+                    schuss();
                 } else {
+                    //LADEN
                     sendSocket("load "+id);
                     String z = receiveSocket();
                     if (!z.contains("done")) {
@@ -77,6 +86,8 @@ public class Host {
                             Clientshot(nachricht);
                         else
                             sonderNachrichten(nachricht);
+                    } else {
+                        schuss();
                     }
                 }
 
@@ -155,27 +166,34 @@ public class Host {
             e.printStackTrace();
         }
     }
-    private boolean shooting=false;
 
-    public void schuss(int x, int y) {
-        if (dasSpiel.getAbschussSpieler() != 1 || !dasSpiel.isStarted() || dasSpiel.isOver() || shooting) {
+    public void schuss() {
+        while (!dasSpiel.isStarted());
+        if (dasSpiel.getAbschussSpieler() != 1  || dasSpiel.isOver() ) {
             System.err.println("NIX SCHUSS");
             return;
         }
-        shooting = true;
         Runnable runnable = ()->{
-            sendSocket("shot "+x+" "+y);
+            int[] xy = derBot.getSchuss();
+            sendSocket("shot "+xy[0]+" "+xy[1]);
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {
                 CutConnection();
             }
             if (z.contains("1")) {
-                dasSpiel.shoot(x,y,1,1,false);
+                dasSpiel.shoot(xy[0],xy[1], 1,1,false);
+                derBot.setSchussFeld(xy[0], xy[1], 2,false);
+                change = true;
+                schuss();
             } else if(z.contains("2")) {
-                dasSpiel.shoot(x,y,1,1,true);
+                dasSpiel.shoot(xy[0],xy[1],1,1,true);
+                derBot.setSchussFeld(xy[0], xy[1], 2,true);
+                change = true;
+                schuss();
             } else if (z.contains("0")) {
-                dasSpiel.shoot(x,y,1,0,false);
+                dasSpiel.shoot(xy[0], xy[1],1,0,false);
+                derBot.setSchussFeld(xy[0], xy[1], 3,false);
                 change = true;
                 sendSocket("next");
                 nachricht = receiveSocket();
@@ -186,7 +204,6 @@ public class Host {
             } else {
                 CutConnection();
             }
-            shooting = false;
             change = true;
         };
         Thread t = new Thread(runnable);
@@ -197,6 +214,7 @@ public class Host {
         int x = Integer.parseInt(nachricht.split(" ")[1]);
         int y = Integer.parseInt(nachricht.split(" ")[2]);
         dasSpiel.shoot(x,y,0,0,false);
+        //derBot.setSchussFeld(x,y,);
         change = true;
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
@@ -230,6 +248,7 @@ public class Host {
             CutConnection();
         } else if (nachricht.contains("next")) {
             System.out.println("Sie sind an der Reihe!");
+            schuss();
         } else {
             CutConnection();
         }

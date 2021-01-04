@@ -53,7 +53,7 @@ public class GameGridController implements Initializable, Serializable {
 
     public GameGridController() {}
     public void setInteger(Integer a,Integer b) {
-        methoden = new nuetzlicheMethoden();
+        methoden = new nuetzlicheMethoden(a);
         x=a;
         bot = b;
         Gridinit();
@@ -63,12 +63,12 @@ public class GameGridController implements Initializable, Serializable {
         SaveGame save = (SaveGame) SaveGame.load(id);
         Spiel s = save.g;
         Bot b = save.b;
-        methoden = new nuetzlicheMethoden();
         /*
         Bot b =(Bot) Bot.load(id+"-B");
         Spiel s = Spiel.load(id+"-S");
          */
         x = s.getSizeX();
+        methoden = new nuetzlicheMethoden(x);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = s;
         ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = b;
 

@@ -37,7 +37,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
-public class MultiHostSpielerController implements Initializable, Serializable {
+public class MultiHostBotController implements Initializable, Serializable {
     private static final long serialVersionUID=1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private StackPane StackPane;
@@ -55,11 +55,9 @@ public class MultiHostSpielerController implements Initializable, Serializable {
 
     private nuetzlicheMethoden methoden;
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
-    private Host Host;
+    private Bot derBot;
+    private BotHost Host;
     private Timeline updateTimeline;
-
-
-    public MultiHostSpielerController() {}
 
     private void initupdateTimeline() {
         if (updateTimeline != null) {
@@ -79,25 +77,30 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         updateTimeline.setCycleCount(Animation.INDEFINITE);
         updateTimeline.play();
     }
-
-    public void setVariables(Integer Port,Integer FeldGroesse) {
+    //Konstruktor normal
+    public void setVariables(Integer Port,Integer FeldGroesse,int bot) {
         methoden = new nuetzlicheMethoden(FeldGroesse);
         x=FeldGroesse;
-        //bot = b;
+        this.bot = bot;
         Gridinit();
         Spielinit();
-        Host = new Host(Port,FeldGroesse,GOETTLICHESSPIELDERVERNICHTUNGMITbot);
+        derBot.shipSizesToAdd(Bot.calcships(x,x));
+        Host = new BotHost(Port,FeldGroesse,derBot);
         Host.init();
-
-
+        GridUpdater();
+        initupdateTimeline();
     }
-    public void setVariables(Integer Port, SAFE_SOME SAFE,String id) {
+    //Konstruktor laden
+    public void setVariables(Integer Port, SAFE_SOME SAFE,String id,int bot) {
         x=SAFE.spiele[0].getSizeX();
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot=SAFE.spiele[0];
         methoden = new nuetzlicheMethoden(x);
-        //bot = b;
+        this.bot = bot;
+        Spielinit();
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot=SAFE.spiele[0];
+        derBot.dasSpiel = GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+        derBot.dasSpiel.setSpielFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld());
         Gridinit();
-        Host = new Host(Port,x,GOETTLICHESSPIELDERVERNICHTUNGMITbot,id);
+        Host = new BotHost(Port,x,derBot,id);
         Host.init();
         GridUpdater();
         initupdateTimeline();
@@ -150,25 +153,22 @@ public class MultiHostSpielerController implements Initializable, Serializable {
     }
     //Initialisiert das Spiel und den Bot
     public void Spielinit() {
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.setVerbose(false);
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
+        switch (bot) {
+            case 1:
+                derBot = new RDM_Bot(x,x);
+                break;
+            case 2:
+                derBot = new Bot_lvl_2(x,x);
+                break;
+            case 3:
+                derBot = new Bot_schwer(x,x);
+                break;
+            default:
+                System.err.println("Bot Auswahl Fehler");
+                return;
+        }
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot = derBot.dasSpiel;
     }
-    /*
-    public double minsizeberechner() {
-        Rectangle2D screen = Screen.getPrimary().getBounds();
-        //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
-        //return -((double)x-10)+50;
-        //return -(0.75* (double) x-7.5)+50;
-        //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
-        double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
-        zahl*= 0.7;
-        zahl = (zahl/2)/x;
-        //System.out.println("Wundervolle Zahl: "+zahl);
-        if (zahl > 200) zahl=200;
-        return zahl;
-    }
-     */
 
 
 
@@ -235,7 +235,6 @@ public class MultiHostSpielerController implements Initializable, Serializable {
     //ActionHandler für Label 2 (Grid 2) gedrückt
     private void label2click(int a, int b) {
         System.out.println("Grid 2 pressed in x: "+a+" y: "+b);
-        Host.schuss(a,b);
     }
 
 
@@ -363,38 +362,6 @@ public class MultiHostSpielerController implements Initializable, Serializable {
     //ActionHandler für Label 1 (Grid 1) gedrückt
     private void labelclick(int a, int b) {
         System.out.println("x= "+a+" y= "+b);
-
-        // sx,sy,ex,ey
-        if(!spielstatus) {
-            if (count == 0) {
-                sx = a;
-                sy = b;
-                //labels[a][b].setStyle("-fx-background-color: white");
-                labels[a][b] = methoden.textureauswahlWasser(labels[a][b],x);
-                count++;
-                return;
-            }
-            if (count == 1) {
-                ex = a;
-                ey = b;
-                //labels[a][b].setStyle("-fx-background-color: white");
-                labels[a][b] = methoden.textureauswahlWasser(labels[a][b],x);
-                count = 0;
-                shippplace();
-            }
-        }
-
-        /*
-        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-        if(spieler == 0) {
-            if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b,1,0,false)) {
-                labels[a][b].setStyle("-fx-background-color: red");
-            }
-            labels[a][b].setStyle("-fx-background-color: pink");
-        }
-
-         */
-
     }
     //versetzt Spiel in Feuermodus
     public void gameStart(ActionEvent event) {
@@ -407,7 +374,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         GameTopLabel1.setText("Du schießt jetzt hier:");
         Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
 
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot.setAbschussSpieler(1);
         /*
         System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
         int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);
