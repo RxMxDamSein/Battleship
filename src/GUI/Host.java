@@ -235,4 +235,14 @@ public class Host {
         }
 
     }
+
+    public void save(String hash) {
+        sendSocket("save "+hash);
+        if (!receiveSocket().contains("done")) {
+            System.err.println("Client hat nicht wahrscheinlich gespeichert");
+            CutConnection();
+            return;
+        }
+        CutConnection();
+    }
 }

@@ -37,7 +37,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
-public class MultiHostBotController implements Initializable, Serializable {
+public class MultiClientSpielerController implements Initializable, Serializable {
     private static final long serialVersionUID=1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private StackPane StackPane;
@@ -55,9 +55,10 @@ public class MultiHostBotController implements Initializable, Serializable {
 
     private nuetzlicheMethoden methoden;
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
-    private Bot derBot;
-    private BotHost Host;
     private Timeline updateTimeline;
+    private Client Client;
+
+
 
     private void initupdateTimeline() {
         if (updateTimeline != null) {
@@ -69,42 +70,37 @@ public class MultiHostBotController implements Initializable, Serializable {
                 GridUpdater();
                 updateTimeline.stop();
             }
-            else if (Host.change) {
-                Host.change = false;
+            else if (Client.change) {
+                Client.change = false;
                 GridUpdater();
             }
         }));
         updateTimeline.setCycleCount(Animation.INDEFINITE);
         updateTimeline.play();
     }
-    //Konstruktor normal
-    public void setVariables(Integer Port,Integer FeldGroesse,int bot) {
-        methoden = new nuetzlicheMethoden(FeldGroesse);
-        x=FeldGroesse;
-        this.bot = bot;
+
+    public void setVariables(Client Client) {
+        methoden = new nuetzlicheMethoden(Client.dasSpiel.getSizeX());
+        x=Client.dasSpiel.getSizeX();
+        //bot = b;
         Gridinit();
         Spielinit();
-        derBot.shipSizesToAdd(Bot.calcships(x,x));
-        Host = new BotHost(Port,FeldGroesse,derBot);
-        Host.init();
-        GridUpdater();
-        initupdateTimeline();
+        this.Client = Client;
+        Client.init();
+
+
     }
-    //Konstruktor laden
-    public void setVariables(Integer Port, SAFE_SOME SAFE,String id,int bot) {
+    public void setVariables(Integer Port, SAFE_SOME SAFE,String id) {
         if (SAFE.id != null) {
             id = SAFE.id;
         }
         x=SAFE.spiele[0].getSizeX();
-        methoden = new nuetzlicheMethoden(x);
-        this.bot = bot;
-        Spielinit();
         GOETTLICHESSPIELDERVERNICHTUNGMITbot=SAFE.spiele[0];
-        derBot.dasSpiel = GOETTLICHESSPIELDERVERNICHTUNGMITbot;
-        derBot.dasSpiel.setSpielFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld());
+        methoden = new nuetzlicheMethoden(x);
+        //bot = b;
         Gridinit();
-        Host = new BotHost(Port,x,derBot,id);
-        Host.init();
+        Client = new Client(Port,x,GOETTLICHESSPIELDERVERNICHTUNGMITbot,id);
+        Client.init();
         GridUpdater();
         initupdateTimeline();
 
@@ -156,23 +152,25 @@ public class MultiHostBotController implements Initializable, Serializable {
     }
     //Initialisiert das Spiel und den Bot
     public void Spielinit() {
-        switch (bot) {
-            case 1:
-                derBot = new RDM_Bot(x,x);
-                break;
-            case 2:
-                derBot = new Bot_lvl_2(x,x);
-                break;
-            case 3:
-                derBot = new Bot_schwer(x,x);
-                break;
-            default:
-                System.err.println("Bot Auswahl Fehler");
-                return;
-        }
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot = derBot.dasSpiel;
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.setAbschussSpieler(1);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot.setVerbose(false);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
+    /*
+    public double minsizeberechner() {
+        Rectangle2D screen = Screen.getPrimary().getBounds();
+        //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
+        //return -((double)x-10)+50;
+        //return -(0.75* (double) x-7.5)+50;
+        //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
+        double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
+        zahl*= 0.7;
+        zahl = (zahl/2)/x;
+        //System.out.println("Wundervolle Zahl: "+zahl);
+        if (zahl > 200) zahl=200;
+        return zahl;
+    }
+     */
 
 
 
@@ -239,6 +237,7 @@ public class MultiHostBotController implements Initializable, Serializable {
     //ActionHandler für Label 2 (Grid 2) gedrückt
     private void label2click(int a, int b) {
         System.out.println("Grid 2 pressed in x: "+a+" y: "+b);
+        Client.schuss(a,b);
     }
 
 
@@ -366,6 +365,38 @@ public class MultiHostBotController implements Initializable, Serializable {
     //ActionHandler für Label 1 (Grid 1) gedrückt
     private void labelclick(int a, int b) {
         System.out.println("x= "+a+" y= "+b);
+
+        // sx,sy,ex,ey
+        if(!spielstatus) {
+            if (count == 0) {
+                sx = a;
+                sy = b;
+                //labels[a][b].setStyle("-fx-background-color: white");
+                labels[a][b] = methoden.textureauswahlWasser(labels[a][b],x);
+                count++;
+                return;
+            }
+            if (count == 1) {
+                ex = a;
+                ey = b;
+                //labels[a][b].setStyle("-fx-background-color: white");
+                labels[a][b] = methoden.textureauswahlWasser(labels[a][b],x);
+                count = 0;
+                shippplace();
+            }
+        }
+
+        /*
+        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
+        if(spieler == 0) {
+            if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b,1,0,false)) {
+                labels[a][b].setStyle("-fx-background-color: red");
+            }
+            labels[a][b].setStyle("-fx-background-color: pink");
+        }
+
+         */
+
     }
     //versetzt Spiel in Feuermodus
     public void gameStart(ActionEvent event) {
@@ -376,9 +407,9 @@ public class MultiHostBotController implements Initializable, Serializable {
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
         GameTopLabel1.setText("Du schießt jetzt hier:");
-        Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
+        Client.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
 
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.setAbschussSpieler(1);
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
         /*
         System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
         int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);
@@ -403,8 +434,8 @@ public class MultiHostBotController implements Initializable, Serializable {
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-        if (Host.Connected) {
-            Host.CutConnection();
+        if (Client.Connected) {
+            Client.CutConnection();
         }
         Parent root = FXMLLoader.load(getClass().getResource("HostMenu.fxml"));
         Scene s = new Scene(root);
@@ -424,7 +455,6 @@ public class MultiHostBotController implements Initializable, Serializable {
     }
 
     public void Speichern(ActionEvent event) throws IOException {
-        Host.pause = true;
 
         //SaveData data = new SaveData();
         //ResourceManager.save(this, "1.save");
@@ -446,7 +476,7 @@ public class MultiHostBotController implements Initializable, Serializable {
             //Speichern
             String hash = ""+this.hashCode();
             new SAFE_SOME(null,new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot},4,hash,name);
-            Host.save(hash);
+            Client.save(hash);
             newStage.close();
         });
         comp.getChildren().add(DateiName);

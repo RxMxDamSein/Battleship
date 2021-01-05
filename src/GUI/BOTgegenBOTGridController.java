@@ -194,7 +194,7 @@ public class BOTgegenBOTGridController  implements Initializable  {
                 WUNDERVOLLERGEGNERBOT = new Bot_nightmare(x,x,ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel);
                 break;
             case 4:
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_schwer(x,x);
+                WUNDERVOLLERGEGNERBOT = new Bot_schwer(x,x);
                 break;
             default:
                 System.err.println("Bot Auswahl Fehler!!");

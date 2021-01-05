@@ -19,7 +19,6 @@ public class GUImain extends Application {
         Scene scene = new Scene(root);
         primaryStage.setTitle("GameStartO");
         primaryStage.setScene(scene);
-        //primaryStage.setMaximized(true);
         primaryStage.show();
 
     }

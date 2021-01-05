@@ -11,6 +11,7 @@ public class SAFE_SOME implements Serializable {
     public Bot[] bots;
     public Spiel[] spiele;
     public int game;
+    public String id;
     /*
     switch game
     1 -> 2SP
@@ -19,15 +20,7 @@ public class SAFE_SOME implements Serializable {
     4 -> PlayerHost
     5 -> PlayerBotHost
      */
-
-    /**
-     * Damit kann man doch dann gefühlt alles speichern :D
-     * @param b so viele Bots du willst
-     * @param s so viele Spiele du willst
-     * @param g ein int wert um zu wissen was für ein Spiel typ
-     * @param id Dateiname sozusagen
-     */
-    public SAFE_SOME(Bot[] b,Spiel[] s,int g,String id){
+    private void STD_SAVE(Bot[] b,Spiel[] s,int g,String id) {
         bots=b;
         spiele=s;
         game=g;
@@ -37,6 +30,20 @@ public class SAFE_SOME implements Serializable {
             System.err.println("SAVE ERROR!");
             e.printStackTrace();
         }
+    }
+    public SAFE_SOME(Bot[] b,Spiel[] s,int g,String id,String DateiName) {
+        this.id = id;
+        STD_SAVE(b, s, g, DateiName);
+    }
+    /**
+     * Damit kann man doch dann gefühlt alles speichern :D
+     * @param b so viele Bots du willst
+     * @param s so viele Spiele du willst
+     * @param g ein int wert um zu wissen was für ein Spiel typ
+     * @param id Dateiname sozusagen
+     */
+    public SAFE_SOME(Bot[] b,Spiel[] s,int g,String id){
+        STD_SAVE(b, s, g, id);
     }
 
     /**

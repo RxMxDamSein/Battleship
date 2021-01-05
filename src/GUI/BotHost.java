@@ -25,6 +25,7 @@ public class BotHost {
     public String nachricht="",id;
     private Spiel dasSpiel;
     private Bot derBot;
+    public boolean pause=false;
 
     public BotHost (int p,int g,Bot derBot) {
         port=p;
@@ -63,7 +64,7 @@ public class BotHost {
                         return;
                     }
                     senships(Bot.calcships(dasSpiel.getSizeX(),dasSpiel.getSizeY()));
-                    schuss();
+
                 } else {
                     //LADEN
                     sendSocket("load "+id);
@@ -152,6 +153,7 @@ public class BotHost {
                 CutConnection();
             }
             Spielstartet = true;
+            schuss();
         };
         Thread t = new Thread(Runnable);
         t.start();
@@ -168,8 +170,8 @@ public class BotHost {
     }
 
     public void schuss() {
-        while (!dasSpiel.isStarted());
-        if (dasSpiel.getAbschussSpieler() != 1  || dasSpiel.isOver() ) {
+        while (pause);
+        if (dasSpiel.getAbschussSpieler() != 1  || dasSpiel.isOver() || !dasSpiel.isStarted() ) {
             System.err.println("NIX SCHUSS");
             return;
         }
@@ -253,5 +255,15 @@ public class BotHost {
             CutConnection();
         }
 
+    }
+
+    public void save(String hash) {
+        sendSocket("save "+hash);
+        if (!receiveSocket().contains("done")) {
+            System.err.println("Client hat nicht wahrscheinlich gespeichert");
+            CutConnection();
+            return;
+        }
+        CutConnection();
     }
 }

@@ -92,6 +92,9 @@ public class MultiHostSpielerController implements Initializable, Serializable {
 
     }
     public void setVariables(Integer Port, SAFE_SOME SAFE,String id) {
+        if (SAFE.id != null) {
+            id = SAFE.id;
+        }
         x=SAFE.spiele[0].getSizeX();
         GOETTLICHESSPIELDERVERNICHTUNGMITbot=SAFE.spiele[0];
         methoden = new nuetzlicheMethoden(x);
@@ -471,11 +474,10 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         Save.setOnAction(event1 -> {
             String name = String.valueOf(DateiName.getText());
             System.out.println("Name: "+name);
-            //new SaveGame(GOETTLICHESSPIELDERVERNICHTUNGMITbot,ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST,name);
-            /*
-            GOETTLICHESSPIELDERVERNICHTUNGMITbot.saveGame(name+"-S");
-            ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.saveGame(name+"-B");
-             */
+            //Speichern
+            String hash = ""+this.hashCode();
+            new SAFE_SOME(null,new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot},4,hash,name);
+            Host.save(hash);
             newStage.close();
         });
         comp.getChildren().add(DateiName);
