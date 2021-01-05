@@ -21,6 +21,15 @@ public class JoinMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        BotChoice.getItems().add("Einfach");
+        BotChoice.getItems().add("Mittel");
+        BotChoice.getItems().add("Schwer");
+        BotChoice.setValue("Mittel");
+        //BotChoice.hide();
+
+        SpielartChoice.getItems().add("Spieler");
+        SpielartChoice.getItems().add("Bot");
+        SpielartChoice.setValue("Spieler");
 
     }
     public void backbutton(ActionEvent event) throws IOException {
@@ -68,6 +77,9 @@ public class JoinMenuController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiClientSpielerGrid.fxml"));
             Parent r = loader.load();
             MultiClientSpielerController controller = loader.getController();
+            while (Client.status<1 && !Client.ERROR);
+            if(Client.ERROR)
+                return;
             controller.setVariables(Client);
             //ToDo GUI Einfrieren
             Scene s = new Scene(r);

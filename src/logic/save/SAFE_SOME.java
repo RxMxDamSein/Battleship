@@ -1,5 +1,6 @@
 package logic.save;
 
+import GUI.Client;
 import logic.Bot;
 import logic.Spiel;
 
@@ -10,8 +11,32 @@ public class SAFE_SOME implements Serializable {
     private static final long serialVersionUID=1337L;
     public Bot[] bots;
     public Spiel[] spiele;
+    public Object[] objects;
     public int game;
     public String id;
+    public int Status;
+
+    public SAFE_SOME(Bot[] b, Spiel[] s, int g, String id, String DateiName, int status) {
+        this.Status=status;
+        this.id = id;
+        STD_SAVE(b, s, g, DateiName);
+    }
+
+    public SAFE_SOME(Bot[] b, Spiel[] s, int g, String id, int status) {
+        this.Status=status;
+        STD_SAVE(b, s, g, id);
+    }
+
+    public SAFE_SOME(Client client) {
+        objects=new Object[]{client};
+        try {
+            ResourceManager.save(this,id);
+        } catch (IOException e) {
+            System.err.println("SAVE ERROR!");
+            e.printStackTrace();
+        }
+    }
+
     /*
     switch game
     1 -> 2SP

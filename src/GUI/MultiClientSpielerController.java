@@ -83,28 +83,15 @@ public class MultiClientSpielerController implements Initializable, Serializable
         methoden = new nuetzlicheMethoden(Client.dasSpiel.getSizeX());
         x=Client.dasSpiel.getSizeX();
         //bot = b;
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot=Client.dasSpiel;
         Gridinit();
-        Spielinit();
+        //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
-        Client.init();
+        //Client.init(); wurde davor schon erledigt
 
 
     }
-    public void setVariables(Integer Port, SAFE_SOME SAFE,String id) {
-        if (SAFE.id != null) {
-            id = SAFE.id;
-        }
-        x=SAFE.spiele[0].getSizeX();
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot=SAFE.spiele[0];
-        methoden = new nuetzlicheMethoden(x);
-        //bot = b;
-        Gridinit();
-        Client = new Client(Port,x,GOETTLICHESSPIELDERVERNICHTUNGMITbot,id);
-        Client.init();
-        GridUpdater();
-        initupdateTimeline();
 
-    }
 
 
 
@@ -150,27 +137,8 @@ public class MultiClientSpielerController implements Initializable, Serializable
         //}
 
     }
-    //Initialisiert das Spiel und den Bot
-    public void Spielinit() {
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.setVerbose(false);
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
-    }
-    /*
-    public double minsizeberechner() {
-        Rectangle2D screen = Screen.getPrimary().getBounds();
-        //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
-        //return -((double)x-10)+50;
-        //return -(0.75* (double) x-7.5)+50;
-        //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
-        double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
-        zahl*= 0.7;
-        zahl = (zahl/2)/x;
-        //System.out.println("Wundervolle Zahl: "+zahl);
-        if (zahl > 200) zahl=200;
-        return zahl;
-    }
-     */
+
+
 
 
 
@@ -269,12 +237,18 @@ public class MultiClientSpielerController implements Initializable, Serializable
             //Schiff geht nach
             if (ey > sy) {
                 size = ey - sy+1;
+                if(!Client.inShips(size)){
+                    illegalesSchiff();
+                    return;
+                }
                 System.out.println("Size: "+size);
                 shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(sx,sy,false,size,0);
                 System.out.println(shippaddo);
                 if(!shippaddo) {
                     illegalesSchiff();
                     return;
+                }else {
+                    Client.deleteShip(size);
                 }
                 for (int i = ey; i != sy-1; i--) {
                     //System.out.println("PENIS 1");
@@ -285,12 +259,20 @@ public class MultiClientSpielerController implements Initializable, Serializable
             }
             if (sy > ey) {
                 size = sy - ey+1;
+                if(!Client.inShips(size)) {
+                    illegalesSchiff();
+                    return;
+                }
+
                 System.out.println("Size: "+size);
                 shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(ex,ey,false,size,0);
                 System.out.println(shippaddo);
                 if(!shippaddo) {
                     illegalesSchiff();
                     return;
+                }
+                else {
+                    Client.deleteShip(size);
                 }
                 for (int i = sy; i != ey-1; i--) {
                     //System.out.println("PENIS 2");
@@ -309,12 +291,18 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.out.println("Horizontal Schiff");
             if (ex > sx) {
                 size = ex - sx+1;
+                if(!Client.inShips(size)) {
+                    illegalesSchiff();
+                    return;
+                }
                 System.out.println("Size: "+size);
                 shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(sx,sy,true,size,0);
                 System.out.println(shippaddo);
                 if(!shippaddo) {
                     illegalesSchiff();
                     return;
+                }else {
+                    Client.deleteShip(size);
                 }
                 for (int i = ex; i != sx-1; i--) {
                     //System.out.println("i= " + i);
@@ -325,12 +313,18 @@ public class MultiClientSpielerController implements Initializable, Serializable
             }
             if (ex < sx) {
                 size = sx - ex+1;
+                if(!Client.inShips(size)) {
+                    illegalesSchiff();
+                    return;
+                }
                 System.out.println("Size: "+size);
                 shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(ex,ey,true,size,0);
                 System.out.println(shippaddo);
                 if(!shippaddo) {
                     illegalesSchiff();
                     return;
+                }else {
+                    Client.deleteShip(size);
                 }
                 for (int i = sx; i != ex-1; i--) {
                     //System.out.println("KAKA 2");
@@ -404,12 +398,16 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Spiel bereits im gange!!");
             return;
         }
+
+
+        if(!Client.senships()){
+            System.err.println("Es wurden nicht alle Schiffe hinzugefügt!");
+            return;
+        }
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
         GameTopLabel1.setText("Du schießt jetzt hier:");
-        Client.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
 
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
         /*
         System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
         int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);
@@ -434,7 +432,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-        if (Client.Connected) {
+        if (Client.status>0) {
             Client.CutConnection();
         }
         Parent root = FXMLLoader.load(getClass().getResource("HostMenu.fxml"));
@@ -475,7 +473,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.out.println("Name: "+name);
             //Speichern
             String hash = ""+this.hashCode();
-            new SAFE_SOME(null,new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot},4,hash,name);
+            new SAFE_SOME(Client);
             Client.save(hash);
             newStage.close();
         });
