@@ -437,10 +437,11 @@ public class MultiClientSpielerController implements Initializable, Serializable
         if (Client.Connected) {
             Client.CutConnection();
         }
-        Parent root = FXMLLoader.load(getClass().getResource("HostMenu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("JoinMenu.fxml"));
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("JoinMenu");
         window.show();
     }
 

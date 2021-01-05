@@ -63,6 +63,7 @@ public class NeuesSpielMenuController implements Initializable {
         Scene s = new Scene(r);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("Game");
         window.show();
 
     }
@@ -74,7 +75,7 @@ public class NeuesSpielMenuController implements Initializable {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
-
+        window.setTitle("EinzelspielerMenu");
         window.show();
     }
 

@@ -410,6 +410,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("HostMenu");
         window.show();
     }
 

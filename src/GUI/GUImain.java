@@ -17,9 +17,8 @@ public class GUImain extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Scene scene = new Scene(root);
-        primaryStage.setTitle("GameStartO");
+        primaryStage.setTitle("MainMenu");
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 }

@@ -28,6 +28,7 @@ public class JoinMenuController implements Initializable {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("MehrspielerMenu");
         window.show();
     }
 
@@ -69,10 +70,13 @@ public class JoinMenuController implements Initializable {
             Parent r = loader.load();
             MultiClientSpielerController controller = loader.getController();
             controller.setVariables(Client);
+
             //ToDo GUI Einfrieren
+            while (Client.status != 3);
             Scene s = new Scene(r);
             Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(s);
+            window.setTitle("Client Spieler");
             window.show();
         } else if (ausw.equals("Bot")) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiClientBotGrid.fxml"));
@@ -82,6 +86,7 @@ public class JoinMenuController implements Initializable {
             Scene s = new Scene(r);
             Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(s);
+            window.setTitle("Client Bot");
             window.show();
         }
     }
