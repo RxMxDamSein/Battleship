@@ -37,7 +37,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
-public class MultiClientSpielerController implements Initializable, Serializable {
+public class MultiClientBotController implements Initializable, Serializable {
     private static final long serialVersionUID=1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private StackPane StackPane;
@@ -56,9 +56,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
     private nuetzlicheMethoden methoden;
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
     private Timeline updateTimeline;
-    private Client Client;
+    private BotClient Client;
 
-
+public MultiClientBotController(){}
 
     private void initupdateTimeline() {
         if (updateTimeline != null) {
@@ -79,7 +79,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         updateTimeline.play();
     }
 
-    public void setVariables(Client Client) {
+    public void setVariables(BotClient Client) {
         methoden = new nuetzlicheMethoden(Client.dasSpiel.getSizeX());
         x=Client.dasSpiel.getSizeX();
         //bot = b;
@@ -88,13 +88,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
         //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
         //Client.init(); wurde davor schon erledigt
-        if(Client.loaded){
-            GridUpdater();
-            initupdateTimeline();
-            spielstatus=true;
-        }
-
-
+        GridUpdater();
+        initupdateTimeline();
+        spielstatus=true;
     }
 
 
@@ -210,7 +206,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
     //ActionHandler für Label 2 (Grid 2) gedrückt
     private void label2click(int a, int b) {
         System.out.println("Grid 2 pressed in x: "+a+" y: "+b);
-        Client.schuss(a,b);
     }
 
 
@@ -462,7 +457,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Du kannst nur speichern, wenn du dran bist!");
             return;
         }
-
+        Client.pause = true;
         //SaveData data = new SaveData();
         //ResourceManager.save(this, "1.save");
         // SAVE POP UP Fenster

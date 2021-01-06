@@ -128,6 +128,9 @@ public class BotHost {
             System.err.println("Can not receive Nachricht from Client!");
             e.printStackTrace();
         }
+        if (nachricht == null) {
+            CutConnection();
+        }
         return nachricht;
     }
 

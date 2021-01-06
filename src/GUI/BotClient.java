@@ -1,7 +1,6 @@
 package GUI;
 
-import logic.Bot;
-import logic.Spiel;
+import logic.*;
 import logic.netCode.Server;
 import logic.save.SAFE_SOME;
 import sun.security.provider.ConfigFile;
@@ -11,13 +10,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client {
+public class BotClient {
     private Socket s;
     private BufferedReader in;
     private OutputStreamWriter out;
-    private boolean shooting=false;
-    public boolean ERROR=false,change=false,loaded=false;
+    public boolean ERROR=false,change=false,loaded=false,pause=false;
     public Spiel dasSpiel;
+    public Bot derBot;
     public int[] ships;//if ships is added make it -1
     public int status=0;
     // 0 = keine verbindung
@@ -29,7 +28,7 @@ public class Client {
 
 
 
-    public Client(String IP, Integer PORT) {
+    public BotClient(String IP, Integer PORT,int bot) {
         Runnable runnable = ()->{
             try {
                 s = new Socket(IP, PORT);
@@ -41,6 +40,25 @@ public class Client {
                     loaded=true;
                     SAFE_SOME safe_some=SAFE_SOME.load(z.split(" ")[1]);
                     dasSpiel=safe_some.spiele[0];
+                    int x =dasSpiel.getSizeX();
+                    int y =dasSpiel.getSizeY();
+                    switch (bot) {
+                        case 1:
+                            derBot = new RDM_Bot(x,y);
+                            break;
+                        case 2:
+                            derBot = new Bot_lvl_2(x,y);
+                            break;
+                        case 3:
+                            derBot = new Bot_schwer(x,y);
+                            break;
+                        default:
+                            System.err.println("Bot Error!!");
+                            ERROR = true;
+                            CutConnection();
+                            return;
+                    }
+                    derBot.dasSpiel = dasSpiel;
                     status=2;
                     System.out.println("status "+status+" error "+ERROR);
                     sendSocket("done");
@@ -56,8 +74,24 @@ public class Client {
                         sonderNachrichten(z);
 
                 } else if (z.contains("size")) {
-                    dasSpiel = new Spiel(Integer.parseInt(z.split(" ")[1]),Integer.parseInt(z.split(" ")[2]),true);
-                    dasSpiel.init();
+                    int x = Integer.parseInt(z.split(" ")[1]),y=Integer.parseInt(z.split(" ")[2]);
+                    switch (bot) {
+                        case 1:
+                            derBot = new RDM_Bot(x,y);
+                            break;
+                        case 2:
+                            derBot = new Bot_lvl_2(x,y);
+                            break;
+                        case 3:
+                            derBot = new Bot_schwer(x,y);
+                            break;
+                        default:
+                            System.err.println("Bot Error!!");
+                            ERROR = true;
+                            CutConnection();
+                            return;
+                    }
+                    dasSpiel = derBot.dasSpiel;
                     status = 1;
                     sendSocket("next");
                     z = receiveSocket();
@@ -72,6 +106,7 @@ public class Client {
                         ships[i-1] = Integer.parseInt(s[i]);
                     }
                     status = 2;
+                    senships();
                 } else {
                     CutConnection();
                     return;
@@ -157,13 +192,16 @@ public class Client {
         CutConnection();
     }
 
-    public void schuss(int x, int y) {
-        if (dasSpiel.getAbschussSpieler() != 1 || !dasSpiel.isStarted() || dasSpiel.isOver() || shooting) {
+    public void schuss() {
+        if (dasSpiel.getAbschussSpieler() != 1 || !dasSpiel.isStarted() || dasSpiel.isOver() ) {
             System.err.println("NIX SCHUSS");
             return;
         }
-        shooting = true;
         Runnable runnable = ()->{
+            while (pause);
+            int[] xy= derBot.getSchuss();
+            int x = xy[0];
+            int y = xy[1];
             sendSocket("shot "+x+" "+y);
             String z = receiveSocket();
             System.out.println(z);
@@ -172,10 +210,17 @@ public class Client {
             }
             if (z.contains("1")) {
                 dasSpiel.shoot(x,y,1,1,false);
+                derBot.setSchussFeld(x,y,2,false);
+                change = true;
+                schuss();
             } else if(z.contains("2")) {
                 dasSpiel.shoot(x,y,1,1,true);
+                derBot.setSchussFeld(x,y,2,true);
+                change = true;
+                schuss();
             } else if (z.contains("0")) {
                 dasSpiel.shoot(x,y,1,0,false);
+                derBot.setSchussFeld(x,y,3,false);
                 change = true;
                 sendSocket("next");
                 String nachricht = receiveSocket();
@@ -186,7 +231,6 @@ public class Client {
             } else {
                 CutConnection();
             }
-            shooting = false;
             change = true;
         };
         Thread t = new Thread(runnable);
@@ -204,10 +248,12 @@ public class Client {
                 if (dasSpiel.istVersenkt()) {
                     antwort+="2";
                 } else {
+                    //treffer
                     antwort+="1";
                 }
                 break;
             case 3:
+                //Wasser
                 antwort+="0";
                 break;
             default:
@@ -230,7 +276,7 @@ public class Client {
             sendSocket("done");
             CutConnection();
         } else if (nachricht.contains("next")) {
-            System.out.println("Sie sind an der Reihe!");
+            schuss();
         } else {
             CutConnection();
         }
@@ -238,12 +284,13 @@ public class Client {
     }
 
     public boolean senships() {
-        for (int i: ships)
-        {
-            if(i>-1)
-                return false;
-        }
         Runnable runnable=() ->{
+            if (!derBot.shipSizesToAdd(ships)) {
+                CutConnection();
+                System.err.println("Bot shipsizestoadd fehler");
+                return;
+            }
+            dasSpiel.setAbschussSpieler(0);
             sendSocket("done");
             if(!receiveSocket().contains("ready")){
                 System.err.println("Server sollte eigentlich Spiel starten!");
