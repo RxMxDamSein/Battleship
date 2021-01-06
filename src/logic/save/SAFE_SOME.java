@@ -14,28 +14,15 @@ public class SAFE_SOME implements Serializable {
     public Object[] objects;
     public int game;
     public String id;
-    public int Status;
 
-    public SAFE_SOME(Bot[] b, Spiel[] s, int g, String id, String DateiName, int status) {
-        this.Status=status;
+    public SAFE_SOME(Bot[] b, Spiel[] s, int g, String id, String DateiName) {
         this.id = id;
         STD_SAVE(b, s, g, DateiName);
     }
 
-    public SAFE_SOME(Bot[] b, Spiel[] s, int g, String id, int status) {
-        this.Status=status;
-        STD_SAVE(b, s, g, id);
-    }
 
-    public SAFE_SOME(Client client) {
-        objects=new Object[]{client};
-        try {
-            ResourceManager.save(this,id);
-        } catch (IOException e) {
-            System.err.println("SAVE ERROR!");
-            e.printStackTrace();
-        }
-    }
+
+
 
     /*
     switch game
@@ -56,10 +43,7 @@ public class SAFE_SOME implements Serializable {
             e.printStackTrace();
         }
     }
-    public SAFE_SOME(Bot[] b,Spiel[] s,int g,String id,String DateiName) {
-        this.id = id;
-        STD_SAVE(b, s, g, DateiName);
-    }
+
     /**
      * Damit kann man doch dann gefühlt alles speichern :D
      * @param b so viele Bots du willst

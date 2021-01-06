@@ -406,7 +406,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         if (Host.Connected) {
             Host.CutConnection();
         }
-        Parent root = FXMLLoader.load(getClass().getResource("HostMenu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);

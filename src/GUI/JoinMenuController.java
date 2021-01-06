@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import logic.Bot;
 
 import java.io.IOException;
 import java.net.URL;
@@ -78,9 +79,16 @@ public class JoinMenuController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiClientSpielerGrid.fxml"));
             Parent r = loader.load();
             MultiClientSpielerController controller = loader.getController();
-            while (Client.status<1 && !Client.ERROR);
-            if(Client.ERROR)
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(Client.ERROR|| Client.status<1){
+                System.err.println("Error or status < 1!");
                 return;
+            }
+
             controller.setVariables(Client);
 
             //ToDo GUI Einfrieren
@@ -91,10 +99,20 @@ public class JoinMenuController implements Initializable {
             window.setTitle("Client Spieler");
             window.show();
         } else if (ausw.equals("Bot")) {
+            BotClient Client = new BotClient(ip,p,bot);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiClientBotGrid.fxml"));
             Parent r = loader.load();
-            //MultiClientBotController controller = loader.getController();
-            //controller.setVariables(p,ip,bot);
+            MultiClientBotController controller = loader.getController();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(Client.ERROR|| Client.status<1){
+                System.err.println("Error or status < 1!");
+                return;
+            }
+            controller.setVariables(Client);
             Scene s = new Scene(r);
             Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(s);
