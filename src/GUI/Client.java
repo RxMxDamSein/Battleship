@@ -11,13 +11,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client implements Serializable {
-    private static final long serialVersionUID=1337L;
+public class Client {
     private Socket s;
     private BufferedReader in;
     private OutputStreamWriter out;
     private boolean shooting=false;
-    public boolean ERROR=false,change=false;
+    public boolean ERROR=false,change=false,loaded=false;
     public Spiel dasSpiel;
     public int[] ships;//if ships is added make it -1
     public int status=0;
@@ -39,28 +38,22 @@ public class Client implements Serializable {
                 out = new OutputStreamWriter(s.getOutputStream());
                 String z =receiveSocket();
                 if (z.contains("load")) {
+                    loaded=true;
                     SAFE_SOME safe_some=SAFE_SOME.load(z.split(" ")[1]);
-                    Client c=(Client) safe_some.objects[0];
-                    shooting=c.shooting;
-                    ERROR=c.ERROR;
-                    change=c.change;
-                    dasSpiel=c.dasSpiel;
-                    ships=c.ships;
-                    status=c.status;
+                    dasSpiel=safe_some.spiele[0];
+                    status=2;
+                    System.out.println("status "+status+" error "+ERROR);
                     sendSocket("done");
                     if(!receiveSocket().contains("ready")){
                         CutConnection();
                         return;
                     }
                     sendSocket("ready");
-                    if (dasSpiel.getAbschussSpieler() == 0) {
-                        sendSocket("next");
-                        z = receiveSocket();
-                        if (z.contains("shot"))
-                            Servershot(z);
-                        else
-                            sonderNachrichten(z);
-                    }
+                    z = receiveSocket();
+                    if (z.contains("shot"))
+                        Servershot(z);
+                    else
+                        sonderNachrichten(z);
 
                 } else if (z.contains("size")) {
                     dasSpiel = new Spiel(Integer.parseInt(z.split(" ")[1]),Integer.parseInt(z.split(" ")[2]),true);
@@ -150,7 +143,8 @@ public class Client implements Serializable {
         }
     }
 
-    public void save(String hash) {
+    public void save(String hash,String dname) {
+        new SAFE_SOME(null,new Spiel[]{dasSpiel},4,hash,dname);
         sendSocket("save "+hash);
         if (!receiveSocket().contains("done")) {
             System.err.println("Client hat nicht wahrscheinlich gespeichert");
@@ -229,7 +223,7 @@ public class Client implements Serializable {
 
     private void sonderNachrichten (String nachricht) {
         if (nachricht.contains("save")) {
-            new SAFE_SOME(this);
+            new SAFE_SOME(null,new Spiel[]{dasSpiel},4,nachricht.split(" ")[1]);
             sendSocket("done");
             CutConnection();
         } else if (nachricht.contains("next")) {

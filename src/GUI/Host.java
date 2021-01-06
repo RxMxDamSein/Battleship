@@ -69,6 +69,7 @@ public class Host {
                         CutConnection();
                         return;
                     }
+                    shooting=false;
                     Spielstartet = true;
                     if (dasSpiel.getAbschussSpieler() == 0) {
                         sendSocket("next");
@@ -140,6 +141,7 @@ public class Host {
             if (!z.contains("ready")) {
                 CutConnection();
             }
+            shooting=false;
             Spielstartet = true;
         };
         Thread t = new Thread(Runnable);
@@ -155,7 +157,7 @@ public class Host {
             e.printStackTrace();
         }
     }
-    private boolean shooting=false;
+    private boolean shooting=true;
 
     public void schuss(int x, int y) {
         if (dasSpiel.getAbschussSpieler() != 1 || !dasSpiel.isStarted() || dasSpiel.isOver() || shooting) {

@@ -456,6 +456,10 @@ public class MultiHostSpielerController implements Initializable, Serializable {
     }
 
     public void Speichern(ActionEvent event) throws IOException {
+        if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler()==0){
+            System.err.println("nur speichern wenn du dran bist!");
+            return;
+        }
 
         //SaveData data = new SaveData();
         //ResourceManager.save(this, "1.save");

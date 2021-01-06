@@ -88,6 +88,11 @@ public class MultiClientSpielerController implements Initializable, Serializable
         //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
         //Client.init(); wurde davor schon erledigt
+        if(Client.loaded){
+            GridUpdater();
+            initupdateTimeline();
+            spielstatus=true;
+        }
 
 
     }
@@ -453,6 +458,10 @@ public class MultiClientSpielerController implements Initializable, Serializable
     }
 
     public void Speichern(ActionEvent event) throws IOException {
+        if(Client.dasSpiel.getAbschussSpieler()==0){
+            System.err.println("Du kannst nur speichern, wenn du dran bist!");
+            return;
+        }
 
         //SaveData data = new SaveData();
         //ResourceManager.save(this, "1.save");
@@ -473,8 +482,8 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.out.println("Name: "+name);
             //Speichern
             String hash = ""+this.hashCode();
-            new SAFE_SOME(Client);
-            Client.save(hash);
+
+            Client.save(hash,name);
             newStage.close();
         });
         comp.getChildren().add(DateiName);
