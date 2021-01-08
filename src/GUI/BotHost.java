@@ -57,7 +57,7 @@ public class BotHost {
 
                 // NICHT LADEN
                 if (!load) {
-                    sendSocket("size " + Feldg + " " + Feldg);
+                    sendSocket("size " + Feldg );
                     String z = receiveSocket();
                     if (!z.contains("next")) {
                         CutConnection();
@@ -180,7 +180,7 @@ public class BotHost {
         }
         Runnable runnable = ()->{
             int[] xy = derBot.getSchuss();
-            sendSocket("shot "+xy[0]+" "+xy[1]);
+            sendSocket("shot "+(xy[0]+1)+" "+(xy[1]+1));
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {
@@ -216,8 +216,8 @@ public class BotHost {
     }
 
     private void Clientshot(String nachricht) {
-        int x = Integer.parseInt(nachricht.split(" ")[1]);
-        int y = Integer.parseInt(nachricht.split(" ")[2]);
+        int x = Integer.parseInt(nachricht.split(" ")[1])-1;
+        int y = Integer.parseInt(nachricht.split(" ")[2])-1;
         dasSpiel.shoot(x,y,0,0,false);
         //derBot.setSchussFeld(x,y,);
         change = true;

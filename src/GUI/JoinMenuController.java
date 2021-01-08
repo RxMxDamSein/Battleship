@@ -100,13 +100,13 @@ public class JoinMenuController implements Initializable {
             Parent r = loader.load();
             MultiClientBotController controller = loader.getController();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(8000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             if(Client.ERROR|| Client.status<1){
                 System.err.println("Error or status < 1!");
-                return;
+                //return;
             }
             controller.setVariables(Client);
             Scene s = new Scene(r);

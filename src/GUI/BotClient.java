@@ -74,7 +74,7 @@ public class BotClient {
                         sonderNachrichten(z);
 
                 } else if (z.contains("size")) {
-                    int x = Integer.parseInt(z.split(" ")[1]),y=Integer.parseInt(z.split(" ")[2]);
+                    int x = Integer.parseInt(z.split(" ")[1]),y=Integer.parseInt(z.split(" ")[1]);
                     switch (bot) {
                         case 1:
                             derBot = new RDM_Bot(x,y);
@@ -202,7 +202,7 @@ public class BotClient {
             int[] xy= derBot.getSchuss();
             int x = xy[0];
             int y = xy[1];
-            sendSocket("shot "+x+" "+y);
+            sendSocket("shot "+(x+1)+" "+(y+1));
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {
@@ -238,8 +238,8 @@ public class BotClient {
     }
 
     private void Servershot(String nachricht) {
-        int x = Integer.parseInt(nachricht.split(" ")[1]);
-        int y = Integer.parseInt(nachricht.split(" ")[2]);
+        int x = Integer.parseInt(nachricht.split(" ")[1])-1;
+        int y = Integer.parseInt(nachricht.split(" ")[2])-1;
         dasSpiel.shoot(x,y,0,0,false);
         change = true;
         String antwort = "answer ";

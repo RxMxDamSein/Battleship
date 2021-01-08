@@ -56,7 +56,7 @@ public class Client {
                         sonderNachrichten(z);
 
                 } else if (z.contains("size")) {
-                    dasSpiel = new Spiel(Integer.parseInt(z.split(" ")[1]),Integer.parseInt(z.split(" ")[2]),true);
+                    dasSpiel = new Spiel(Integer.parseInt(z.split(" ")[1]),Integer.parseInt(z.split(" ")[1]),true);
                     dasSpiel.init();
                     status = 1;
                     sendSocket("next");
@@ -164,7 +164,7 @@ public class Client {
         }
         shooting = true;
         Runnable runnable = ()->{
-            sendSocket("shot "+x+" "+y);
+            sendSocket("shot "+(x-1)+" "+(y-1));
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {
@@ -194,8 +194,8 @@ public class Client {
     }
 
     private void Servershot(String nachricht) {
-        int x = Integer.parseInt(nachricht.split(" ")[1]);
-        int y = Integer.parseInt(nachricht.split(" ")[2]);
+        int x = Integer.parseInt(nachricht.split(" ")[1])-1;
+        int y = Integer.parseInt(nachricht.split(" ")[2])-1;
         dasSpiel.shoot(x,y,0,0,false);
         change = true;
         String antwort = "answer ";
