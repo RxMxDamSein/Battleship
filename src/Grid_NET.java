@@ -400,6 +400,9 @@ public class Grid_NET{
                         case 3:
                             labels[s][i][j].setTextFill(Color.web("blue"));
                             break;
+                        case 4:
+                            labels[s][i][j].setTextFill(Color.web("darkred"));
+                            break;
 
                     }
                 }

@@ -12,7 +12,7 @@ import java.util.Random;
 public class Spiel implements Serializable {
     private static final long serialVersionUID=1337L;
     private int x=20,y=20;
-    // 0 frei, 1 Schiff, 2 Treffer, 3 Wasser
+    // 0 frei, 1 Schiff, 2 Treffer, 3 Wasser, 4 versenkt
     private int[][][] feld;
     public boolean init=false;
     private boolean started=false;
@@ -288,6 +288,7 @@ public class Spiel implements Serializable {
             versenkt=p_versenkt;
             //kill ships in schiffe for player 1
             if(versenkt){
+                Bot.waterAround(spieler,x,y,feld,this.x,this.y);
                 if(!killEnemyShipfromPos(x,y)&&verbose){//ToDo some error with this!
                     System.err.println("ship could not sink!!!");
                 }
@@ -334,7 +335,7 @@ public class Spiel implements Serializable {
                 if(verbose)
                     System.err.println("undefined feld state");
                 return false;
-            case 2: case 3:
+            case 2: case 3: case 4:
                 if(verbose)
                     System.err.println("Selected Field was already shot s "+spieler+" xy "+x+" "+y);
                 return false;
@@ -349,6 +350,10 @@ public class Spiel implements Serializable {
                             System.err.println("Es wurde ein Treffer erzielt, aber es sollte dort kein Schiff sein!");
                     }
                     if(!s.schifflebt){//Schiff ist versenkt!
+                        Schiff.killShipfields(s,feld);
+                        if(spieler==1){
+                            Bot.waterAround(1,x,y,feld,this.x,this.y);
+                        }
                         versenkt=true;
                     }
                 }

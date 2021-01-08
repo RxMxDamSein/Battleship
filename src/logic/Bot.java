@@ -392,21 +392,22 @@ public abstract class Bot implements Serializable {
     public static void waterAround(int s,int x, int y, int[][][] f,int width,int height){
         boolean up,down,left,right;
         up=down=left=right=false;
-        if(y+1<height && f[s][x][y+1]==2){
+        if(y+1<height && (f[s][x][y+1]==2 || f[s][x][y+1]==4)){
             down=true;
         }
-        if(y-1>=0 && f[s][x][y-1]==2){
+        if(y-1>=0 && (f[s][x][y-1]==2|| f[s][x][y-1]==4)){
             up=true;
         }
-        if(x+1<width && f[s][x+1][y]==2){
+        if(x+1<width && (f[s][x+1][y]==2|| f[s][x+1][y]==4)){
             right=true;
         }
-        if(x-1>=0 && f[s][x-1][y]==2){
+        if(x-1>=0 && (f[s][x-1][y]==2|| f[s][x-1][y]==4)){
             left=true;
         }
         int i;
         if(up){
-            for(i=0;y-i>=0&&f[s][x][y-i]==2;i++){
+            for(i=0;y-i>=0&&(f[s][x][y-i]==2|| f[s][x][y-i]==4);i++){
+                f[s][x][y-i]=4;
                 if(x+1<width)
                     f[s][x+1][y-i]=3;
                 if(x-1>=0)
@@ -430,7 +431,8 @@ public abstract class Bot implements Serializable {
             }
         }
         if(down){
-            for(i=0;y+i<height&&f[s][x][y+i]==2;i++){
+            for(i=0;y+i<height&&(f[s][x][y+i]==2|| f[s][x][y+i]==4);i++){
+                f[s][x][y+i]=4;
                 if(x+1<width)
                     f[s][x+1][y+i]=3;
                 if(x-1>=0)
@@ -454,7 +456,8 @@ public abstract class Bot implements Serializable {
             }
         }
         if(left){
-            for(i=0;x-i>=0&&f[s][x-i][y]==2;i++){
+            for(i=0;x-i>=0&&(f[s][x-i][y]==2|| f[s][x-i][y]==4);i++){
+                f[s][x-i][y]=4;
                 if(y+1<height)
                     f[s][x-i][y+1]=3;
                 if(y-1>=0)
@@ -478,7 +481,8 @@ public abstract class Bot implements Serializable {
             }
         }
         if(right){
-            for(i=0;x+i<width&&f[s][x+i][y]==2;i++){
+            for(i=0;x+i<width&&(f[s][x+i][y]==2|| f[s][x+i][y]==4);i++){
+                f[s][x+i][y]=4;
                 if(y+1<height)
                     f[s][x+i][y+1]=3;
                 if(y-1>=0)
@@ -502,6 +506,7 @@ public abstract class Bot implements Serializable {
             }
         }
         if(!up && !down && !right && !left){
+            f[s][x][y]=4;
             if(x>0 && y>0)
                 f[s][x-1][y-1]=3;
             if( y>0)
