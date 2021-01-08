@@ -534,10 +534,13 @@ public abstract class Bot implements Serializable {
         //Change von Dennis von >= zu ==
         if((res==100)&&(x>=5 || y>=5)){
             return new int[]{5,4,4,3,3,3,2,2,2,2};
-        }
+        }else if(res==1)
+            return new int[]{1};
+        else if(res<=4)
+            return new int[]{2};
         int max=(x>y)?x:y;
         if(max>5){
-            max/=3;
+            max=5;
             if(max<5)
                 max=5;
         }
@@ -546,7 +549,7 @@ public abstract class Bot implements Serializable {
         int used=0;
         Random rdm=new Random();
         while(used<res*0.7){
-            int next=rdm.nextInt(max)+3;
+            int next=rdm.nextInt(max-1)+2;
             s.add(next);
             used+=(next+2)*3;
         }

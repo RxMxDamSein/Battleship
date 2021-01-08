@@ -288,10 +288,11 @@ public class Spiel implements Serializable {
             versenkt=p_versenkt;
             //kill ships in schiffe for player 1
             if(versenkt){
-                Bot.waterAround(spieler,x,y,feld,this.x,this.y);
                 if(!killEnemyShipfromPos(x,y)&&verbose){//ToDo some error with this!
                     System.err.println("ship could not sink!!!");
                 }
+                Bot.waterAround(spieler,x,y,feld,this.x,this.y);
+
                 checkGameOver();
             }
         }

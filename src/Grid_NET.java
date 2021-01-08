@@ -186,6 +186,8 @@ public class Grid_NET{
             }
             try {
                 sT.s.close();
+                sT.in.close();
+                sT.out.close();
             } catch (IOException e) {
                 System.err.println("can not close Socket");
                 e.printStackTrace();
@@ -325,8 +327,12 @@ public class Grid_NET{
 
 
         try {
-            if(sT.s!=null)
+            if(sT.s!=null){
                 sT.s.close();
+                sT.out.close();
+                sT.in.close();
+            }
+
             if(sT.ss!=null)
                 sT.ss.close();
         } catch (IOException e) {
