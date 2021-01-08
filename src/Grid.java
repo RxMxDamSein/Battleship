@@ -166,7 +166,29 @@ public class Grid {
             for (int i=0;i<feld[s].length;i++){
                 for(int j=0;j<feld[s][i].length;j++){
                     labels[s][i][j].setText(" "+String.valueOf(feld[s][i][j])+" ");
+                    switch (feld[s][i][j]){
+                        default:
+                            labels[s][i][j].setTextFill(Color.web("grey"));
+                            break;
+                        case 1:
+                            labels[s][i][j].setTextFill(Color.web("black"));
+                            break;
+                        case 2:
+                            if(dasSpiel.istVersenkt()){
+                                labels[s][i][j].setTextFill(Color.web("darkred"));
+                            }else {
+                                labels[s][i][j].setTextFill(Color.web("red"));
+                            }
+                            break;
+                        case 3:
+                            labels[s][i][j].setTextFill(Color.web("blue"));
+                            break;
+                        case 4:
+                            labels[s][i][j].setTextFill(Color.web("darkred"));
+                            break;
+                    }
                 }
+
             }
         }
     }

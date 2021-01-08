@@ -60,7 +60,7 @@ public class BotGrid {
         this.gridPlayer2.getChildren().add(lToShoot[1]);
         window.setTitle("GRID!");
         this.dasSpiel=new Spiel(x,y,true);
-        derBot=new Bot_schwer(x,y);
+        derBot=new Bot_lvl_2(x,y);
         if(!dasSpiel.init())
             sceneZutuck();
         this.feld=dasSpiel.getFeld();
@@ -221,7 +221,9 @@ public class BotGrid {
                         case 3:
                             labels[s][i][j].setTextFill(Color.web("blue"));
                             break;
-
+                        case 4:
+                            labels[s][i][j].setTextFill(Color.web("darkred"));
+                            break;
                     }
                 }
             }

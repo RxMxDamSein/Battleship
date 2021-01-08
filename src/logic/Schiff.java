@@ -66,4 +66,14 @@ public class Schiff implements Serializable {
         }
         return true;
     }
+
+    public static void killShipfields(Schiff s,int[][][] f){
+        for(int i=0;i<s.schifflaenge;i++){
+            if(s.horizontal){
+                f[s.spieler][s.xOPos+i][s.yOPos]=4;
+            }else{
+                f[s.spieler][s.xOPos][s.yOPos+i]=4;
+            }
+        }
+    }
 }

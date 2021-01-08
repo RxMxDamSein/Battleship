@@ -279,6 +279,8 @@ public class Grid_NET_B {
             }
             try {
                 sT.s.close();
+                sT.in.close();
+                sT.out.close();
             } catch (IOException e) {
                 System.err.println("can not close Socket");
                 e.printStackTrace();
@@ -354,8 +356,12 @@ public class Grid_NET_B {
 
 
         try {
-            if(sT.s!=null)
+            if(sT.s!=null){
                 sT.s.close();
+                sT.out.close();
+                sT.in.close();
+            }
+
             if(sT.ss!=null)
                 sT.ss.close();
         } catch (IOException e) {
@@ -415,7 +421,9 @@ public class Grid_NET_B {
                         case 3:
                             labels[s][i][j].setTextFill(Color.web("blue"));
                             break;
-
+                        case 4:
+                            labels[s][i][j].setTextFill(Color.web("darkred"));
+                            break;
                     }
                 }
             }
