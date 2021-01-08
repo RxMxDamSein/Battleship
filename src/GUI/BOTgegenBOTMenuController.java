@@ -27,11 +27,13 @@ public class BOTgegenBOTMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         choiceBox1.getItems().add("Einfach");
         choiceBox1.getItems().add("Mittel");
+        choiceBox1.getItems().add("Schwer");
         choiceBox1.getItems().add("Nightmare");
         choiceBox1.setValue("Einfach");
 
         choiceBox2.getItems().add("Einfach");
         choiceBox2.getItems().add("Mittel");
+        choiceBox2.getItems().add("Schwer");
         choiceBox2.getItems().add("Nightmare");
         choiceBox2.setValue("Einfach");
 
@@ -72,6 +74,9 @@ public class BOTgegenBOTMenuController implements Initializable {
         if (ch1.equals("Nightmare")) {
             bot1 = 3;
         }
+        if (ch1.equals("Schwer")) {
+            bot1 = 4;
+        }
         //Bot2 festlegen
         if (ch2.equals("Einfach")) {
             bot2 = 1;
@@ -81,6 +86,9 @@ public class BOTgegenBOTMenuController implements Initializable {
         }
         if (ch2.equals("Nightmare")) {
             bot2 = 3;
+        }
+        if (ch2.equals("Schwer")) {
+            bot2 = 4;
         }
         System.out.println("_______________");
         System.out.println("GridSize: "+x);

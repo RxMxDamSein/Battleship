@@ -26,6 +26,10 @@ public class Spiel implements Serializable {
     //if remote -> both sides are known; !remote -> only your side is known! and you are player 0(1)
     private boolean remote;
 
+    public void setSpielFeld(int[][][] f) {
+        this.feld = f;
+    }
+
     /**
      * make Spiel object
      */

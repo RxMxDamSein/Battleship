@@ -1,7 +1,11 @@
 package GUI;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,9 +24,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import logic.*;
 
 import logic.save.ResourceManager;
+import logic.save.SAFE_SOME;
 import logic.save.SaveData;
 
 import java.io.IOException;
@@ -31,7 +37,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
-public class GameGridController implements Initializable, Serializable {
+public class MultiHostSpielerController implements Initializable, Serializable {
     private static final long serialVersionUID=1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private StackPane StackPane;
@@ -49,88 +55,96 @@ public class GameGridController implements Initializable, Serializable {
 
     private nuetzlicheMethoden methoden;
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
-    private Bot ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST;
+    private Host Host;
+    private Timeline updateTimeline;
 
-    public GameGridController() {}
-    public void setInteger(Integer a,Integer b) {
-        methoden = new nuetzlicheMethoden(a);
-        x=a;
-        bot = b;
+
+    public MultiHostSpielerController() {}
+
+    private void initupdateTimeline() {
+        if (updateTimeline != null) {
+            System.err.println("Timeline existiert bereits!!!");
+            return;
+        }
+        updateTimeline = new Timeline(new KeyFrame(Duration.millis(50),event -> {
+            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
+                GridUpdater();
+                updateTimeline.stop();
+            }
+            else if (Host.change) {
+                Host.change = false;
+                GridUpdater();
+            }
+        }));
+        updateTimeline.setCycleCount(Animation.INDEFINITE);
+        updateTimeline.play();
+    }
+
+    public void setVariables(Integer Port,Integer FeldGroesse) {
+        methoden = new nuetzlicheMethoden(FeldGroesse);
+        x=FeldGroesse;
+        //bot = b;
         Gridinit();
         Spielinit();
+        Host = new Host(Port,FeldGroesse,GOETTLICHESSPIELDERVERNICHTUNGMITbot);
+        Host.init();
+
+
     }
-    public void gameloader (String id) {
-        SaveGame save = (SaveGame) SaveGame.load(id);
-        Spiel s = save.g;
-        Bot b = save.b;
-        /*
-        Bot b =(Bot) Bot.load(id+"-B");
-        Spiel s = Spiel.load(id+"-S");
-         */
-        x = s.getSizeX();
+    public void setVariables(Integer Port, SAFE_SOME SAFE,String id) {
+        x=SAFE.spiele[0].getSizeX();
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot=SAFE.spiele[0];
         methoden = new nuetzlicheMethoden(x);
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot = s;
-        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = b;
-
+        //bot = b;
         Gridinit();
+        Host = new Host(Port,x,GOETTLICHESSPIELDERVERNICHTUNGMITbot,id);
+        Host.init();
         GridUpdater();
-
-        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-        if (spieler != -1) {
-            spielstatus = true;
-        }
-
-        //System.out.println("Abschussspieler: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler());
-        if (!GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver() && spieler == 0) {
-            //System.out.println("BOT SCHUSS NACH LADEN°°°°°°°°");
-            Botschiesst();
-        }
-        if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver() || ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.isFinOver())
-            System.out.println("SPIEL ENDE");
-
-
-
+        initupdateTimeline();
 
     }
+
+
+
     public void GridUpdater() {
         int feld[][][] = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld();
         //for (int s=0;s<2;s++){
-            for (int a = x - 1; a >= 0; a--) {
-                for (int b = x - 1; b >= 0; b--) {
-                    switch (feld[0][a][b]) {
-                        default:
-                            break;
-                        case 1:
-                            //labels[a][b].setStyle("-fx-background-color: grey");
-                            labels[a][b] = methoden.textureSchiff(labels[a][b],x);
-                            break;
-                        case 2:
-                            //labels[a][b].setStyle("-fx-background-color: red");
-                            labels[a][b] = methoden.textureSchiffTreffer(labels[a][b],x);
-                            break;
-                        case 3:
-                            //labels[a][b].setStyle("-fx-background-color: blue");
-                            labels[a][b] = methoden.textureWasserTreffer(labels[a][b],x);
-                            break;
-                    }
-                    switch (feld[1][a][b]) {
-                        default:
-                            break;
-                        case 1:
-                            //labels2[a][b].setStyle("-fx-background-color: black");
-                            labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
-                            break;
-                        case 2:
-                            //labels2[a][b].setStyle("-fx-background-color: red");
-                            labels2[a][b] = methoden.textureSchiffTreffer(labels2[a][b],x);
-                            break;
-                        case 3:
-                            //labels2[a][b].setStyle("-fx-background-color: blue");
-                            labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
-                            break;
-                    }
+        for (int a = x - 1; a >= 0; a--) {
+            for (int b = x - 1; b >= 0; b--) {
+                switch (feld[0][a][b]) {
+                    default:
+                        break;
+                    case 1:
+                        //labels[a][b].setStyle("-fx-background-color: grey");
+                        labels[a][b] = methoden.textureSchiff(labels[a][b],x);
+                        break;
+                    case 2:
+                        //labels[a][b].setStyle("-fx-background-color: red");
+                        labels[a][b] = methoden.textureSchiffTreffer(labels[a][b],x);
+                        break;
+                    case 3:
+                        //labels[a][b].setStyle("-fx-background-color: blue");
+                        labels[a][b] = methoden.textureWasserTreffer(labels[a][b],x);
+                        break;
+                }
+                switch (feld[1][a][b]) {
+                    default:
+                        break;
+                    case 1:
+                        //labels2[a][b].setStyle("-fx-background-color: black");
+                        labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
+                        break;
+                    case 2:
+                        //labels2[a][b].setStyle("-fx-background-color: red");
+                        labels2[a][b] = methoden.textureSchiffTreffer(labels2[a][b],x);
+                        break;
+                    case 3:
+                        //labels2[a][b].setStyle("-fx-background-color: blue");
+                        labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
+                        break;
                 }
             }
+        }
         //}
 
     }
@@ -138,24 +152,6 @@ public class GameGridController implements Initializable, Serializable {
     public void Spielinit() {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.setVerbose(false);
-        switch (bot) {
-            case 1:
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x,x);
-                break;
-            case 2:
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_lvl_2(x,x);
-                break;
-            case 3:
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_nightmare(x,x,GOETTLICHESSPIELDERVERNICHTUNGMITbot);
-                break;
-            case 4:
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_schwer(x,x);
-                break;
-            default:
-                System.err.println("Bot Auswahl Fehler!!");
-
-        }
-        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getDasSpiel().setVerbose(false);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
     /*
@@ -173,6 +169,8 @@ public class GameGridController implements Initializable, Serializable {
         return zahl;
     }
      */
+
+
 
     //Grid und Labels initialisieren
     public void Gridinit() {
@@ -204,7 +202,7 @@ public class GameGridController implements Initializable, Serializable {
 
                 //final int ca=a,cb=b;
                 int ca=a,cb=b;
-               labels[a][b].setOnMouseClicked(e -> labelclick(ca,cb) );
+                labels[a][b].setOnMouseClicked(e -> labelclick(ca,cb) );
                 GridPane.setConstraints(labels[a][b],a,b,1,1,HPos.CENTER,VPos.CENTER);
                 GameGrid.getChildren().add(labels[a][b]);
 
@@ -236,120 +234,11 @@ public class GameGridController implements Initializable, Serializable {
     }
     //ActionHandler für Label 2 (Grid 2) gedrückt
     private void label2click(int a, int b) {
-        int phit;
-        boolean schuss;
         System.out.println("Grid 2 pressed in x: "+a+" y: "+b);
-        if (spielstatus) {
-            int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-            //spieler 0 = Bot
-            // Spieler schießt auf Bot
-            if(spieler == 1) {
-                //phit: 4 = Versenkt
-                phit = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.abschiesen(a,b);
-                //System.out.println("phit: "+phit);
-                //System.out.println("Botfeld: ");
-                if (phit == 4) {
-                    GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),1,true);
-                    //labels2[a][b].setStyle("-fx-background-color: black");
-                    labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
-                    System.out.println("TREFFER VERSENKT!!");
-                    if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.isFinOver()) {
-                        //GOETTLICHESSPIELDERVERNICHTUNGMITbot.setGameOver();
-                        System.out.println("DU HAST GEWONNEN!!");
-                        GameTopLabel1.setStyle("-fx-background-color: red");
-                        GameTopLabel1.setText("DU HAST GEWONNEN!!!");
-                        /*
-                        try {
-                            TimeUnit.SECONDS.sleep(10);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        Platform.exit();
-
-                         */
-                    }
-                } else {
-                    GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),phit,false);
-                    if (phit == 1) {
-                        //labels2[a][b].setStyle("-fx-background-color: red");
-                        labels2[a][b] = methoden.textureSchiffTreffer(labels2[a][b],x);
-                        System.out.println("TREFFER!!");
-                    }
-                    if (phit == 3 || phit == 0) {
-                        //Treffer auf Wasser
-                        System.out.println("TREFFER WASSER!!");
-                        //labels2[a][b].setStyle("-fx-background-color: blue");
-                        labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
-                    }
-                }
-            }
-            //System.out.println("nach Spieler schuss");
-            spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-            if (spieler == 0)
-                Botschiesst();
-        }
+        Host.schuss(a,b);
     }
 
-    private void Botschiesst() {
-        //Bot schießt auf Spieler
-        if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 1) {
-            return;
-        }
-        System.out.println("Bot schießt");
-        int[] xy = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getSchuss();
-        System.out.println("Bot schießt auf: x: "+xy[0]+" y: "+xy[1]);
 
-        if (!GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(xy[0],xy[1], 0,0,false)) {
-            System.err.println("BOT schuss fehler");
-            return;
-        }
-        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.setSchussFeld(xy[0],xy[1],GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld()[0][xy[0]][xy[1]],GOETTLICHESSPIELDERVERNICHTUNGMITbot.istVersenkt());
-        //3 wasser, 2 schiff
-        int hit = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld()[0][xy[0]][xy[1]];
-        System.out.println("Bot Hit: "+hit);
-        if (hit == 3 || hit == 0) {
-            //Treffer auf Wasser
-            labels[xy[0]][xy[1]] = methoden.textureWasserTreffer(labels[xy[0]][xy[1]],x);
-            //labels[xy[0]][xy[1]].setStyle("-fx-background-color: blue");
-            logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
-            return;
-        }
-        //Treffer auf Schiff
-        if (hit == 2 || hit == 1) {
-            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.istVersenkt()) {
-                labels[xy[0]][xy[1]] = methoden.textureversenkt(labels[xy[0]][xy[1]],x);
-                //labels[xy[0]][xy[1]].setStyle("-fx-background-color: black");
-                System.out.println("BOT: TREFFER VERSENKT!!");
-                if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
-                    //Bot hat gewonnen
-                    System.out.println("BOT HAT GEWONNEN!!");
-                    GameTopLabel1.setStyle("-fx-background-color: red");
-                    GameTopLabel1.setText("BOT HAT GEWONNEN!!!");
-                    /*
-                    try {
-                        TimeUnit.SECONDS.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Platform.exit();
-
-                     */
-                }
-                if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
-                    Botschiesst();
-                }
-                logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
-                return;
-            }
-            labels[xy[0]][xy[1]] = methoden.textureSchiffTreffer(labels[xy[0]][xy[1]],x);
-            //labels[xy[0]][xy[1]].setStyle("-fx-background-color: red");
-            System.out.println("BOT: TREFFER!!");
-            logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
-            Botschiesst();
-            return;
-        }
-
-    }
 
     public void shippplace() {
         boolean shippaddo;
@@ -509,14 +398,16 @@ public class GameGridController implements Initializable, Serializable {
     }
     //versetzt Spiel in Feuermodus
     public void gameStart(ActionEvent event) {
+        if (spielstatus) {
+            System.err.println("Spiel bereits im gange!!");
+            return;
+        }
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
         GameTopLabel1.setText("Du schießt jetzt hier:");
-        if(!ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.shipSizesToAdd(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe))) {
-            System.err.println("Bot Schiffe fehler");
-            return;
-        }
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel();
+        Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
+
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
         /*
         System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
         int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);
@@ -531,18 +422,26 @@ public class GameGridController implements Initializable, Serializable {
         GameTopLabel.setText("Spieler: "+spieler);
         if (spieler == 0) {
             GameTopLabel.setText("Bot schießt");
-            Botschiesst();
+            //Clinet Schießt
             GameTopLabel.setText("Du schießt");
         }
+        initupdateTimeline();
     }
 
     public void BacktoMenu(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("EinzelspielerMenu.fxml"));
+        if (updateTimeline != null) {
+            updateTimeline.stop();
+        }
+        if (Host.Connected) {
+            Host.CutConnection();
+        }
+        Parent root = FXMLLoader.load(getClass().getResource("HostMenu.fxml"));
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.show();
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -572,7 +471,7 @@ public class GameGridController implements Initializable, Serializable {
         Save.setOnAction(event1 -> {
             String name = String.valueOf(DateiName.getText());
             System.out.println("Name: "+name);
-            new SaveGame(GOETTLICHESSPIELDERVERNICHTUNGMITbot,ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST,name);
+            //new SaveGame(GOETTLICHESSPIELDERVERNICHTUNGMITbot,ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST,name);
             /*
             GOETTLICHESSPIELDERVERNICHTUNGMITbot.saveGame(name+"-S");
             ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.saveGame(name+"-B");
