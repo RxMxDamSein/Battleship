@@ -112,6 +112,9 @@ public class GameGridController implements Initializable, Serializable {
                             //labels[a][b].setStyle("-fx-background-color: blue");
                             labels[a][b] = methoden.textureWasserTreffer(labels[a][b],x);
                             break;
+                        case 4:
+                            labels[a][b] = methoden.textureversenkt(labels[a][b],x);
+                            break;
                     }
                     switch (feld[1][a][b]) {
                         default:
@@ -127,6 +130,9 @@ public class GameGridController implements Initializable, Serializable {
                         case 3:
                             //labels2[a][b].setStyle("-fx-background-color: blue");
                             labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
+                            break;
+                        case 4:
+                            labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
                             break;
                     }
                 }
@@ -248,10 +254,13 @@ public class GameGridController implements Initializable, Serializable {
                 phit = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.abschiesen(a,b);
                 //System.out.println("phit: "+phit);
                 //System.out.println("Botfeld: ");
+
+
                 if (phit == 4) {
                     GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),1,true);
                     //labels2[a][b].setStyle("-fx-background-color: black");
-                    labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
+                    //labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
+                    GridUpdater();
                     System.out.println("TREFFER VERSENKT!!");
                     if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.isFinOver()) {
                         //GOETTLICHESSPIELDERVERNICHTUNGMITbot.setGameOver();
@@ -272,17 +281,20 @@ public class GameGridController implements Initializable, Serializable {
                     GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),phit,false);
                     if (phit == 1) {
                         //labels2[a][b].setStyle("-fx-background-color: red");
-                        labels2[a][b] = methoden.textureSchiffTreffer(labels2[a][b],x);
+                        GridUpdater();
+                        //labels2[a][b] = methoden.textureSchiffTreffer(labels2[a][b],x);
                         System.out.println("TREFFER!!");
                     }
                     if (phit == 3 || phit == 0) {
                         //Treffer auf Wasser
                         System.out.println("TREFFER WASSER!!");
                         //labels2[a][b].setStyle("-fx-background-color: blue");
-                        labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
+                        GridUpdater();
+                        //labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
                     }
                 }
             }
+
             //System.out.println("nach Spieler schuss");
             spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
             if (spieler == 0)
@@ -309,7 +321,8 @@ public class GameGridController implements Initializable, Serializable {
         System.out.println("Bot Hit: "+hit);
         if (hit == 3 || hit == 0) {
             //Treffer auf Wasser
-            labels[xy[0]][xy[1]] = methoden.textureWasserTreffer(labels[xy[0]][xy[1]],x);
+            GridUpdater();
+            //labels[xy[0]][xy[1]] = methoden.textureWasserTreffer(labels[xy[0]][xy[1]],x);
             //labels[xy[0]][xy[1]].setStyle("-fx-background-color: blue");
             logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
             return;
@@ -317,7 +330,8 @@ public class GameGridController implements Initializable, Serializable {
         //Treffer auf Schiff
         if (hit == 2 || hit == 1) {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.istVersenkt()) {
-                labels[xy[0]][xy[1]] = methoden.textureversenkt(labels[xy[0]][xy[1]],x);
+                GridUpdater();
+                //labels[xy[0]][xy[1]] = methoden.textureversenkt(labels[xy[0]][xy[1]],x);
                 //labels[xy[0]][xy[1]].setStyle("-fx-background-color: black");
                 System.out.println("BOT: TREFFER VERSENKT!!");
                 if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
@@ -341,7 +355,8 @@ public class GameGridController implements Initializable, Serializable {
                 logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);
                 return;
             }
-            labels[xy[0]][xy[1]] = methoden.textureSchiffTreffer(labels[xy[0]][xy[1]],x);
+            GridUpdater();
+            //labels[xy[0]][xy[1]] = methoden.textureSchiffTreffer(labels[xy[0]][xy[1]],x);
             //labels[xy[0]][xy[1]].setStyle("-fx-background-color: red");
             System.out.println("BOT: TREFFER!!");
             logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(),true);

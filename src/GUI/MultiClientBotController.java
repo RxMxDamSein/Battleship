@@ -116,6 +116,9 @@ public MultiClientBotController(){}
                         //labels[a][b].setStyle("-fx-background-color: blue");
                         labels[a][b] = methoden.textureWasserTreffer(labels[a][b],x);
                         break;
+                    case 4:
+                        labels[a][b] = methoden.textureversenkt(labels[a][b],x);
+                        break;
                 }
                 switch (feld[1][a][b]) {
                     default:
@@ -131,6 +134,9 @@ public MultiClientBotController(){}
                     case 3:
                         //labels2[a][b].setStyle("-fx-background-color: blue");
                         labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
+                        break;
+                    case 4:
+                        labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
                         break;
                 }
             }
