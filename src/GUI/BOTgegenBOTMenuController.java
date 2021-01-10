@@ -44,6 +44,7 @@ public class BOTgegenBOTMenuController implements Initializable {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("MainMenu");
         window.show();
     }
 
@@ -102,6 +103,7 @@ public class BOTgegenBOTMenuController implements Initializable {
         Scene s = new Scene(r);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("BvB");
         window.show();
     }
 }

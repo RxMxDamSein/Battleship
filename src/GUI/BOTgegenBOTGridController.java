@@ -89,7 +89,7 @@ public class BOTgegenBOTGridController  implements Initializable  {
                         //labels2[a][b].setStyle("-fx-background-color: blue");
                         break;
                     case 4:
-                        labels2[a][b].setStyle("-fx-background-color: black");
+                        labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
                         break;
                 }
                 /*
@@ -393,6 +393,7 @@ public class BOTgegenBOTGridController  implements Initializable  {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("BOTgegenBOTMenu");
         window.show();
     }
 

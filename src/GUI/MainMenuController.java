@@ -29,6 +29,7 @@ public class MainMenuController implements Initializable  {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("EinzelspielerMenu");
         window.show();
     }
 
@@ -37,6 +38,7 @@ public class MainMenuController implements Initializable  {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("MehrspielerMenu");
         window.show();
     }
 
@@ -45,6 +47,7 @@ public class MainMenuController implements Initializable  {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("Einstellungen");
         window.show();
     }
 }

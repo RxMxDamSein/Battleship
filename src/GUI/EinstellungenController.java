@@ -42,6 +42,7 @@ public class EinstellungenController implements Initializable {
     Scene s = new Scene(root);
     Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("MainMenu");
         window.show();
     }
 

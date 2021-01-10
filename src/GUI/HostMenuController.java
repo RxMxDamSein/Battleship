@@ -49,7 +49,7 @@ public class HostMenuController implements Initializable {
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
-
+        window.setTitle("MainMenu");
         window.show();
     }
 
@@ -101,6 +101,7 @@ public class HostMenuController implements Initializable {
             Scene s = new Scene(r);
             Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(s);
+            window.setTitle("Host Spieler");
             window.show();
         } else if (ausw.equals("Bot")) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
@@ -110,6 +111,7 @@ public class HostMenuController implements Initializable {
             Scene s = new Scene(r);
             Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(s);
+            window.setTitle("Host Bot");
             window.show();
 
         }
@@ -151,6 +153,7 @@ public class HostMenuController implements Initializable {
             Scene s = new Scene(r);
             Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(s);
+            window.setTitle("Host Spieler");
             window.show();
         } else if (ausw.equals("Bot")) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
@@ -160,6 +163,7 @@ public class HostMenuController implements Initializable {
             Scene s = new Scene(r);
             Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
             window.setScene(s);
+            window.setTitle("Host Bot");
             window.show();
         }
 

@@ -58,6 +58,29 @@ public class MultiClientSpielerController implements Initializable, Serializable
     private Timeline updateTimeline;
     private Client Client;
 
+    public void shipLabel() {
+        Runnable runnable = ()->{
+            System.out.println("PENIS!");
+            while (Client.status<2);
+            System.out.println("Kein penis");
+            StringBuilder s= new StringBuilder();
+            s.append(Client.ships.length+" Schiffe mit groesse: ");
+            for (int i = 0;i<Client.ships.length;i++) {
+                if (i != Client.ships.length-1) {
+                    s.append(" " + Client.ships[i]);
+                    s.append(",");
+                    continue;
+                }
+                s.append(" "+Client.ships[i]);
+            }
+            System.out.println(s.toString());
+            GameTopLabel.setText(s.toString());
+
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
+
 
 
     private void initupdateTimeline() {
@@ -80,6 +103,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
     }
 
     public void setVariables(Client Client) {
+        GameTopLabel.setAlignment(Pos.CENTER);
         methoden = new nuetzlicheMethoden(Client.dasSpiel.getSizeX());
         x=Client.dasSpiel.getSizeX();
         //bot = b;
@@ -87,6 +111,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         Gridinit();
         //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
+        shipLabel();
         //Client.init(); wurde davor schon erledigt
         if(Client.loaded){
             GridUpdater();
@@ -120,6 +145,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
                         //labels[a][b].setStyle("-fx-background-color: blue");
                         labels[a][b] = methoden.textureWasserTreffer(labels[a][b],x);
                         break;
+                    case 4:
+                        labels[a][b] = methoden.textureversenkt(labels[a][b],x);
+                        break;
                 }
                 switch (feld[1][a][b]) {
                     default:
@@ -135,6 +163,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
                     case 3:
                         //labels2[a][b].setStyle("-fx-background-color: blue");
                         labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
+                        break;
+                    case 4:
+                        labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
                         break;
                 }
             }
@@ -411,6 +442,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
+        GameTopLabel.setText("Deine Schiffe:");
         GameTopLabel1.setText("Du schießt jetzt hier:");
 
         /*
@@ -444,6 +476,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
         window.setScene(s);
+        window.setTitle("JoinMenu");
         window.show();
     }
 

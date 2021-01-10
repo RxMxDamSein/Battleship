@@ -66,12 +66,15 @@ public class Client {
                         CutConnection();
                         return;
                     }
+                    //System.out.println(z);
                     String[] s = z.split(" ");
                     ships = new int[s.length-1];
                     for (int i=1;i<s.length;i++) {
                         ships[i-1] = Integer.parseInt(s[i]);
+                        //System.out.println(ships[i-1]);
                     }
                     status = 2;
+                    System.out.println("Status 2");
                 } else {
                     CutConnection();
                     return;
