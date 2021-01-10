@@ -48,7 +48,7 @@ public class BvB_GUI {
         init(window,x,y,sceneOld);
 
         int[] add=Bot.calcships(x,y);
-        b1=new Bot_schwer(x,y);
+        b1=new Bot_lvl_2(x,y);
         b1.shipSizesToAdd(add);
         b1.getDasSpiel().setVerbose(false);
         b2=new Bot_lvl_2(x,y);
@@ -249,6 +249,9 @@ public class BvB_GUI {
                             break;
                         case 3:
                             labels[s][i][j].setTextFill(Color.web("blue"));
+                            break;
+                        case 4:
+                            labels[s][i][j].setTextFill(Color.web("darkred"));
                             break;
 
                     }
