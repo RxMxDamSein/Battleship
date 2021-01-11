@@ -2,6 +2,7 @@ package GUI;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import logic.*;
@@ -46,6 +48,7 @@ public class GameGridController implements Initializable, Serializable {
     private Label[ ][ ] labels2;
     private Integer x,bot,count=0;
     private int sx=-1,sy=-1,ex=-1,ey=-1;
+    boolean FensterClosed=false;
 
     private nuetzlicheMethoden methoden;
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
@@ -267,15 +270,7 @@ public class GameGridController implements Initializable, Serializable {
                         System.out.println("DU HAST GEWONNEN!!");
                         GameTopLabel1.setStyle("-fx-background-color: red");
                         GameTopLabel1.setText("DU HAST GEWONNEN!!!");
-                        /*
-                        try {
-                            TimeUnit.SECONDS.sleep(10);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        Platform.exit();
-
-                         */
+                        methoden.GameEnd(true);
                     }
                 } else {
                     GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b, GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler(),phit,false);
@@ -340,15 +335,7 @@ public class GameGridController implements Initializable, Serializable {
                     System.out.println("BOT HAT GEWONNEN!!");
                     GameTopLabel1.setStyle("-fx-background-color: red");
                     GameTopLabel1.setText("BOT HAT GEWONNEN!!!");
-                    /*
-                    try {
-                        TimeUnit.SECONDS.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Platform.exit();
-
-                     */
+                    methoden.GameEnd(false);
                 }
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     Botschiesst();

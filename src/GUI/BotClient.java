@@ -19,6 +19,7 @@ public class BotClient {
     public Bot derBot;
     public int[] ships;//if ships is added make it -1
     public int status=0;
+    private nuetzlicheMethoden methoden;
     // 0 = keine verbindung
     // 1 = Verbindung und Spielfeld
     // 2 = Schiffsgrößen erhalten
@@ -42,6 +43,7 @@ public class BotClient {
                     dasSpiel=safe_some.spiele[0];
                     int x =dasSpiel.getSizeX();
                     int y =dasSpiel.getSizeY();
+                    methoden = new nuetzlicheMethoden(dasSpiel.getSizeX());
                     switch (bot) {
                         case 1:
                             derBot = new RDM_Bot(x,y);
@@ -217,6 +219,12 @@ public class BotClient {
                 dasSpiel.shoot(x,y,1,1,true);
                 derBot.setSchussFeld(x,y,2,true);
                 change = true;
+
+                //
+                if (dasSpiel.isOver()) {
+                    methoden.GameEnd(true);
+                }
+                ////////////
                 schuss();
             } else if (z.contains("0")) {
                 dasSpiel.shoot(x,y,1,0,false);
@@ -251,11 +259,21 @@ public class BotClient {
                     //treffer
                     antwort+="1";
                 }
+                ////////////
+                if (dasSpiel.isOver()) {
+                    methoden.GameEnd(false);
+                }
+                ////////////////
                 break;
             case 3:
                 //Wasser
                 antwort+="0";
                 break;
+                ///////////////////////
+            case 4:
+                antwort+="0";
+                break;
+                ////////////////
             default:
                 System.err.println("Spielbrett sollte beschossen sein");
                 CutConnection();

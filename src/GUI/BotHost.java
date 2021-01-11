@@ -233,6 +233,11 @@ public class BotHost {
             case 3:
                 antwort+="0";
                 break;
+                /////////////////
+            case 4:
+                antwort+="0";
+                break;
+                /////////////////////
             default:
                 System.err.println("Spielbrett sollte beschossen sein");
                 CutConnection();

@@ -1,10 +1,16 @@
 package GUI;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 import javax.swing.text.View;
 import java.io.File;
@@ -134,6 +140,44 @@ public  class nuetzlicheMethoden {
 
         }
         return z;
+    }
+
+    /**
+     *
+     * @param gewinner true wenn man gewonnen hat
+     */
+    public void GameEnd(boolean gewinner) {
+
+        Stage newStage = new Stage();
+        VBox comp = new VBox();
+        comp.setPadding(new Insets(10,10,10,10));
+        comp.setSpacing(5);
+        comp.setStyle("-fx-background-color: DARKCYAN;");
+        comp.setAlignment(Pos.CENTER);
+        Label label = new Label();
+        if (gewinner) {
+            label.setText("Du hast Gewonnen!!");
+        } else {
+            label.setText("Du hast Verloren!!");
+        }
+        if (gewinner) {
+            label.setStyle("-fx-background-color: green");
+        } else {
+            label.setStyle("-fx-background-color: red");
+        }
+        label.setAlignment(Pos.CENTER);
+        label.setPrefSize(200,50);
+        Button BackMenu = new Button();
+        BackMenu.setPrefSize(60,30);
+        BackMenu.setText("Exit");
+        BackMenu.setOnAction(event1 -> {
+            newStage.close();
+        });
+        comp.getChildren().add(label);
+        comp.getChildren().add(BackMenu);
+        Scene stageScene = new Scene(comp, 300, 150);
+        newStage.setScene(stageScene);
+        newStage.show();
     }
 
 }
