@@ -50,6 +50,9 @@ public class Host {
                 out = new OutputStreamWriter(s.getOutputStream());
                 // LADEN
                 if (!load) {
+                    //////////
+                    //Thread.sleep(10000);
+                    //////////
                     sendSocket("size " + Feldg );
                     String z = receiveSocket();
                     if (!z.contains("next")) {

@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.Bot;
@@ -17,11 +18,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class JoinMenuController implements Initializable {
+    @FXML private Label joinLabel;
     @FXML private TextField IPText,PortText;
     @FXML private ChoiceBox<String> SpielartChoice,BotChoice;
+    private nuetzlicheMethoden methoden;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        methoden = new nuetzlicheMethoden();
         BotChoice.getItems().add("Einfach");
         BotChoice.getItems().add("Mittel");
         BotChoice.getItems().add("Schwer");
@@ -75,48 +79,12 @@ public class JoinMenuController implements Initializable {
 
         if (ausw.equals("Spieler")) {
             Client Client = new Client(ip,p);
+            methoden.warteBildschirm(Client,null);
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiClientSpielerGrid.fxml"));
-            Parent r = loader.load();
-            MultiClientSpielerController controller = loader.getController();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if(Client.ERROR|| Client.status<1){
-                System.err.println("Error or status < 1!");
-                return;
-            }
-
-            controller.setVariables(Client);
-
-            //ToDo GUI Einfrieren
-            Scene s = new Scene(r);
-            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-            window.setScene(s);
-            window.setTitle("Client Spieler");
-            window.show();
         } else if (ausw.equals("Bot")) {
             BotClient Client = new BotClient(ip,p,bot);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiClientBotGrid.fxml"));
-            Parent r = loader.load();
-            MultiClientBotController controller = loader.getController();
-            try {
-                Thread.sleep(8000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if(Client.ERROR|| Client.status<1){
-                System.err.println("Error or status < 1!");
-                //return;
-            }
-            controller.setVariables(Client);
-            Scene s = new Scene(r);
-            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-            window.setScene(s);
-            window.setTitle("Client Bot");
-            window.show();
+            methoden.warteBildschirm(null,Client);
+
         }
     }
 

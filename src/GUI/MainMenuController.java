@@ -18,6 +18,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable  {
+    public static Stage primaryStage;
+
+    public static void setPrimaryStage(Stage primaryStage) {
+        MainMenuController.primaryStage = primaryStage;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

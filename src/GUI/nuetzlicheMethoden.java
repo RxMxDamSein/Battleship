@@ -1,27 +1,39 @@
 package GUI;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import javax.swing.text.View;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
-public  class nuetzlicheMethoden {
+public class nuetzlicheMethoden {
     private int texture=0;
     private Image textureWasser,textureSchiff,textureSchiffTreffer,textureWasserTreffer,textureversenkt,textureauswahlWasser;
+    private Timeline timeline;
 
 
+    public nuetzlicheMethoden(){}
     public nuetzlicheMethoden(int x){
         //TODO DENNIS MACH SACHEN (NUR IMAGE SPEICHERN)
         texture = EinstellungenController.skin;
@@ -168,9 +180,18 @@ public  class nuetzlicheMethoden {
         label.setAlignment(Pos.CENTER);
         label.setPrefSize(200,50);
         Button BackMenu = new Button();
-        BackMenu.setPrefSize(60,30);
-        BackMenu.setText("Exit");
+        BackMenu.setPrefSize(120,30);
+        BackMenu.setText("MainMenu");
         BackMenu.setOnAction(event1 -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+                Scene scene = new Scene(root);
+                MainMenuController.primaryStage.setTitle("MainMenu");
+                MainMenuController.primaryStage.setScene(scene);
+                MainMenuController.primaryStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             newStage.close();
         });
         comp.getChildren().add(label);
@@ -178,6 +199,111 @@ public  class nuetzlicheMethoden {
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
+    }
+    private boolean success;
+    private int count=0;
+    public void warteBildschirm(Client Client,BotClient BotClient) {
+        Stage newStage = new Stage();
+        VBox comp = new VBox();
+        comp.setPadding(new Insets(10,10,10,10));
+        comp.setSpacing(5);
+        comp.setStyle("-fx-background-color: DARKCYAN;");
+        comp.setAlignment(Pos.CENTER);
+        Label label = new Label();
+        label.setText("Bitte warten...");
+        label.setAlignment(Pos.CENTER);
+        //label.setFont(new Font("Ink Free",14));
+        label.setFont(new Font("System",14));
+        label.setPrefSize(250,30);
+        Button BackMenu = new Button();
+        BackMenu.setPrefSize(80,30);
+        BackMenu.setText("Abbruch");
+        BackMenu.setOnAction(event1 -> {
+         timeline.stop();
+         newStage.close();
+        });
+        comp.getChildren().add(label);
+        comp.getChildren().add(BackMenu);
+        Scene stageScene = new Scene(comp, 300, 150);
+        newStage.setScene(stageScene);
+        newStage.show();
+
+        timeline = new Timeline(new KeyFrame(new Duration(50),event->{
+            count++;
+            if (!success){
+                if (count%70==0){
+                    timeline.stop();
+                    newStage.close();
+                }
+                return;
+            }
+            try {
+                if (BotClient == null) {
+                    if (!setMultiClientSpielerGrid(Client)) {
+                        if (count%20==0) {
+                            label.setText(label.getText() + ".");
+                        }
+
+                    } else {
+                        timeline.stop();
+                        newStage.close();
+                    }
+                } else {
+                    if (!setMultiClientBotGrid(BotClient)) {
+                        if (count%20==0) {
+                            label.setText(label.getText() + ".");
+                        }
+                    } else {
+                        timeline.stop();
+                        newStage.close();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (Client != null && Client.ERROR || BotClient != null && BotClient.ERROR) {
+                label.setText("Konnte keine Verbindung herstellen!!");
+                label.setStyle("-fx-background-color: #df0052");
+                success=false;
+                count=0;
+            }
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        success=true;
+        timeline.play();
+    }
+
+    public boolean setMultiClientSpielerGrid(Client Client) throws IOException {
+        if(Client.ERROR|| Client.status<1){
+            if (Client.ERROR) System.err.println("Error or status < 1!");
+            return false;
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiClientSpielerGrid.fxml"));
+        Parent r = loader.load();
+        MultiClientSpielerController controller = loader.getController();
+        controller.setVariables(Client);
+        Scene s = new Scene(r);
+        MainMenuController.primaryStage.setScene(s);
+        MainMenuController.primaryStage.setTitle("Client Spieler");
+        MainMenuController.primaryStage.show();
+        timeline.stop();
+        return true;
+    }
+    public boolean setMultiClientBotGrid(BotClient Client)throws IOException{
+        if(Client.ERROR|| Client.status<1){
+            if (Client.ERROR)System.err.println("Error or status < 1!");
+            return false;
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiClientBotGrid.fxml"));
+        Parent r = loader.load();
+        MultiClientBotController controller = loader.getController();
+        controller.setVariables(Client);
+        Scene s = new Scene(r);
+        MainMenuController.primaryStage.setScene(s);
+        MainMenuController.primaryStage.setTitle("Client Bot");
+        MainMenuController.primaryStage.show();
+        timeline.stop();
+        return true;
     }
 
 }

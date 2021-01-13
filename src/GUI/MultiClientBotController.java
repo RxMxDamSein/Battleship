@@ -67,6 +67,11 @@ public MultiClientBotController(){}
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50),event -> {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
+                if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0){
+                    methoden.GameEnd(true);
+                } else {
+                    methoden.GameEnd(false);
+                }
                 GridUpdater();
                 updateTimeline.stop();
             }

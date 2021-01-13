@@ -19,6 +19,7 @@ public class GUImain extends Application {
         Scene scene = new Scene(root);
         primaryStage.setTitle("MainMenu");
         primaryStage.setScene(scene);
+        MainMenuController.setPrimaryStage(primaryStage);
         primaryStage.show();
 
     }

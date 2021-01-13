@@ -21,7 +21,7 @@ public class Client {
     public int[] ships;//if ships is added make it -1
     public int status=0;
     // 0 = keine verbindung
-    // 1 = Verbindung und Spielfeld
+    // 1 = Verbindung und Spielfeldgröße gegeben
     // 2 = Schiffsgrößen erhalten
 
 
