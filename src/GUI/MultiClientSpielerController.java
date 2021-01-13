@@ -469,9 +469,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-        if (Client.status>0) {
+        try{
             Client.CutConnection();
-        }
+        }catch (Exception e){}
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();

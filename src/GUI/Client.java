@@ -143,6 +143,8 @@ public class Client {
         System.out.println("Closing Connection!");
         try {
             s.close();
+            in.close();
+            out.close();
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
             e.printStackTrace();
@@ -167,7 +169,7 @@ public class Client {
         }
         shooting = true;
         Runnable runnable = ()->{
-            sendSocket("shot "+(x-1)+" "+(y-1));
+            sendSocket("shot "+(x+1)+" "+(y+1));
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {
@@ -204,6 +206,7 @@ public class Client {
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:
+            case 4:
                 if (dasSpiel.istVersenkt()) {
                     antwort+="2";
                 } else {

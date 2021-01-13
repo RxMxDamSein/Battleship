@@ -441,8 +441,10 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-        if (Host.Connected) {
+        try{
             Host.CutConnection();
+        }catch (Exception e){
+
         }
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);

@@ -177,6 +177,8 @@ public class BotClient {
         System.out.println("Closing Connection!");
         try {
             s.close();
+            in.close();
+            out.close();
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
             e.printStackTrace();
@@ -253,27 +255,16 @@ public class BotClient {
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:
+            case 4:
                 if (dasSpiel.istVersenkt()) {
                     antwort+="2";
                 } else {
-                    //treffer
                     antwort+="1";
                 }
-                ////////////
-                if (dasSpiel.isOver()) {
-                    methoden.GameEnd(false);
-                }
-                ////////////////
                 break;
             case 3:
-                //Wasser
                 antwort+="0";
                 break;
-                ///////////////////////
-            case 4:
-                antwort+="0";
-                break;
-                ////////////////
             default:
                 System.err.println("Spielbrett sollte beschossen sein");
                 CutConnection();

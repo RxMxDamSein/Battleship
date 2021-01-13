@@ -208,6 +208,7 @@ public class Host {
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:
+            case 4:
                 if (dasSpiel.istVersenkt()) {
                     antwort+="2";
                 } else {
