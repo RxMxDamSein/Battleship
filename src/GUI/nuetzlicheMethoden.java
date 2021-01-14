@@ -19,6 +19,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import logic.save.SAFE_SOME;
 
 import javax.swing.text.View;
 import java.awt.*;
@@ -32,6 +33,11 @@ public class nuetzlicheMethoden {
     private Image textureWasser,textureSchiff,textureSchiffTreffer,textureWasserTreffer,textureversenkt,textureauswahlWasser;
     private Timeline timeline;
 
+    Integer Port=420;
+    Integer Feldgroesse=null;
+    Integer bot=null;
+    SAFE_SOME SAFE=null;
+    String id=" ";
 
     public nuetzlicheMethoden(){}
     public nuetzlicheMethoden(int x){
@@ -305,5 +311,248 @@ public class nuetzlicheMethoden {
         timeline.stop();
         return true;
     }
+    //Integer Port,Integer Feldgroesse, SAFE_SOME SAFE, String id
+    Stage newStage;
+    public void HostwarteBildschirm() {
+        newStage = new Stage();
+        Label label = new Label();
+        VBox comp = new VBox();
+        comp.setPadding(new Insets(10,10,10,10));
+        comp.setSpacing(5);
+        comp.setStyle("-fx-background-color: DARKCYAN;");
+        comp.setAlignment(Pos.CENTER);
 
+        label.setText("Sever wird erstellt...");
+        label.setAlignment(Pos.CENTER);
+        //label.setFont(new Font("Ink Free",14));
+        label.setFont(new Font("System",14));
+        label.setPrefSize(250,30);
+        Button BackMenu = new Button();
+        BackMenu.setPrefSize(80,30);
+        BackMenu.setText("Abbruch");
+        BackMenu.setOnAction(event1 -> {
+            //timeline.stop();
+            newStage.close();
+        });
+        comp.getChildren().add(label);
+        comp.getChildren().add(BackMenu);
+        Scene stageScene = new Scene(comp, 300, 150);
+        newStage.setScene(stageScene);
+        newStage.show();
+        try{
+            if (bot == null) {
+                if (SAFE == null) {
+                    //Port, Feldgroesse, null, null
+                    if (!setMultiHostSpielerGrid()) {
+                        label.setText("Sever fehler");
+                        label.setStyle("-fx-background-color: #df0052");
+                        timeline = new Timeline(new KeyFrame(new Duration(10000),event -> {
+                            label.setText(label.getText()+".");
+                        }));
+                        timeline.setCycleCount(5);
+                        timeline.play();
+                        newStage.close();
+                    }
+                    newStage.close();
+                } else {
+                    //Port, null, SAFE, id
+                    if (!setMultiHostSpielerGrid()) {
+                        label.setText("Sever fehler");
+                        label.setStyle("-fx-background-color: #df0052");
+                        Thread.sleep(60);
+                        newStage.close();
+                    }
+                    newStage.close();
+                }
+            }else {
+                if (SAFE == null) {
+                    //Port,Feldgroesse,bot,null,null
+                    if (!setMultiHostBotGrid()) {
+                        label.setText("Sever fehler");
+                        label.setStyle("-fx-background-color: #df0052");
+                        Thread.sleep(60);
+                        newStage.close();
+                    }
+                    newStage.close();
+                } else {
+                    //Port,null,bot,SAFE,id
+                    if (!setMultiHostBotGrid()) {
+                        label.setText("Sever fehler");
+                        label.setStyle("-fx-background-color: #df0052");
+                        Thread.sleep(60);
+                        newStage.close();
+                    }
+                    newStage.close();
+                }
+            }
+        }catch (IOException | InterruptedException e){
+            System.out.println("HostWarteBildschirmFehler");
+            e.printStackTrace();
+        }
+
+
+        ///////////////////////
+/*
+        timeline = new Timeline(new KeyFrame(new Duration(50),event->{
+            count++;
+            if (!success){
+                if (count%70==0){
+                    timeline.stop();
+                    newStage.close();
+                }
+                return;
+            }
+            try {
+                if (SAFE == null){
+                    //nicht laden
+                    if (HostBotController == null) {
+                        if () {
+                            if (count%20==0) {
+                                label.setText(label.getText() + ".");
+                            }
+
+                        } else {
+                            timeline.stop();
+                            newStage.close();
+                        }
+                    } else {
+                        if (!setMultiClientBotGrid(BotClient)) {
+                            if (count%20==0) {
+                                label.setText(label.getText() + ".");
+                            }
+                        } else {
+                            timeline.stop();
+                            newStage.close();
+                        }
+                    }
+                }else {
+                    //laden
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (Client != null && Client.ERROR || BotClient != null && BotClient.ERROR) {
+                label.setText("Konnte keine Verbindung herstellen!!");
+                label.setStyle("-fx-background-color: #df0052");
+                success=false;
+                count=0;
+            }
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        success=true;
+        timeline.play();
+
+ */
+    }
+
+    //Integer Port,Integer Feldgroesse, SAFE_SOME SAFE, String id
+    int i=1;
+    Timeline t;
+    private boolean setMultiHostSpielerGrid()throws IOException {
+        if (SAFE == null){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
+            Parent r = loader.load();
+            MultiHostSpielerController controller = loader.getController();
+            controller.setVariables(Port,Feldgroesse);
+            //ToDo Besseres warten
+            while (i%10000!=0){
+                i++;
+                //System.out.println("PENIS "+i);
+            }
+            i=1;
+            /*
+             t = new Timeline(new KeyFrame(new Duration(10000),event -> {
+                 System.out.println("PENIS "+i);
+                i++;
+                if (i%1000==0){
+                    t.stop();
+                }
+            }));
+            t.setCycleCount(Animation.INDEFINITE);
+            t.play();
+
+             */
+            /*
+            try {
+                Thread.sleep(1000);
+            }catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+             */
+            if (controller.Host.ERROR){
+                return false;
+            }
+            Scene s = new Scene(r);
+            MainMenuController.primaryStage.setScene(s);
+            MainMenuController.primaryStage.setTitle("Host Spieler");
+            MainMenuController.primaryStage.show();
+            return true;
+        }else {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
+            Parent r = loader.load();
+            MultiHostSpielerController controller = loader.getController();
+            controller.setVariables(Port,SAFE,id);
+            if (controller.Host.ERROR){
+                return false;
+            }
+            Scene s = new Scene(r);
+            MainMenuController.primaryStage.setScene(s);
+            MainMenuController.primaryStage.setTitle("Host Spieler");
+            MainMenuController.primaryStage.show();
+            return true;
+        }
+    }
+    //Integer Port,Integer Feldgroesse,Integer bot, SAFE_SOME SAFE, String id
+    private boolean setMultiHostBotGrid()throws IOException{
+        if (SAFE==null){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
+            Parent r = loader.load();
+            MultiHostBotController controller = loader.getController();
+            controller.setVariables(Port,Feldgroesse,bot);
+            if (controller.Host.ERROR){
+                return false;
+            }
+            Scene s = new Scene(r);
+            MainMenuController.primaryStage.setScene(s);
+            MainMenuController.primaryStage.setTitle("Host Bot");
+            MainMenuController.primaryStage.show();
+            return true;
+        }else {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
+            Parent r = loader.load();
+            MultiHostBotController controller = loader.getController();
+            controller.setVariables(Port,SAFE,id,bot);
+            if (controller.Host.ERROR){
+                return false;
+            }
+            Scene s = new Scene(r);
+            MainMenuController.primaryStage.setScene(s);
+            MainMenuController.primaryStage.setTitle("Host Bot");
+            MainMenuController.primaryStage.show();
+            return true;
+        }
+    }
+
+    public void setHostVariablen(Integer Port,Integer Feldgroesse) {
+        this.Port =Port;
+        this.Feldgroesse=Feldgroesse;
+    }
+    public void setHostVariablen(Integer Port,SAFE_SOME SAFE, String id) {
+        this.Port=Port;
+        this.SAFE=SAFE;
+        this.id=id;
+    }
+    public void setHostVariablen(Integer Port,Integer Feldgroesse,Integer bot) {
+        setHostVariablen(Port,Feldgroesse);
+        this.bot=bot;
+    }
+    public void setHostVariablen(Integer Port,Integer bot, SAFE_SOME SAFE, String id) {
+        this.Port=Port;
+        this.bot=bot;
+        this.SAFE=SAFE;
+        this.id=id;
+    }
 }

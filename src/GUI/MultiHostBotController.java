@@ -56,7 +56,7 @@ public class MultiHostBotController implements Initializable, Serializable {
     private nuetzlicheMethoden methoden;
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
     private Bot derBot;
-    private BotHost Host;
+    public BotHost Host;
     private Timeline updateTimeline;
 
     private void initupdateTimeline() {

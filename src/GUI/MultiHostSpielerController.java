@@ -55,7 +55,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
 
     private nuetzlicheMethoden methoden;
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
-    private Host Host;
+    public Host Host;
     private Timeline updateTimeline;
 
 

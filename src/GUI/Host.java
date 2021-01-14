@@ -95,6 +95,13 @@ public class Host {
         t.start();
 
 
+
+    }
+    private void penis(){
+        Runnable runnable = () -> {
+
+        };
+        Thread thread = new Thread(runnable);
     }
 
     public  void sendSocket(String antwort){

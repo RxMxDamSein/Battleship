@@ -26,11 +26,13 @@ public class HostMenuController implements Initializable {
     @FXML private TextField SpielGroesseText;
     @FXML private ChoiceBox<String> SpielartChoice;
     @FXML private ChoiceBox<String> BotChoice;
+    private nuetzlicheMethoden methoden;
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        methoden = new nuetzlicheMethoden();
         BotChoice.getItems().add("Einfach");
         BotChoice.getItems().add("Mittel");
         BotChoice.getItems().add("Schwer");
@@ -94,6 +96,9 @@ public class HostMenuController implements Initializable {
         }
 
         if (ausw.equals("Spieler")) {
+            methoden.setHostVariablen(p,SAFE,id);
+            methoden.HostwarteBildschirm();
+            /*
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
@@ -103,17 +108,10 @@ public class HostMenuController implements Initializable {
             window.setScene(s);
             window.setTitle("Host Spieler");
             window.show();
+             */
         } else if (ausw.equals("Bot")) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
-            Parent r = loader.load();
-            MultiHostBotController controller = loader.getController();
-            controller.setVariables(p,SAFE,id,bot);
-            Scene s = new Scene(r);
-            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-            window.setScene(s);
-            window.setTitle("Host Bot");
-            window.show();
-
+            methoden.setHostVariablen(p,bot,SAFE,id);
+            methoden.HostwarteBildschirm();
         }
 
     }
@@ -133,7 +131,7 @@ public class HostMenuController implements Initializable {
         }
         String ausw = SpielartChoice.getValue();
         String ch = BotChoice.getValue();
-        int bot=2;
+        Integer bot=2;
 
         if (ch.equals("Einfach")) {
             bot = 1;
@@ -146,25 +144,22 @@ public class HostMenuController implements Initializable {
         }
 
         if (ausw.equals("Spieler")) {
+            methoden.setHostVariablen(p,g);
+            methoden.HostwarteBildschirm();
+            /*
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
             controller.setVariables(p,g);
             Scene s = new Scene(r);
-            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-            window.setScene(s);
-            window.setTitle("Host Spieler");
-            window.show();
+            MainMenuController.primaryStage.setScene(s);
+            MainMenuController.primaryStage.setTitle("Host Spieler");
+            MainMenuController.primaryStage.show();
+
+             */
         } else if (ausw.equals("Bot")) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
-            Parent r = loader.load();
-            MultiHostBotController controller = loader.getController();
-            controller.setVariables(p,g,bot);
-            Scene s = new Scene(r);
-            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-            window.setScene(s);
-            window.setTitle("Host Bot");
-            window.show();
+            methoden.setHostVariablen(p,g,bot);
+           methoden.HostwarteBildschirm();
         }
 
 
