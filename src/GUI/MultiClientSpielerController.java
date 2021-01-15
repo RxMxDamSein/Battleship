@@ -459,6 +459,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Es wurden nicht alle Schiffe hinzugefügt!");
             return;
         }
+        //StartButton.setOpacity(0.5);
         spielstatus = true;
         gameStartButton.setVisible(false);
         System.out.println("Spielstatus: "+spielstatus);
