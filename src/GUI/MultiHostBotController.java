@@ -45,6 +45,7 @@ public class MultiHostBotController implements Initializable, Serializable {
     //@FXML private Button placebutton;
     @FXML private  Label GameTopLabel;
     @FXML private Label GameTopLabel1;
+    @FXML private Button gameStartButton;
     private boolean spielstatus=false;
     private GridPane GameGrid;
     private GridPane GameGrid2;
@@ -67,9 +68,9 @@ public class MultiHostBotController implements Initializable, Serializable {
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50),event -> {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0){
-                    methoden.GameEnd(true);
-                } else {
                     methoden.GameEnd(false);
+                } else {
+                    methoden.GameEnd(true);
                 }
                 GridUpdater();
                 updateTimeline.stop();
@@ -387,9 +388,11 @@ public class MultiHostBotController implements Initializable, Serializable {
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
         GameTopLabel1.setText("Du schießt jetzt hier:");
-        Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
-
+        //Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
+        Host.Spielstartet = true;
+        Host.schuss();
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.setAbschussSpieler(1);
+        gameStartButton.setVisible(false);
         /*
         System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
         int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);

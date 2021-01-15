@@ -41,6 +41,7 @@ public class GameGridController implements Initializable, Serializable {
     //@FXML private Button placebutton;
     @FXML private  Label GameTopLabel;
     @FXML private Label GameTopLabel1;
+    @FXML private Button gameStartButton;
     private boolean spielstatus=false;
     private GridPane GameGrid;
     private GridPane GameGrid2;
@@ -519,6 +520,7 @@ public class GameGridController implements Initializable, Serializable {
             System.err.println("Bot Schiffe fehler");
             return;
         }
+        gameStartButton.setVisible(false);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel();
         GridUpdater();
         /*
@@ -550,7 +552,7 @@ public class GameGridController implements Initializable, Serializable {
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        //nuetzlicheMethoden.setStageCenter();
     }
 
 

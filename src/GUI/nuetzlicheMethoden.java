@@ -334,11 +334,87 @@ public class nuetzlicheMethoden {
             //timeline.stop();
             newStage.close();
         });
+        Button start = new Button("Start");
+        start.setOnAction(event3 -> {
+            try{
+                if (bot == null) {
+                    if (SAFE == null) {
+                        //Port, Feldgroesse, null, null
+                        if (!setMultiHostSpielerGrid()) {
+                            label.setText("Sever fehler");
+                            label.setStyle("-fx-background-color: #df0052");
+                            /*
+                            timeline = new Timeline(new KeyFrame(new Duration(10000),event -> {
+                                label.setText(label.getText()+".");
+                            }));
+                            timeline.setCycleCount(5);
+                            timeline.play();
+
+                             */
+                            Integer i=1;
+                            while (i%1000990990!=0){
+                                i++;
+                                //System.out.println("PENIS "+i);
+                            }
+                            i=1;
+
+                            while (i%1000990990!=0){
+                                i++;
+                                //System.out.println("PENIS "+i);
+                            }
+                            i=1;
+                            //newStage.close();
+                            System.out.println("Penis");
+                            return;
+                        }
+                        newStage.close();
+                    } else {
+                        //Port, null, SAFE, id
+                        if (!setMultiHostSpielerGrid()) {
+                            label.setText("Sever fehler");
+                            label.setStyle("-fx-background-color: #df0052");
+                            Thread.sleep(60);
+                            newStage.close();
+                        }
+                        newStage.close();
+                    }
+                }else {
+                    if (SAFE == null) {
+                        //Port,Feldgroesse,bot,null,null
+                        if (!setMultiHostBotGrid()) {
+                            label.setText("Sever fehler");
+                            label.setStyle("-fx-background-color: #df0052");
+                            Thread.sleep(60);
+
+                            newStage.close();
+                        }
+                        newStage.close();
+                    } else {
+                        //Port,null,bot,SAFE,id
+                        if (!setMultiHostBotGrid()) {
+                            label.setText("Sever fehler");
+                            label.setStyle("-fx-background-color: #df0052");
+                            Thread.sleep(60);
+                            newStage.close();
+                        }
+                        newStage.close();
+                    }
+                }
+            }catch (IOException | InterruptedException e){
+                System.out.println("HostWarteBildschirmFehler");
+                e.printStackTrace();
+            }
+
+        });
         comp.getChildren().add(label);
+        comp.getChildren().add(start);
         comp.getChildren().add(BackMenu);
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
+        ////
+
+        /*
         try{
             if (bot == null) {
                 if (SAFE == null) {
@@ -389,6 +465,8 @@ public class nuetzlicheMethoden {
             System.out.println("HostWarteBildschirmFehler");
             e.printStackTrace();
         }
+
+         */
 
 
         ///////////////////////
@@ -456,12 +534,18 @@ public class nuetzlicheMethoden {
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
             controller.setVariables(Port,Feldgroesse);
+            //////////////////
             //ToDo Besseres warten
+            /*
             while (i%10000!=0){
                 i++;
                 //System.out.println("PENIS "+i);
             }
             i=1;
+
+             */
+
+            ////////////////////
             /*
              t = new Timeline(new KeyFrame(new Duration(10000),event -> {
                  System.out.println("PENIS "+i);
@@ -482,8 +566,10 @@ public class nuetzlicheMethoden {
             }
 
              */
-            if (controller.Host.ERROR){
-                return false;
+            while (!controller.Host.Hosted) {
+                if (controller.Host.ERROR) {
+                    return false;
+                }
             }
             Scene s = new Scene(r);
             MainMenuController.primaryStage.setScene(s);
@@ -495,8 +581,10 @@ public class nuetzlicheMethoden {
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
             controller.setVariables(Port,SAFE,id);
-            if (controller.Host.ERROR){
-                return false;
+            while (!controller.Host.Hosted) {
+                if (controller.Host.ERROR) {
+                    return false;
+                }
             }
             Scene s = new Scene(r);
             MainMenuController.primaryStage.setScene(s);
@@ -512,8 +600,10 @@ public class nuetzlicheMethoden {
             Parent r = loader.load();
             MultiHostBotController controller = loader.getController();
             controller.setVariables(Port,Feldgroesse,bot);
-            if (controller.Host.ERROR){
-                return false;
+            while (!controller.Host.Hosted) {
+                if (controller.Host.ERROR) {
+                    return false;
+                }
             }
             Scene s = new Scene(r);
             MainMenuController.primaryStage.setScene(s);
@@ -525,8 +615,10 @@ public class nuetzlicheMethoden {
             Parent r = loader.load();
             MultiHostBotController controller = loader.getController();
             controller.setVariables(Port,SAFE,id,bot);
-            if (controller.Host.ERROR){
-                return false;
+            while (!controller.Host.Hosted) {
+                if (controller.Host.ERROR) {
+                    return false;
+                }
             }
             Scene s = new Scene(r);
             MainMenuController.primaryStage.setScene(s);
@@ -554,5 +646,15 @@ public class nuetzlicheMethoden {
         this.bot=bot;
         this.SAFE=SAFE;
         this.id=id;
+    }
+
+
+    public static void setStageCenter(){
+        double width = MainMenuController.primaryStage.getWidth();
+        double height = MainMenuController.primaryStage.getHeight();
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        System.out.println("Stage W: "+width+" H: "+height+";Screen W: "+bounds.getWidth()+" H: "+bounds.getHeight());
+        MainMenuController.primaryStage.setX((bounds.getWidth()-width)/2);
+        MainMenuController.primaryStage.setY((bounds.getHeight()-height)/2);
     }
 }

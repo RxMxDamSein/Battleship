@@ -21,6 +21,7 @@ public class Host {
     private boolean Spielstartet=false;
     public boolean ERROR=false;
     public boolean Connected=false,change=false,load=false;
+    public boolean Hosted=false;
     public String nachricht="",id;
     private Spiel dasSpiel;
 
@@ -42,6 +43,7 @@ public class Host {
             ss = null;
             try {
                 ss = new ServerSocket(port);
+                Hosted=true;
                 System.out.println("Waiting for client ...");
                 s = ss.accept();
                 System.out.println("Connection established");
@@ -96,12 +98,6 @@ public class Host {
 
 
 
-    }
-    private void penis(){
-        Runnable runnable = () -> {
-
-        };
-        Thread thread = new Thread(runnable);
     }
 
     public  void sendSocket(String antwort){

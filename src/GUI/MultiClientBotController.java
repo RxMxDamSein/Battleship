@@ -45,6 +45,7 @@ public class MultiClientBotController implements Initializable, Serializable {
     //@FXML private Button placebutton;
     @FXML private  Label GameTopLabel;
     @FXML private Label GameTopLabel1;
+    @FXML private Button gameStartButton;
     private boolean spielstatus=false;
     private GridPane GameGrid;
     private GridPane GameGrid2;
@@ -68,9 +69,9 @@ public MultiClientBotController(){}
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50),event -> {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0){
-                    methoden.GameEnd(true);
-                } else {
                     methoden.GameEnd(false);
+                } else {
+                    methoden.GameEnd(true);
                 }
                 GridUpdater();
                 updateTimeline.stop();
@@ -416,6 +417,7 @@ public MultiClientBotController(){}
             return;
         }
         spielstatus = true;
+        gameStartButton.setVisible(false);
         System.out.println("Spielstatus: "+spielstatus);
         GameTopLabel1.setText("Du schießt jetzt hier:");
 
@@ -455,7 +457,7 @@ public MultiClientBotController(){}
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        gameStartButton.setVisible(false);
     }
 
 

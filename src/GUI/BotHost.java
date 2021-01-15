@@ -19,9 +19,10 @@ public class BotHost {
     private int port,Feldg;
     private BufferedReader in;
     private OutputStreamWriter out;
-    private boolean Spielstartet=false;
+    public boolean Spielstartet=false;
     public boolean ERROR=false;
     public boolean Connected=false,change=false,load=false;
+    public boolean Hosted;
     public String nachricht="",id;
     private Spiel dasSpiel;
     private Bot derBot;
@@ -47,6 +48,7 @@ public class BotHost {
             ss = null;
             try {
                 ss = new ServerSocket(port);
+                Hosted=true;
                 System.out.println("Waiting for client ...");
                 s = ss.accept();
                 System.out.println("Connection established");
@@ -155,8 +157,8 @@ public class BotHost {
             if (!z.contains("ready")) {
                 CutConnection();
             }
-            Spielstartet = true;
-            schuss();
+            //Spielstartet = true;
+            //schuss();
         };
         Thread t = new Thread(Runnable);
         t.start();

@@ -26,7 +26,7 @@ public class MainMenuController implements Initializable  {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        //nuetzlicheMethoden.setStageCenter();
     }
 
     public void einzelspieler(ActionEvent event) throws IOException {

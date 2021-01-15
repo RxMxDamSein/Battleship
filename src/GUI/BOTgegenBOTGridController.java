@@ -3,6 +3,8 @@ package GUI;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,11 +32,13 @@ import java.util.ResourceBundle;
 public class BOTgegenBOTGridController  implements Initializable  {
     private static final long serialVersionUID=1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
+    @FXML private Slider BotSpeedSlider;
     @FXML private StackPane StackPane;
     @FXML private StackPane StackPane2;
     //@FXML private Button placebutton;
     @FXML private  Label GameTopLabel;
     @FXML private Label GameTopLabel1;
+    @FXML Button gameStartButton;
     private boolean spielstatus=false;
     private GridPane GameGrid;
     private GridPane GameGrid2;
@@ -42,7 +47,8 @@ public class BOTgegenBOTGridController  implements Initializable  {
     private Integer x,bot1,bot2,count=0;
     private int sx=-1,sy=-1,ex=-1,ey=-1;
     private Timeline oneSecondsWonder;
-    private int speed=100;
+    //private int speed=100;
+    private int speed=500;
     private int[][][] feld;
 
     private nuetzlicheMethoden methoden;
@@ -54,7 +60,23 @@ public class BOTgegenBOTGridController  implements Initializable  {
     public BOTgegenBOTGridController() {}
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        //Duration duration = new Duration();
+        BotSpeedSlider.setMin(1);
+        BotSpeedSlider.setValue(100);
+        BotSpeedSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                //System.out.println("observable: "+observable+" oldValue: "+oldValue+" newValue: "+newValue);
+                double value = newValue.intValue();
+                speed = (int) ((int)speed * (value/100));
+                System.out.println("Speed: "+speed+" newValue: "+value);
+                if (oneSecondsWonder != null) {
+                    oneSecondsWonder.stop();
+                    //oneSecondsWonder.setDelay(Duration.millis(speed));
+                    initoneSecondsWonder();
+                }
+            }
+        });
     }
 
     public void setInteger(Integer a, Integer b1, Integer b2) {
@@ -303,6 +325,10 @@ public class BOTgegenBOTGridController  implements Initializable  {
     }
 
     public void gameStart(ActionEvent event) {
+        gameStartButton.setVisible(false);
+        initoneSecondsWonder();
+    }
+    private void initoneSecondsWonder(){
         oneSecondsWonder=new Timeline(new KeyFrame(Duration.millis(speed), e->{
             if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.isOver() /*|| b2.isFinOver()*/){
                 oneSecondsWonder.stop();
