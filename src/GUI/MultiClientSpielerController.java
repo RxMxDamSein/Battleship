@@ -45,6 +45,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
     //@FXML private Button placebutton;
     @FXML private  Label GameTopLabel;
     @FXML private Label GameTopLabel1;
+    //@FXML private Button StartButton;
     private boolean spielstatus=false;
     private GridPane GameGrid;
     private GridPane GameGrid2;
@@ -91,9 +92,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50),event -> {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0){
-                    methoden.GameEnd(true);
-                } else {
                     methoden.GameEnd(false);
+                } else {
+                    methoden.GameEnd(true);
                 }
                 GridUpdater();
                 updateTimeline.stop();
@@ -445,6 +446,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Es wurden nicht alle Schiffe hinzugefügt!");
             return;
         }
+        //StartButton.setOpacity(0.5);
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
         GameTopLabel.setText("Deine Schiffe:");
