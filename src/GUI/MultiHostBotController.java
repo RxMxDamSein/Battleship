@@ -387,7 +387,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         }
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
-        GameTopLabel1.setText("Du schießt jetzt hier:");
+        //GameTopLabel1.setText("Du schießt jetzt hier:");
         //Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
         Host.Spielstartet = true;
         Host.schuss();
@@ -401,15 +401,17 @@ public class MultiHostBotController implements Initializable, Serializable {
         System.out.println("Schiff "+i+" größe: "+penis[i]);
         }
          */
-        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
+        methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot,GameTopLabel,GameTopLabel1);
         //System.out.println("Spieler: "+spieler);
-        System.out.println("Spieler: "+spieler);
+        /*
         GameTopLabel.setText("Spieler: "+spieler);
         if (spieler == 0) {
             GameTopLabel.setText("Bot schießt");
             //Clinet Schießt
             GameTopLabel.setText("Du schießt");
         }
+
+         */
         initupdateTimeline();
     }
 

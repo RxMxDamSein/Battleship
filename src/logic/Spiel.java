@@ -192,7 +192,13 @@ public class Spiel implements Serializable {
         return true;
     }
     /**
-     * @return gibt den Spieler der jetzt abgeschossen wird zurück
+     * @return gibt den Spieler der jetzt abgeschossen wird zurück.
+     *<br>
+     * <br>
+     * 0 ist dein Gegner schiesst auf dich.
+     * <br>
+     * 1 is du schiesst auf den Gegner.
+     * <br>
      */
     public int getAbschussSpieler(){
         return abschussSpieler;

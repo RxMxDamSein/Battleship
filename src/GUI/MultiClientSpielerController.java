@@ -62,39 +62,21 @@ public class MultiClientSpielerController implements Initializable, Serializable
     private Client Client;
 
 
-    private void shipLabel() {
-        //is ned aufm JavaFx THREAD AAAAAAAAAAAAAAAAAA
-        Runnable runnable = ()->{
-            System.out.println("PENIS!");
-            while (Client.status!=2){
-                System.out.println("SOS");
-            };
-            System.out.println("Kein penis");
-            StringBuilder s= new StringBuilder();
-            s.append(Client.ships.length+" Schiffe mit groesse: ");
-            for (int i = 0;i<Client.ships.length;i++) {
-                if (i != Client.ships.length-1) {
-                    s.append(" " + Client.ships[i]);
-                    s.append(",");
-                    continue;
-                }
-                s.append(" "+Client.ships[i]);
+    public void shipLabel() {
+        StringBuilder s= new StringBuilder();
+        s.append(Client.ships.length+" Schiffe mit groesse: ");
+        for (int i = 0;i<Client.ships.length;i++) {
+            if (i != Client.ships.length-1) {
+                s.append(" " + Client.ships[i]);
+                s.append(",");
+                continue;
             }
-            System.out.println(s.toString());
-            //GameTopLabel.setText(s.toString());
-            //gameStartButton.setVisible(true);
-            setLabel(s.toString());
-
-        };
-        Thread thread = new Thread(runnable);
-        thread.start();
-    }
-    private void setLabel(String s){
-        GameTopLabel.setText(s);
+            s.append(" "+Client.ships[i]);
+        }
+        System.out.println(s.toString());
+        GameTopLabel.setText(s.toString());
         gameStartButton.setVisible(true);
     }
-
-
 
     private void initupdateTimeline() {
         if (updateTimeline != null) {
@@ -130,18 +112,53 @@ public class MultiClientSpielerController implements Initializable, Serializable
         Gridinit();
         //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
-        shipLabel();
         //Client.init(); wurde davor schon erledigt
         if(Client.loaded){
             GridUpdater();
             initupdateTimeline();
             spielstatus=true;
+            return;
         }
+         time = new Timeline(new KeyFrame(new Duration(100),event -> {
+            if (Client.status==2){
+                shipLabel();
+                time.stop();
+            }
+        }));
+        time.setCycleCount(Animation.INDEFINITE);
+        time.play();
+
+
 
 
     }
+    private Timeline time;
+    /*
+    private Timeline abschussLabel;
+
+    private void setAbschussLabel(){
+        if (!spielstatus  || GOETTLICHESSPIELDERVERNICHTUNGMITbot==null){
+            return;
+        }
+        abschussLabel = new Timeline(new KeyFrame(new Duration(100),event -> {
+            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()){
+                abschussLabel.stop();
+            }
+            int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
+            if (spieler==0){
+                GameTopLabel.setText("Gegner schießt!");
+                GameTopLabel1.setText("");
+            }else if (spieler==1){
+                GameTopLabel.setText("");
+                GameTopLabel1.setText("Du schießt");
+            }
+        }));
+        abschussLabel.setCycleCount(Animation.INDEFINITE);
+        abschussLabel.play();
+    }
 
 
+     */
 
 
     public void GridUpdater() {
@@ -453,8 +470,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Spiel bereits im gange!!");
             return;
         }
-
-
         if(!Client.senships()){
             System.err.println("Es wurden nicht alle Schiffe hinzugefügt!");
             return;
@@ -463,8 +478,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
         spielstatus = true;
         gameStartButton.setVisible(false);
         System.out.println("Spielstatus: "+spielstatus);
-        GameTopLabel.setText("Deine Schiffe:");
-        GameTopLabel1.setText("Du schießt jetzt hier:");
+        //GameTopLabel.setText("Deine Schiffe:");
+        //GameTopLabel1.setText("Du schießt jetzt hier:");
+
 
         /*
         System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
@@ -474,15 +490,19 @@ public class MultiClientSpielerController implements Initializable, Serializable
         System.out.println("Schiff "+i+" größe: "+penis[i]);
         }
          */
+        methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot,GameTopLabel,GameTopLabel1);
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         //System.out.println("Spieler: "+spieler);
-        System.out.println("Spieler: "+spieler);
+        System.out.println("AbschussSpieler: "+spieler);
+        /*
         GameTopLabel.setText("Spieler: "+spieler);
         if (spieler == 0) {
             GameTopLabel.setText("Bot schießt");
             //Clinet Schießt
             GameTopLabel.setText("Du schießt");
         }
+         */
+        GridUpdater();
         initupdateTimeline();
     }
 
@@ -490,6 +510,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
+        time.stop();
         try{
             Client.CutConnection();
         }catch (Exception e){}

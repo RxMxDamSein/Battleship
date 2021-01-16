@@ -45,6 +45,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
     //@FXML private Button placebutton;
     @FXML private  Label GameTopLabel;
     @FXML private Label GameTopLabel1;
+    @FXML private Button gameStartButton;
     private boolean spielstatus=false;
     private GridPane GameGrid;
     private GridPane GameGrid2;
@@ -418,7 +419,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         }
         spielstatus = true;
         System.out.println("Spielstatus: "+spielstatus);
-        GameTopLabel1.setText("Du schießt jetzt hier:");
+        //GameTopLabel1.setText("Du schießt jetzt hier:");
         Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
 
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
@@ -433,12 +434,16 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         //System.out.println("Spieler: "+spieler);
         System.out.println("Spieler: "+spieler);
+        methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot,GameTopLabel,GameTopLabel1);
+        /*
         GameTopLabel.setText("Spieler: "+spieler);
         if (spieler == 0) {
             GameTopLabel.setText("Bot schießt");
             //Clinet Schießt
             GameTopLabel.setText("Du schießt");
         }
+         */
+        gameStartButton.setVisible(false);
         initupdateTimeline();
     }
 

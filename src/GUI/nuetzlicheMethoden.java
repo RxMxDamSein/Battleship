@@ -19,6 +19,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import logic.Spiel;
 import logic.save.SAFE_SOME;
 
 import javax.swing.text.View;
@@ -279,7 +280,7 @@ public class nuetzlicheMethoden {
         timeline.play();
     }
 
-    public boolean setMultiClientSpielerGrid(Client Client) throws IOException {
+    private boolean setMultiClientSpielerGrid(Client Client) throws IOException {
         if(Client.ERROR|| Client.status<1){
             if (Client.ERROR) System.err.println("Error or status < 1!");
             return false;
@@ -295,7 +296,7 @@ public class nuetzlicheMethoden {
         timeline.stop();
         return true;
     }
-    public boolean setMultiClientBotGrid(BotClient Client)throws IOException{
+    private boolean setMultiClientBotGrid(BotClient Client)throws IOException{
         if(Client.ERROR|| Client.status<1){
             if (Client.ERROR)System.err.println("Error or status < 1!");
             return false;
@@ -656,5 +657,30 @@ public class nuetzlicheMethoden {
         System.out.println("Stage W: "+width+" H: "+height+";Screen W: "+bounds.getWidth()+" H: "+bounds.getHeight());
         MainMenuController.primaryStage.setX((bounds.getWidth()-width)/2);
         MainMenuController.primaryStage.setY((bounds.getHeight()-height)/2);
+    }
+    private Timeline abschussLabel;
+
+    /**
+     *
+     * @param dasSpiel
+     * @param label1 linkes Label des Spielfelds
+     * @param label2 rechtes Label des Spielfelds
+     */
+    public void setAbschussLabelTimeline(Spiel dasSpiel,Label label1,Label label2){
+        abschussLabel = new Timeline(new KeyFrame(new Duration(100),event -> {
+            if (dasSpiel.isOver()){
+                abschussLabel.stop();
+            }
+            int spieler = dasSpiel.getAbschussSpieler();
+            if (spieler==0){
+                label1.setText("Gegner schießt!");
+                label2.setText("");
+            }else if (spieler==1){
+                label1.setText("");
+                label2.setText("Du schießt");
+            }
+        }));
+        abschussLabel.setCycleCount(Animation.INDEFINITE);
+        abschussLabel.play();
     }
 }
