@@ -1,5 +1,8 @@
 package logic;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 public class Bot_schwer extends Bot{
 
     private int[] enemyShips;
@@ -17,7 +20,10 @@ public class Bot_schwer extends Bot{
 
     @Override
     public boolean shipSizesToAdd(int[] s) {
-        enemyShips=s;
+        Arrays.sort(s);
+        enemyShips=new int[s.length];
+        for(int i=s.length-1;i>=0;i--)
+            enemyShips[enemyShips.length-i-1]=s[i];
         longestShip=s[0];
         return addShipsRDMly(s,dasSpiel,rdm,x,y);
     }
@@ -34,7 +40,7 @@ public class Bot_schwer extends Bot{
                     erfolg=true;
                     enemyShips[i]=-1;
                     longestShip=-1;
-                    for(int j=i+1;j<enemyShips.length;j++){
+                    for(int j=0;j<enemyShips.length;j++){
                         if(enemyShips[j]>0 && longestShip<enemyShips[j]){    //noch eine richtige Größe
                             //System.err.println("NEW longeShip "+enemyShips[j]);;
                             longestShip=enemyShips[j];
@@ -44,9 +50,10 @@ public class Bot_schwer extends Bot{
 
                     break;
                 }
-                if(!erfolg){
-                    System.err.println("There should not be a ship that size left");
-                }
+
+            }
+            if(!erfolg){
+                System.err.println("There should not be a ship that size left");
             }
         }
     }
@@ -63,12 +70,12 @@ public class Bot_schwer extends Bot{
                     //System.out.println("(x|y) "+x+"|"+y);
                     if (dasSpiel.getFeld()[1][x][y] != 0) {
                         if (x - lx >= longestShip)
-                            return new int[]{rdm.nextInt(x), y};
+                            return new int[]{(x>0)?rdm.nextInt(x):0, y};
                         lx = x + 1;
                     }
                 }
                 if (x - lx >= longestShip)
-                    return new int[]{rdm.nextInt(x), y};
+                    return new int[]{(x>0)?rdm.nextInt(x):0, y};
                 y+=1;
                 if(y>=this.y)
                     y=0;
@@ -80,19 +87,18 @@ public class Bot_schwer extends Bot{
                     //System.out.println("(x|y) "+x+"|"+y);
                     if (dasSpiel.getFeld()[1][x][y] != 0) {
                         if (y - ly >= longestShip)
-                            return new int[]{x,rdm.nextInt(y)};
+                            return new int[]{x,(y>0)?rdm.nextInt(y):0};
                         ly = y + 1;
                     }
                 }
                 if (y - ly >= longestShip)
-                    return new int[]{x,rdm.nextInt(y)};
+                    return new int[]{x,(y>0)?rdm.nextInt(y):0};
                 x+=1;
                 if(x>=this.x)
                     x=0;
             }
-
+            System.err.println("Bot should have found something! "+longestShip);
+            return rdmSchuss(this.dasSpiel,this.rdm,this.x,this.y);
         }
-        System.err.println("Bot should have found something! "+longestShip);
-        return rdmSchuss(this.dasSpiel,this.rdm,this.x,this.y);
     }
 }

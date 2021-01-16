@@ -252,9 +252,9 @@ public class BOTgegenBOTGridController  implements Initializable  {
         }
         int[] add = Bot.calcships(x,x);
         ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.shipSizesToAdd(add);
-        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getDasSpiel().setVerbose(false);
+        //ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getDasSpiel().setVerbose(false);
         WUNDERVOLLERGEGNERBOT.shipSizesToAdd(add);
-        WUNDERVOLLERGEGNERBOT.getDasSpiel().setVerbose(false);
+        //WUNDERVOLLERGEGNERBOT.getDasSpiel().setVerbose(false);
         feld=ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
         //GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
@@ -351,6 +351,7 @@ public class BOTgegenBOTGridController  implements Initializable  {
 
     public void gameStart(ActionEvent event) {
         gameStartButton.setVisible(false);
+        WUNDERVOLLERGEGNERBOT.dasSpiel.setAbschussSpieler((ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler()==1)?0:1);
         initoneSecondsWonder();
     }
     private void initoneSecondsWonder(){
@@ -378,30 +379,12 @@ public class BOTgegenBOTGridController  implements Initializable  {
             }
         }else{
             int[] xy=ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getSchuss();
-            int ret=WUNDERVOLLERGEGNERBOT.abschiesen(xy[0],xy[1]);
-            //Lversenkt.setText("o");
-            if(ret<0)
+            if(!WUNDERVOLLERGEGNERBOT.dasSpiel.shoot(xy[0],xy[1],0,0,false)) {
                 return;
-            else if(ret==4){
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.shoot(xy[0],xy[1],1,1,true);
-                System.out.println("Treffer Versenkt!");
-                //Lversenkt.setText("x");
-                //if(derBot.isFinOver())
-                //    dasSpiel.setGameOver();
             }
-            else
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.shoot(xy[0],xy[1],1,ret,false);
-            if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.istVersenkt()){
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.slayship=false;
-                Bot.waterAround(1,xy[0],xy[1],ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld(),ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getSizeX(),ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getSizeY());
-                if (ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.isOver()) {
-                    methoden.GameEnd(false);
-                }
-            }else if (ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld()[1][xy[0]][xy[1]]==2){
-                //System.out.println("B1 SLAY!!!!");
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.slayship=true;
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.slayX=xy[0];
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.slayY=xy[1];
+            ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.setSchussFeld(xy[0],xy[1],WUNDERVOLLERGEGNERBOT.dasSpiel.getFeld()[0][xy[0]][xy[1]],WUNDERVOLLERGEGNERBOT.dasSpiel.istVersenkt());
+            if (WUNDERVOLLERGEGNERBOT.dasSpiel.isOver()) {
+                methoden.GameEnd(true);
             }
         }
         GridUpdater();

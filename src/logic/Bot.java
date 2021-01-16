@@ -23,16 +23,16 @@ public abstract class Bot implements Serializable {
         int zy=slayY;
         boolean horizontal=false;
         boolean vertical=false;
-        if(zx>0 && dasSpiel.getFeld()[1][zx-1][zy]==2 || zx<(x-1) && dasSpiel.getFeld()[1][zx+1][zy]==2)
+        if(zx>0 && dasSpiel.getFeld()[1][zx-1][zy]==4 || zx<(x-1) && dasSpiel.getFeld()[1][zx+1][zy]==4 || zx>0 && dasSpiel.getFeld()[1][zx-1][zy]==2 || zx<(x-1) && dasSpiel.getFeld()[1][zx+1][zy]==2)
             horizontal=true;
-        if(zy>0 && dasSpiel.getFeld()[1][zx][zy-1]==2 || zy<(y-1) && dasSpiel.getFeld()[1][zx][zy+1]==2)
+        if(zy>0 && dasSpiel.getFeld()[1][zx][zy-1]==4 || zy>0 && dasSpiel.getFeld()[1][zx][zy-1]==2 || zy<(y-1) && dasSpiel.getFeld()[1][zx][zy+1]==4 || zy<(y-1) && dasSpiel.getFeld()[1][zx][zy+1]==2)
             vertical=true;
         int schritt=1;
         if(horizontal ){
             while(zx+schritt<x){
                 if(dasSpiel.getFeld()[1][zx+schritt][zy]==0){
                     return new int[]{zx+schritt,zy};
-                }else if(dasSpiel.getFeld()[1][zx+schritt][zy]==2){
+                }else if(dasSpiel.getFeld()[1][zx+schritt][zy]==4 ||dasSpiel.getFeld()[1][zx+schritt][zy]==2){
                     schritt++;
                     continue;
                 }else {
@@ -43,7 +43,7 @@ public abstract class Bot implements Serializable {
             while(zx+schritt>=0){
                 if(dasSpiel.getFeld()[1][zx+schritt][zy]==0){
                     return new int[]{zx+schritt,zy};
-                }else if(dasSpiel.getFeld()[1][zx+schritt][zy]==2){
+                }else if(dasSpiel.getFeld()[1][zx+schritt][zy]==4 ||dasSpiel.getFeld()[1][zx+schritt][zy]==2){
                     schritt--;
                     continue;
                 }else {
@@ -54,7 +54,7 @@ public abstract class Bot implements Serializable {
             while(zy+schritt<y){
                 if(dasSpiel.getFeld()[1][zx][zy+schritt]==0){
                     return new int[]{zx,zy+schritt};
-                }else if(dasSpiel.getFeld()[1][zx][zy+schritt]==2){
+                }else if(dasSpiel.getFeld()[1][zx][zy+schritt]==4 || dasSpiel.getFeld()[1][zx][zy+schritt]==2){
                     schritt++;
                     continue;
                 }else {
@@ -66,7 +66,7 @@ public abstract class Bot implements Serializable {
                 //System.out.println(zx+" "+zy);
                 if(dasSpiel.getFeld()[1][zx][zy+schritt]==0){
                     return new int[]{zx,zy+schritt};
-                }else if(dasSpiel.getFeld()[1][zx][zy+schritt]==2){
+                }else if(dasSpiel.getFeld()[1][zx][zy+schritt]==4 ||dasSpiel.getFeld()[1][zx][zy+schritt]==2){
                     schritt--;
                     continue;
                 }else {
@@ -226,7 +226,7 @@ public abstract class Bot implements Serializable {
             System.out.println("after versenkt!");
             logicOUTput.printFeld(f,true);
         }else {
-            if(wert==2){
+            if(wert==2 || wert==4){
                 slayship=true;
                 slayX=x;
                 slayY=y;
@@ -571,38 +571,38 @@ public abstract class Bot implements Serializable {
         int size=0;
         boolean up,down,left,right;
         up=down=left=right=false;
-        if(y+1<this.y && dasSpiel.getFeld()[s][x][y+1]==2){
+        if(y+1<this.y && dasSpiel.getFeld()[s][x][y+1]==4){
             down=true;
         }
-        if(y-1>=0 && dasSpiel.getFeld()[s][x][y-1]==2){
+        if(y-1>=0 && dasSpiel.getFeld()[s][x][y-1]==4){
             up=true;
         }
-        if(x+1<this.x && dasSpiel.getFeld()[s][x+1][y]==2){
+        if(x+1<this.x && dasSpiel.getFeld()[s][x+1][y]==4){
             right=true;
         }
-        if(x-1>=0 && dasSpiel.getFeld()[s][x-1][y]==2){
+        if(x-1>=0 && dasSpiel.getFeld()[s][x-1][y]==4){
             left=true;
         }
         int i;
         if(up){
-            for(i=0;y-i>=0&&dasSpiel.getFeld()[s][x][y-i]==2;i++){
+            for(i=0;y-i>=0&&dasSpiel.getFeld()[s][x][y-i]==4;i++){
                 size++;
             }
         }
         if(down){
-            for(i=0;y+i<this.y&&dasSpiel.getFeld()[s][x][y+i]==2;i++){
+            for(i=0;y+i<this.y&&dasSpiel.getFeld()[s][x][y+i]==4;i++){
                 size++;
             }
 
         }
         if(left){
-            for(i=0;x-i>=0&&dasSpiel.getFeld()[s][x-i][y]==2;i++){
+            for(i=0;x-i>=0&&dasSpiel.getFeld()[s][x-i][y]==4;i++){
                 size++;
             }
 
         }
         if(right){
-            for(i=0;x+i<this.x&&dasSpiel.getFeld()[s][x+i][y]==2;i++){
+            for(i=0;x+i<this.x&&dasSpiel.getFeld()[s][x+i][y]==4;i++){
                 size++;
             }
         }
