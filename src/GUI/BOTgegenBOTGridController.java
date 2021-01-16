@@ -33,6 +33,7 @@ public class BOTgegenBOTGridController  implements Initializable  {
     private static final long serialVersionUID=1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML private Slider BotSpeedSlider;
+    private boolean changingSlider=false;
     @FXML private StackPane StackPane;
     @FXML private StackPane StackPane2;
     //@FXML private Button placebutton;
@@ -48,7 +49,8 @@ public class BOTgegenBOTGridController  implements Initializable  {
     private int sx=-1,sy=-1,ex=-1,ey=-1;
     private Timeline oneSecondsWonder;
     //private int speed=100;
-    private int speed=500;
+    private final int Ospeed=500;
+    private int speed=Ospeed;
     private int[][][] feld;
 
     private nuetzlicheMethoden methoden;
@@ -63,20 +65,43 @@ public class BOTgegenBOTGridController  implements Initializable  {
         //Duration duration = new Duration();
         BotSpeedSlider.setMin(1);
         BotSpeedSlider.setValue(100);
+        BotSpeedSlider.setOnMouseReleased(event ->{
+            changeSlider();
+        });
         BotSpeedSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 //System.out.println("observable: "+observable+" oldValue: "+oldValue+" newValue: "+newValue);
-                double value = newValue.intValue();
-                speed = (int) ((int)speed * (value/100));
-                System.out.println("Speed: "+speed+" newValue: "+value);
-                if (oneSecondsWonder != null) {
-                    oneSecondsWonder.stop();
-                    //oneSecondsWonder.setDelay(Duration.millis(speed));
-                    initoneSecondsWonder();
-                }
+                changeSlider();
             }
         });
+    }
+
+
+
+    private void changeSlider(){
+        if(changingSlider)
+            return;
+        changingSlider=true;
+        double value = BotSpeedSlider.getValue();
+        speed = (int) (Ospeed * (value/100));
+        System.out.println("Speed: "+speed+" newValue: "+value);
+        if (oneSecondsWonder != null) {
+            oneSecondsWonder.stop();
+            //oneSecondsWonder.setDelay(Duration.millis(speed));
+            initoneSecondsWonder();
+        }
+        Runnable runnable=() ->
+        {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            changingSlider=false;
+        };
+        Thread t=new Thread(runnable);
+        t.start();
     }
 
     public void setInteger(Integer a, Integer b1, Integer b2) {
