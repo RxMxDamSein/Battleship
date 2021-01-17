@@ -8,39 +8,48 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorpane1" prefHeight="300.0" prefWidth="400.0" style="-fx-border-color: DARKCYAN;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MainMenuController">
-   <children>
-      <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: DARKCYAN;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox alignment="TOP_CENTER" prefHeight="67.0" prefWidth="400.0" spacing="100.0" style="-fx-border-color: black;">
-               <children>
-                  <Label prefHeight="64.0" prefWidth="213.0" text="Battleship">
-                     <font>
-                        <Font name="Ink Free" size="43.0" />
-                     </font>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets top="-75.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefHeight="44.0" prefWidth="400.0" />
-            <HBox alignment="CENTER" prefHeight="25.0" prefWidth="400.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#einzelspieler" prefHeight="25.0" prefWidth="87.0" text="Einzelspieler" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="34.0" prefWidth="400.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#mehrspieler" prefHeight="25.0" prefWidth="87.0" text="Mehrspieler" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="44.0" prefWidth="400.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#einstellungen" prefHeight="25.0" prefWidth="87.0" text="Einstellungen" />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-   </children>
+<AnchorPane fx:id="anchorpane1" prefHeight="300.0" prefWidth="400.0" style="-fx-border-color: DARKCYAN;"
+            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="GUI.MainMenuController">
+    <children>
+        <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: DARKCYAN;"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox alignment="TOP_CENTER" prefHeight="67.0" prefWidth="400.0" spacing="100.0"
+                      style="-fx-border-color: black;">
+                    <children>
+                        <Label prefHeight="64.0" prefWidth="213.0" text="Battleship">
+                            <font>
+                                <Font name="Ink Free" size="43.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets top="-75.0"/>
+                    </VBox.margin>
+                </HBox>
+                <HBox prefHeight="44.0" prefWidth="400.0"/>
+                <HBox alignment="CENTER" prefHeight="25.0" prefWidth="400.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#einzelspieler" prefHeight="25.0" prefWidth="87.0"
+                                text="Einzelspieler"/>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="34.0" prefWidth="400.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#mehrspieler" prefHeight="25.0" prefWidth="87.0"
+                                text="Mehrspieler"/>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="44.0" prefWidth="400.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#einstellungen" prefHeight="25.0" prefWidth="87.0"
+                                text="Einstellungen"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>

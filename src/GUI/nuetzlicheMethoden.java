@@ -30,18 +30,20 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class nuetzlicheMethoden {
-    private int texture=0;
-    private Image textureWasser,textureSchiff,textureSchiffTreffer,textureWasserTreffer,textureversenkt,textureauswahlWasser;
+    private int texture = 0;
+    private Image textureWasser, textureSchiff, textureSchiffTreffer, textureWasserTreffer, textureversenkt, textureauswahlWasser;
     private Timeline timeline;
 
-    Integer Port=420;
-    Integer Feldgroesse=null;
-    Integer bot=null;
-    SAFE_SOME SAFE=null;
-    String id=" ";
+    Integer Port = 420;
+    Integer Feldgroesse = null;
+    Integer bot = null;
+    SAFE_SOME SAFE = null;
+    String id = " ";
 
-    public nuetzlicheMethoden(){}
-    public nuetzlicheMethoden(int x){
+    public nuetzlicheMethoden() {
+    }
+
+    public nuetzlicheMethoden(int x) {
         //TODO DENNIS MACH SACHEN (NUR IMAGE SPEICHERN)
         texture = EinstellungenController.skin;
         textureWasser = new Image("GUI/Textures/WundervollesWasser.png");
@@ -63,14 +65,15 @@ public class nuetzlicheMethoden {
         //return -((double)x-10)+50;
         //return -(0.75* (double) x-7.5)+50;
         //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
-        double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
-        zahl*= 0.7;
-        zahl = (zahl/2)/(double) x;
+        double zahl = (screen.getHeight() > screen.getWidth()) ? screen.getHeight() : screen.getWidth();
+        zahl *= 0.7;
+        zahl = (zahl / 2) / (double) x;
         //System.out.println("Wundervolle Zahl: "+zahl);
-        if (zahl > 200) zahl=200;
+        if (zahl > 200) zahl = 200;
         return zahl;
     }
-    public Label textureWasser(Label z,int x) {
+
+    public Label textureWasser(Label z, int x) {
         switch (texture) {
             case 0:
                 z.setStyle("-fx-background-color: #03fcf4");
@@ -85,7 +88,8 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-    public Label textureSchiff(Label z,int x) {
+
+    public Label textureSchiff(Label z, int x) {
         switch (texture) {
             case 0:
                 z.setStyle("-fx-background-color: grey");
@@ -100,7 +104,8 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-    public Label textureSchiffTreffer(Label z,int x) {
+
+    public Label textureSchiffTreffer(Label z, int x) {
         switch (texture) {
             case 0:
                 z.setStyle("-fx-background-color: red");
@@ -115,7 +120,8 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-    public Label textureWasserTreffer(Label z,int x) {
+
+    public Label textureWasserTreffer(Label z, int x) {
         switch (texture) {
             case 0:
                 z.setStyle("-fx-background-color: blue");
@@ -130,7 +136,8 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-    public Label textureversenkt(Label z,int x) {
+
+    public Label textureversenkt(Label z, int x) {
         switch (texture) {
             case 0:
                 z.setStyle("-fx-background-color: black");
@@ -145,7 +152,8 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-    public Label textureauswahlWasser(Label z,int x) {
+
+    public Label textureauswahlWasser(Label z, int x) {
         switch (texture) {
             case 0:
                 z.setStyle("-fx-background-color: white");
@@ -162,14 +170,13 @@ public class nuetzlicheMethoden {
     }
 
     /**
-     *
      * @param gewinner true wenn man gewonnen hat
      */
     public void GameEnd(boolean gewinner) {
 
         Stage newStage = new Stage();
         VBox comp = new VBox();
-        comp.setPadding(new Insets(10,10,10,10));
+        comp.setPadding(new Insets(10, 10, 10, 10));
         comp.setSpacing(5);
         comp.setStyle("-fx-background-color: DARKCYAN;");
         comp.setAlignment(Pos.CENTER);
@@ -185,9 +192,9 @@ public class nuetzlicheMethoden {
             label.setStyle("-fx-background-color: red");
         }
         label.setAlignment(Pos.CENTER);
-        label.setPrefSize(200,50);
+        label.setPrefSize(200, 50);
         Button BackMenu = new Button();
-        BackMenu.setPrefSize(120,30);
+        BackMenu.setPrefSize(120, 30);
         BackMenu.setText("MainMenu");
         BackMenu.setOnAction(event1 -> {
             try {
@@ -207,12 +214,14 @@ public class nuetzlicheMethoden {
         newStage.setScene(stageScene);
         newStage.show();
     }
+
     private boolean success;
-    private int count=0;
-    public void warteBildschirm(Client Client,BotClient BotClient) {
+    private int count = 0;
+
+    public void warteBildschirm(Client Client, BotClient BotClient) {
         Stage newStage = new Stage();
         VBox comp = new VBox();
-        comp.setPadding(new Insets(10,10,10,10));
+        comp.setPadding(new Insets(10, 10, 10, 10));
         comp.setSpacing(5);
         comp.setStyle("-fx-background-color: DARKCYAN;");
         comp.setAlignment(Pos.CENTER);
@@ -220,14 +229,14 @@ public class nuetzlicheMethoden {
         label.setText("Bitte warten...");
         label.setAlignment(Pos.CENTER);
         //label.setFont(new Font("Ink Free",14));
-        label.setFont(new Font("System",14));
-        label.setPrefSize(250,30);
+        label.setFont(new Font("System", 14));
+        label.setPrefSize(250, 30);
         Button BackMenu = new Button();
-        BackMenu.setPrefSize(80,30);
+        BackMenu.setPrefSize(80, 30);
         BackMenu.setText("Abbruch");
         BackMenu.setOnAction(event1 -> {
-         timeline.stop();
-         newStage.close();
+            timeline.stop();
+            newStage.close();
         });
         comp.getChildren().add(label);
         comp.getChildren().add(BackMenu);
@@ -235,10 +244,10 @@ public class nuetzlicheMethoden {
         newStage.setScene(stageScene);
         newStage.show();
 
-        timeline = new Timeline(new KeyFrame(new Duration(50),event->{
+        timeline = new Timeline(new KeyFrame(new Duration(50), event -> {
             count++;
-            if (!success){
-                if (count%70==0){
+            if (!success) {
+                if (count % 70 == 0) {
                     timeline.stop();
                     newStage.close();
                 }
@@ -247,7 +256,7 @@ public class nuetzlicheMethoden {
             try {
                 if (BotClient == null) {
                     if (!setMultiClientSpielerGrid(Client)) {
-                        if (count%20==0) {
+                        if (count % 20 == 0) {
                             label.setText(label.getText() + ".");
                         }
 
@@ -257,7 +266,7 @@ public class nuetzlicheMethoden {
                     }
                 } else {
                     if (!setMultiClientBotGrid(BotClient)) {
-                        if (count%20==0) {
+                        if (count % 20 == 0) {
                             label.setText(label.getText() + ".");
                         }
                     } else {
@@ -271,17 +280,17 @@ public class nuetzlicheMethoden {
             if (Client != null && Client.ERROR || BotClient != null && BotClient.ERROR) {
                 label.setText("Konnte keine Verbindung herstellen!!");
                 label.setStyle("-fx-background-color: #df0052");
-                success=false;
-                count=0;
+                success = false;
+                count = 0;
             }
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
-        success=true;
+        success = true;
         timeline.play();
     }
 
     private boolean setMultiClientSpielerGrid(Client Client) throws IOException {
-        if(Client.ERROR|| Client.status<1){
+        if (Client.ERROR || Client.status < 1) {
             if (Client.ERROR) System.err.println("Error or status < 1!");
             return false;
         }
@@ -296,9 +305,10 @@ public class nuetzlicheMethoden {
         timeline.stop();
         return true;
     }
-    private boolean setMultiClientBotGrid(BotClient Client)throws IOException{
-        if(Client.ERROR|| Client.status<1){
-            if (Client.ERROR)System.err.println("Error or status < 1!");
+
+    private boolean setMultiClientBotGrid(BotClient Client) throws IOException {
+        if (Client.ERROR || Client.status < 1) {
+            if (Client.ERROR) System.err.println("Error or status < 1!");
             return false;
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiClientBotGrid.fxml"));
@@ -312,13 +322,15 @@ public class nuetzlicheMethoden {
         timeline.stop();
         return true;
     }
+
     //Integer Port,Integer Feldgroesse, SAFE_SOME SAFE, String id
     Stage newStage;
+
     public void HostwarteBildschirm() {
         newStage = new Stage();
         Label label = new Label();
         VBox comp = new VBox();
-        comp.setPadding(new Insets(10,10,10,10));
+        comp.setPadding(new Insets(10, 10, 10, 10));
         comp.setSpacing(5);
         comp.setStyle("-fx-background-color: DARKCYAN;");
         comp.setAlignment(Pos.CENTER);
@@ -326,10 +338,10 @@ public class nuetzlicheMethoden {
         label.setText("Sever wird erstellt...");
         label.setAlignment(Pos.CENTER);
         //label.setFont(new Font("Ink Free",14));
-        label.setFont(new Font("System",14));
-        label.setPrefSize(250,30);
+        label.setFont(new Font("System", 14));
+        label.setPrefSize(250, 30);
         Button BackMenu = new Button();
-        BackMenu.setPrefSize(80,30);
+        BackMenu.setPrefSize(80, 30);
         BackMenu.setText("Abbruch");
         BackMenu.setOnAction(event1 -> {
             //timeline.stop();
@@ -337,7 +349,7 @@ public class nuetzlicheMethoden {
         });
         Button start = new Button("Start");
         start.setOnAction(event3 -> {
-            try{
+            try {
                 if (bot == null) {
                     if (SAFE == null) {
                         //Port, Feldgroesse, null, null
@@ -352,18 +364,18 @@ public class nuetzlicheMethoden {
                             timeline.play();
 
                              */
-                            Integer i=1;
-                            while (i%1000990990!=0){
+                            Integer i = 1;
+                            while (i % 1000990990 != 0) {
                                 i++;
                                 //System.out.println("PENIS "+i);
                             }
-                            i=1;
+                            i = 1;
 
-                            while (i%1000990990!=0){
+                            while (i % 1000990990 != 0) {
                                 i++;
                                 //System.out.println("PENIS "+i);
                             }
-                            i=1;
+                            i = 1;
                             //newStage.close();
                             System.out.println("Penis");
                             return;
@@ -379,7 +391,7 @@ public class nuetzlicheMethoden {
                         }
                         newStage.close();
                     }
-                }else {
+                } else {
                     if (SAFE == null) {
                         //Port,Feldgroesse,bot,null,null
                         if (!setMultiHostBotGrid()) {
@@ -401,7 +413,7 @@ public class nuetzlicheMethoden {
                         newStage.close();
                     }
                 }
-            }catch (IOException | InterruptedException e){
+            } catch (IOException | InterruptedException e) {
                 System.out.println("HostWarteBildschirmFehler");
                 e.printStackTrace();
             }
@@ -527,14 +539,15 @@ public class nuetzlicheMethoden {
     }
 
     //Integer Port,Integer Feldgroesse, SAFE_SOME SAFE, String id
-    int i=1;
+    int i = 1;
     Timeline t;
-    private boolean setMultiHostSpielerGrid()throws IOException {
-        if (SAFE == null){
+
+    private boolean setMultiHostSpielerGrid() throws IOException {
+        if (SAFE == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
-            controller.setVariables(Port,Feldgroesse);
+            controller.setVariables(Port, Feldgroesse);
             //////////////////
             //ToDo Besseres warten
             /*
@@ -577,11 +590,11 @@ public class nuetzlicheMethoden {
             MainMenuController.primaryStage.setTitle("Host Spieler");
             MainMenuController.primaryStage.show();
             return true;
-        }else {
+        } else {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
-            controller.setVariables(Port,SAFE,id);
+            controller.setVariables(Port, SAFE, id);
             while (!controller.Host.Hosted) {
                 if (controller.Host.ERROR) {
                     return false;
@@ -594,13 +607,14 @@ public class nuetzlicheMethoden {
             return true;
         }
     }
+
     //Integer Port,Integer Feldgroesse,Integer bot, SAFE_SOME SAFE, String id
-    private boolean setMultiHostBotGrid()throws IOException{
-        if (SAFE==null){
+    private boolean setMultiHostBotGrid() throws IOException {
+        if (SAFE == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
             Parent r = loader.load();
             MultiHostBotController controller = loader.getController();
-            controller.setVariables(Port,Feldgroesse,bot);
+            controller.setVariables(Port, Feldgroesse, bot);
             while (!controller.Host.Hosted) {
                 if (controller.Host.ERROR) {
                     return false;
@@ -611,11 +625,11 @@ public class nuetzlicheMethoden {
             MainMenuController.primaryStage.setTitle("Host Bot");
             MainMenuController.primaryStage.show();
             return true;
-        }else {
+        } else {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
             Parent r = loader.load();
             MultiHostBotController controller = loader.getController();
-            controller.setVariables(Port,SAFE,id,bot);
+            controller.setVariables(Port, SAFE, id, bot);
             while (!controller.Host.Hosted) {
                 if (controller.Host.ERROR) {
                     return false;
@@ -629,53 +643,56 @@ public class nuetzlicheMethoden {
         }
     }
 
-    public void setHostVariablen(Integer Port,Integer Feldgroesse) {
-        this.Port =Port;
-        this.Feldgroesse=Feldgroesse;
+    public void setHostVariablen(Integer Port, Integer Feldgroesse) {
+        this.Port = Port;
+        this.Feldgroesse = Feldgroesse;
     }
-    public void setHostVariablen(Integer Port,SAFE_SOME SAFE, String id) {
-        this.Port=Port;
-        this.SAFE=SAFE;
-        this.id=id;
+
+    public void setHostVariablen(Integer Port, SAFE_SOME SAFE, String id) {
+        this.Port = Port;
+        this.SAFE = SAFE;
+        this.id = id;
     }
-    public void setHostVariablen(Integer Port,Integer Feldgroesse,Integer bot) {
-        setHostVariablen(Port,Feldgroesse);
-        this.bot=bot;
+
+    public void setHostVariablen(Integer Port, Integer Feldgroesse, Integer bot) {
+        setHostVariablen(Port, Feldgroesse);
+        this.bot = bot;
     }
-    public void setHostVariablen(Integer Port,Integer bot, SAFE_SOME SAFE, String id) {
-        this.Port=Port;
-        this.bot=bot;
-        this.SAFE=SAFE;
-        this.id=id;
+
+    public void setHostVariablen(Integer Port, Integer bot, SAFE_SOME SAFE, String id) {
+        this.Port = Port;
+        this.bot = bot;
+        this.SAFE = SAFE;
+        this.id = id;
     }
 
 
-    public static void setStageCenter(){
+    public static void setStageCenter() {
         double width = MainMenuController.primaryStage.getWidth();
         double height = MainMenuController.primaryStage.getHeight();
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        System.out.println("Stage W: "+width+" H: "+height+";Screen W: "+bounds.getWidth()+" H: "+bounds.getHeight());
-        MainMenuController.primaryStage.setX((bounds.getWidth()-width)/2);
-        MainMenuController.primaryStage.setY((bounds.getHeight()-height)/2);
+        System.out.println("Stage W: " + width + " H: " + height + ";Screen W: " + bounds.getWidth() + " H: " + bounds.getHeight());
+        MainMenuController.primaryStage.setX((bounds.getWidth() - width) / 2);
+        MainMenuController.primaryStage.setY((bounds.getHeight() - height) / 2);
     }
+
     private Timeline abschussLabel;
 
     /**
-     *
      * @param dasSpiel
-     * @param label1 linkes Label des Spielfelds
-     * @param label2 rechtes Label des Spielfelds
+     * @param label1   linkes Label des Spielfelds
+     * @param label2   rechtes Label des Spielfelds
      */
-    public void setAbschussLabelTimeline(Spiel dasSpiel,Label label1,Label label2){
-        abschussLabel = new Timeline(new KeyFrame(new Duration(100),event -> {
-            if (dasSpiel.isOver()){
+    public void setAbschussLabelTimeline(Spiel dasSpiel, Label label1, Label label2) {
+        abschussLabel = new Timeline(new KeyFrame(new Duration(100), event -> {
+            if (dasSpiel.isOver()) {
                 abschussLabel.stop();
             }
             int spieler = dasSpiel.getAbschussSpieler();
-            if (spieler==0){
+            if (spieler == 0) {
                 label1.setText("Gegner schießt!");
                 label2.setText("");
-            }else if (spieler==1){
+            } else if (spieler == 1) {
                 label1.setText("");
                 label2.setText("Du schießt");
             }

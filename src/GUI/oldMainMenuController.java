@@ -19,16 +19,20 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-
 public class oldMainMenuController implements Initializable {
-    @FXML private AnchorPane anchorpane1;
-    @FXML private TextField GridSizex;
-    @FXML private TextField GridSizey;
-    @FXML private ChoiceBox choiceBox;
-    @FXML private Button Start;
-    @FXML private Button Clear;
-    public Integer x=0,y=0;
-
+    @FXML
+    private AnchorPane anchorpane1;
+    @FXML
+    private TextField GridSizex;
+    @FXML
+    private TextField GridSizey;
+    @FXML
+    private ChoiceBox choiceBox;
+    @FXML
+    private Button Start;
+    @FXML
+    private Button Clear;
+    public Integer x = 0, y = 0;
 
 
     public void StartButton(ActionEvent actionEvent) throws IOException {
@@ -44,17 +48,15 @@ public class oldMainMenuController implements Initializable {
         }
 
 
-
-
         x = Integer.parseInt(sx);
         y = Integer.parseInt(sy);
 
-        int q=0;
-        if(ch.equals("Singleplayer")  ) {
-            q=1;
+        int q = 0;
+        if (ch.equals("Singleplayer")) {
+            q = 1;
         }
-        if(ch.equals("Multiplayer")) q=2;
-        if(ch.equals("0") | ch.equals("NULL")) q=0;
+        if (ch.equals("Multiplayer")) q = 2;
+        if (ch.equals("0") | ch.equals("NULL")) q = 0;
 
         System.out.println(x);
         System.out.println(y);
@@ -71,16 +73,18 @@ public class oldMainMenuController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GameGrid.fxml"));
         Parent r = loader.load();
         GameGridController controller = loader.getController();
-        controller.setInteger(x,y);
+        controller.setInteger(x, y);
         Scene s = new Scene(r);
-        Stage window = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         window.setScene(s);
         window.show();
     }
+
     public void clearButton(ActionEvent event) {
         GridSizex.clear();
         GridSizey.clear();
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         choiceBox.getItems().add("Singleplayer");
@@ -99,7 +103,6 @@ public class oldMainMenuController implements Initializable {
         Clear.pr
 
          */
-
 
 
     }

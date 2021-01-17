@@ -15,36 +15,32 @@ public class Client {
     private Socket s;
     private BufferedReader in;
     private OutputStreamWriter out;
-    private boolean shooting=false;
-    public boolean ERROR=false,change=false,loaded=false;
+    private boolean shooting = false;
+    public boolean ERROR = false, change = false, loaded = false;
     public Spiel dasSpiel;
     public int[] ships;//if ships is added make it -1
-    public int status=0;
+    public int status = 0;
     // 0 = keine verbindung
     // 1 = Verbindung und Spielfeldgröße gegeben
     // 2 = Schiffsgrößen erhalten
 
 
-
-
-
-
     public Client(String IP, Integer PORT) {
-        Runnable runnable = ()->{
+        Runnable runnable = () -> {
             try {
                 s = new Socket(IP, PORT);
                 System.out.println("Connected!");
                 in = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 out = new OutputStreamWriter(s.getOutputStream());
-                String z =receiveSocket();
+                String z = receiveSocket();
                 if (z.contains("load")) {
-                    loaded=true;
-                    SAFE_SOME safe_some=SAFE_SOME.load(z.split(" ")[1]);
-                    dasSpiel=safe_some.spiele[0];
-                    status=2;
-                    System.out.println("status "+status+" error "+ERROR);
+                    loaded = true;
+                    SAFE_SOME safe_some = SAFE_SOME.load(z.split(" ")[1]);
+                    dasSpiel = safe_some.spiele[0];
+                    status = 2;
+                    System.out.println("status " + status + " error " + ERROR);
                     sendSocket("done");
-                    if(!receiveSocket().contains("ready")){
+                    if (!receiveSocket().contains("ready")) {
                         CutConnection();
                         return;
                     }
@@ -56,7 +52,7 @@ public class Client {
                         sonderNachrichten(z);
 
                 } else if (z.contains("size")) {
-                    dasSpiel = new Spiel(Integer.parseInt(z.split(" ")[1]),Integer.parseInt(z.split(" ")[1]),true);
+                    dasSpiel = new Spiel(Integer.parseInt(z.split(" ")[1]), Integer.parseInt(z.split(" ")[1]), true);
                     dasSpiel.init();
                     status = 1;
                     sendSocket("next");
@@ -68,9 +64,9 @@ public class Client {
                     }
                     //System.out.println(z);
                     String[] s = z.split(" ");
-                    ships = new int[s.length-1];
-                    for (int i=1;i<s.length;i++) {
-                        ships[i-1] = Integer.parseInt(s[i]);
+                    ships = new int[s.length - 1];
+                    for (int i = 1; i < s.length; i++) {
+                        ships[i - 1] = Integer.parseInt(s[i]);
                         //System.out.println(ships[i-1]);
                     }
                     status = 2;
@@ -80,7 +76,7 @@ public class Client {
                     return;
                 }
             } catch (IOException e) {
-                ERROR=true;
+                ERROR = true;
                 System.err.println("Cannot create Socket!!");
                 e.printStackTrace();
             }
@@ -91,44 +87,45 @@ public class Client {
 
     }
 
-    public  void sendSocket(String antwort){
+    public void sendSocket(String antwort) {
         System.out.print("Zu Server: " + antwort + "\n");
         try {
             out.write(String.format("%s%n", antwort));
             out.flush();
-        }catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Can not send Antwort to Server!");
             e.printStackTrace();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.err.println("can not sent anything if it does not exist!");
             e.printStackTrace();
         }
     }
 
 
-    public boolean inShips(int len){
-        if(ships==null)
+    public boolean inShips(int len) {
+        if (ships == null)
             return false;
-        for(int i: ships){
-            if(len==i)
+        for (int i : ships) {
+            if (len == i)
                 return true;
         }
         return false;
     }
 
-    public void deleteShip(int len){
-        for(int i=0;i<ships.length;i++)
-            if(ships[i]==len){
-                ships[i]=-1;
+    public void deleteShip(int len) {
+        for (int i = 0; i < ships.length; i++)
+            if (ships[i] == len) {
+                ships[i] = -1;
                 return;
             }
     }
-    public String receiveSocket(){
-        String nachricht="ERROR";
+
+    public String receiveSocket() {
+        String nachricht = "ERROR";
         try {
             nachricht = in.readLine();
             System.out.println("Von Server: " + nachricht);
-        }catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Can not receive Nachricht from Server!");
             e.printStackTrace();
         }
@@ -151,9 +148,9 @@ public class Client {
         }
     }
 
-    public void save(String hash,String dname) {
-        new SAFE_SOME(null,new Spiel[]{dasSpiel},4,hash,dname);
-        sendSocket("save "+hash);
+    public void save(String hash, String dname) {
+        new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, hash, dname);
+        sendSocket("save " + hash);
         if (!receiveSocket().contains("done")) {
             System.err.println("Client hat nicht wahrscheinlich gespeichert");
             CutConnection();
@@ -168,19 +165,19 @@ public class Client {
             return;
         }
         shooting = true;
-        Runnable runnable = ()->{
-            sendSocket("shot "+(x+1)+" "+(y+1));
+        Runnable runnable = () -> {
+            sendSocket("shot " + (x + 1) + " " + (y + 1));
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {
                 CutConnection();
             }
             if (z.contains("1")) {
-                dasSpiel.shoot(x,y,1,1,false);
-            } else if(z.contains("2")) {
-                dasSpiel.shoot(x,y,1,1,true);
+                dasSpiel.shoot(x, y, 1, 1, false);
+            } else if (z.contains("2")) {
+                dasSpiel.shoot(x, y, 1, 1, true);
             } else if (z.contains("0")) {
-                dasSpiel.shoot(x,y,1,0,false);
+                dasSpiel.shoot(x, y, 1, 0, false);
                 change = true;
                 sendSocket("next");
                 String nachricht = receiveSocket();
@@ -199,22 +196,22 @@ public class Client {
     }
 
     private void Servershot(String nachricht) {
-        int x = Integer.parseInt(nachricht.split(" ")[1])-1;
-        int y = Integer.parseInt(nachricht.split(" ")[2])-1;
-        dasSpiel.shoot(x,y,0,0,false);
+        int x = Integer.parseInt(nachricht.split(" ")[1]) - 1;
+        int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
+        dasSpiel.shoot(x, y, 0, 0, false);
         change = true;
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:
             case 4:
                 if (dasSpiel.istVersenkt()) {
-                    antwort+="2";
+                    antwort += "2";
                 } else {
-                    antwort+="1";
+                    antwort += "1";
                 }
                 break;
             case 3:
-                antwort+="0";
+                antwort += "0";
                 break;
             default:
                 System.err.println("Spielbrett sollte beschossen sein");
@@ -230,9 +227,9 @@ public class Client {
         sonderNachrichten(z);
     }
 
-    private void sonderNachrichten (String nachricht) {
+    private void sonderNachrichten(String nachricht) {
         if (nachricht.contains("save")) {
-            new SAFE_SOME(null,new Spiel[]{dasSpiel},4,nachricht.split(" ")[1]);
+            new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1]);
             sendSocket("done");
             CutConnection();
         } else if (nachricht.contains("next")) {
@@ -244,24 +241,23 @@ public class Client {
     }
 
     public boolean senships() {
-        for (int i: ships)
-        {
-            if(i>-1)
+        for (int i : ships) {
+            if (i > -1)
                 return false;
         }
-        Runnable runnable=() ->{
+        Runnable runnable = () -> {
             sendSocket("done");
-            if(!receiveSocket().contains("ready")){
+            if (!receiveSocket().contains("ready")) {
                 System.err.println("Server sollte eigentlich Spiel starten!");
                 CutConnection();
                 return;
             }
             dasSpiel.starteSpiel(0);
             sendSocket("ready");
-            String z=receiveSocket();
-            if(z.contains("shot")){
+            String z = receiveSocket();
+            if (z.contains("shot")) {
                 Servershot(z);
-            }else {
+            } else {
                 sonderNachrichten(z);
             }
 

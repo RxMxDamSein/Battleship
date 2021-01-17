@@ -18,9 +18,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class JoinMenuController implements Initializable {
-    @FXML private Label joinLabel;
-    @FXML private TextField IPText,PortText;
-    @FXML private ChoiceBox<String> SpielartChoice,BotChoice;
+    @FXML
+    private Label joinLabel;
+    @FXML
+    private TextField IPText, PortText;
+    @FXML
+    private ChoiceBox<String> SpielartChoice, BotChoice;
     private nuetzlicheMethoden methoden;
 
     @Override
@@ -37,10 +40,11 @@ public class JoinMenuController implements Initializable {
         SpielartChoice.setValue("Spieler");
 
     }
+
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("MehrspielerMenu");
         window.show();
@@ -61,7 +65,7 @@ public class JoinMenuController implements Initializable {
         }
         String ausw = SpielartChoice.getValue();
         String ch = BotChoice.getValue();
-        int bot=2;
+        int bot = 2;
 
         if (ch.equals("Einfach")) {
             bot = 1;
@@ -78,12 +82,12 @@ public class JoinMenuController implements Initializable {
         }
 
         if (ausw.equals("Spieler")) {
-            Client Client = new Client(ip,p);
-            methoden.warteBildschirm(Client,null);
+            Client Client = new Client(ip, p);
+            methoden.warteBildschirm(Client, null);
 
         } else if (ausw.equals("Bot")) {
-            BotClient Client = new BotClient(ip,p,bot);
-            methoden.warteBildschirm(null,Client);
+            BotClient Client = new BotClient(ip, p, bot);
+            methoden.warteBildschirm(null, Client);
 
         }
     }

@@ -10,52 +10,56 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" style="-fx-background-color: DARKCYAN;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.JoinMenuController">
-   <children>
-      <HBox alignment="CENTER" prefHeight="86.0" prefWidth="400.0">
-         <children>
-            <Label text="Join">
-               <font>
-                  <Font name="Ink Free" size="33.0" />
-               </font>
-            </Label>
-         </children>
-      </HBox>
-      <HBox alignment="BOTTOM_LEFT" layoutY="246.0" prefHeight="54.0" prefWidth="400.0">
-         <children>
-            <Button mnemonicParsing="false" onAction="#backbutton" text="Zurück">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
-      <HBox alignment="CENTER" layoutY="86.0" prefHeight="100.0" prefWidth="400.0">
-         <children>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <TextField fx:id="IPText" promptText="IP" />
-               </children>
-            </VBox>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <TextField fx:id="PortText" promptText="Port" />
-               </children>
-            </VBox>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <ChoiceBox fx:id="SpielartChoice" prefWidth="150.0" />
-                  <ChoiceBox fx:id="BotChoice" prefWidth="150.0" />
-               </children>
-            </VBox>
-         </children></HBox>
-      <HBox alignment="TOP_CENTER" layoutY="182.0" prefHeight="64.0" prefWidth="400.0">
-         <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#StartButton" text="Starto" />
-               </children>
-            </VBox>
-         </children></HBox>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0"
+            prefWidth="400.0" style="-fx-background-color: DARKCYAN;" xmlns="http://javafx.com/javafx/8.0.171"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.JoinMenuController">
+    <children>
+        <HBox alignment="CENTER" prefHeight="86.0" prefWidth="400.0">
+            <children>
+                <Label text="Join">
+                    <font>
+                        <Font name="Ink Free" size="33.0"/>
+                    </font>
+                </Label>
+            </children>
+        </HBox>
+        <HBox alignment="BOTTOM_LEFT" layoutY="246.0" prefHeight="54.0" prefWidth="400.0">
+            <children>
+                <Button mnemonicParsing="false" onAction="#backbutton" text="Zurück">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" layoutY="86.0" prefHeight="100.0" prefWidth="400.0">
+            <children>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <TextField fx:id="IPText" promptText="IP"/>
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <TextField fx:id="PortText" promptText="Port"/>
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <ChoiceBox fx:id="SpielartChoice" prefWidth="150.0"/>
+                        <ChoiceBox fx:id="BotChoice" prefWidth="150.0"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox alignment="TOP_CENTER" layoutY="182.0" prefHeight="64.0" prefWidth="400.0">
+            <children>
+                <VBox prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#StartButton" text="Starto"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
 </AnchorPane>

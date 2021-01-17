@@ -29,28 +29,34 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class BOTgegenBOTGridController  implements Initializable  {
-    private static final long serialVersionUID=1337L;
+public class BOTgegenBOTGridController implements Initializable {
+    private static final long serialVersionUID = 1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
-    @FXML private Slider BotSpeedSlider;
-    private boolean changingSlider=false;
-    @FXML private StackPane StackPane;
-    @FXML private StackPane StackPane2;
+    @FXML
+    private Slider BotSpeedSlider;
+    private boolean changingSlider = false;
+    @FXML
+    private StackPane StackPane;
+    @FXML
+    private StackPane StackPane2;
     //@FXML private Button placebutton;
-    @FXML private  Label GameTopLabel;
-    @FXML private Label GameTopLabel1;
-    @FXML Button gameStartButton;
-    private boolean spielstatus=false;
+    @FXML
+    private Label GameTopLabel;
+    @FXML
+    private Label GameTopLabel1;
+    @FXML
+    Button gameStartButton;
+    private boolean spielstatus = false;
     private GridPane GameGrid;
     private GridPane GameGrid2;
-    private Label[ ][ ] labels;
-    private Label[ ][ ] labels2;
-    private Integer x,bot1,bot2,count=0;
-    private int sx=-1,sy=-1,ex=-1,ey=-1;
+    private Label[][] labels;
+    private Label[][] labels2;
+    private Integer x, bot1, bot2, count = 0;
+    private int sx = -1, sy = -1, ex = -1, ey = -1;
     private Timeline oneSecondsWonder;
     //private int speed=100;
-    private final int Ospeed=500;
-    private int speed=Ospeed;
+    private final int Ospeed = 500;
+    private int speed = Ospeed;
     private int[][][] feld;
 
     private nuetzlicheMethoden methoden;
@@ -59,13 +65,15 @@ public class BOTgegenBOTGridController  implements Initializable  {
     private Bot ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST;
     private Bot WUNDERVOLLERGEGNERBOT;
 
-    public BOTgegenBOTGridController() {}
+    public BOTgegenBOTGridController() {
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Duration duration = new Duration();
         BotSpeedSlider.setMin(1);
         BotSpeedSlider.setValue(100);
-        BotSpeedSlider.setOnMouseReleased(event ->{
+        BotSpeedSlider.setOnMouseReleased(event -> {
             changeSlider();
         });
         BotSpeedSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -78,35 +86,34 @@ public class BOTgegenBOTGridController  implements Initializable  {
     }
 
 
-
-    private void changeSlider(){
-        if(changingSlider)
+    private void changeSlider() {
+        if (changingSlider)
             return;
-        changingSlider=true;
+        changingSlider = true;
         double value = BotSpeedSlider.getValue();
-        speed = (int) (Ospeed * (value/100));
-        System.out.println("Speed: "+speed+" newValue: "+value);
+        speed = (int) (Ospeed * (value / 100));
+        System.out.println("Speed: " + speed + " newValue: " + value);
         if (oneSecondsWonder != null) {
             oneSecondsWonder.stop();
             //oneSecondsWonder.setDelay(Duration.millis(speed));
             initoneSecondsWonder();
         }
-        Runnable runnable=() ->
+        Runnable runnable = () ->
         {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            changingSlider=false;
+            changingSlider = false;
         };
-        Thread t=new Thread(runnable);
+        Thread t = new Thread(runnable);
         t.start();
     }
 
     public void setInteger(Integer a, Integer b1, Integer b2) {
         methoden = new nuetzlicheMethoden(a);
-        x=a;
+        x = a;
         bot1 = b2;
         bot2 = b1;
         Spielinit();
@@ -114,6 +121,7 @@ public class BOTgegenBOTGridController  implements Initializable  {
         GridUpdater();
 
     }
+
     public void GridUpdater() {
         int feld1[][][] = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
         //for (int s=0;s<2;s++){
@@ -123,20 +131,20 @@ public class BOTgegenBOTGridController  implements Initializable  {
                     default:
                         break;
                     case 1:
-                        labels2[a][b] = methoden.textureSchiff(labels2[a][b],x);
+                        labels2[a][b] = methoden.textureSchiff(labels2[a][b], x);
 
                         //labels2[a][b].setStyle("-fx-background-color: grey");
                         break;
                     case 2:
-                        labels2[a][b] = methoden.textureSchiffTreffer(labels2[a][b],x);
+                        labels2[a][b] = methoden.textureSchiffTreffer(labels2[a][b], x);
                         //labels2[a][b].setStyle("-fx-background-color: red");
                         break;
                     case 3:
-                        labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b],x);
+                        labels2[a][b] = methoden.textureWasserTreffer(labels2[a][b], x);
                         //labels2[a][b].setStyle("-fx-background-color: blue");
                         break;
                     case 4:
-                        labels2[a][b] = methoden.textureversenkt(labels2[a][b],x);
+                        labels2[a][b] = methoden.textureversenkt(labels2[a][b], x);
                         break;
                 }
                 /*
@@ -170,19 +178,19 @@ public class BOTgegenBOTGridController  implements Initializable  {
                     default:
                         break;
                     case 1:
-                        labels[a][b] = methoden.textureSchiff(labels[a][b],x);
+                        labels[a][b] = methoden.textureSchiff(labels[a][b], x);
                         //labels[a][b].setStyle("-fx-background-color: grey");
                         break;
                     case 2:
-                        labels[a][b] = methoden.textureSchiffTreffer(labels[a][b],x);
+                        labels[a][b] = methoden.textureSchiffTreffer(labels[a][b], x);
                         //labels[a][b].setStyle("-fx-background-color: red");
                         break;
                     case 3:
-                        labels[a][b] = methoden.textureWasserTreffer(labels[a][b],x);
+                        labels[a][b] = methoden.textureWasserTreffer(labels[a][b], x);
                         //labels[a][b].setStyle("-fx-background-color: blue");
                         break;
                     case 4:
-                         labels[a][b].setStyle("-fx-background-color: black");
+                        labels[a][b].setStyle("-fx-background-color: black");
                         break;
                 }
                 /*
@@ -212,19 +220,20 @@ public class BOTgegenBOTGridController  implements Initializable  {
 
     public void Spielinit() {
         //GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
+        System.out.println(x + " " + x);
         switch (bot1) {
             case 1:
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x,x);
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new RDM_Bot(x, x);
                 break;
             case 2:
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_lvl_2(x,x);
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_lvl_2(x, x);
                 break;
             case 3:
                 //ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_nightmare(x,x,WUNDERVOLLERGEGNERBOT.dasSpiel);
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_nightmare(x,x,null);
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_nightmare(x, x, null);
                 break;
             case 4:
-                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_schwer(x,x);
+                ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = new Bot_schwer(x, x);
                 break;
             default:
                 System.err.println("Bot Auswahl Fehler!!");
@@ -232,16 +241,16 @@ public class BOTgegenBOTGridController  implements Initializable  {
         }
         switch (bot2) {
             case 1:
-                WUNDERVOLLERGEGNERBOT = new RDM_Bot(x,x);
+                WUNDERVOLLERGEGNERBOT = new RDM_Bot(x, x);
                 break;
             case 2:
-                WUNDERVOLLERGEGNERBOT = new Bot_lvl_2(x,x);
+                WUNDERVOLLERGEGNERBOT = new Bot_lvl_2(x, x);
                 break;
             case 3:
-                WUNDERVOLLERGEGNERBOT = new Bot_nightmare(x,x,ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel);
+                WUNDERVOLLERGEGNERBOT = new Bot_nightmare(x, x, ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel);
                 break;
             case 4:
-                WUNDERVOLLERGEGNERBOT = new Bot_schwer(x,x);
+                WUNDERVOLLERGEGNERBOT = new Bot_schwer(x, x);
                 break;
             default:
                 System.err.println("Bot Auswahl Fehler!!");
@@ -250,12 +259,12 @@ public class BOTgegenBOTGridController  implements Initializable  {
         if (ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST instanceof Bot_nightmare) {
             ((Bot_nightmare) ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST).cheat = WUNDERVOLLERGEGNERBOT.dasSpiel;
         }
-        int[] add = Bot.calcships(x,x);
+        int[] add = Bot.calcships(x, x);
         ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.shipSizesToAdd(add);
         //ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getDasSpiel().setVerbose(false);
         WUNDERVOLLERGEGNERBOT.shipSizesToAdd(add);
         //WUNDERVOLLERGEGNERBOT.getDasSpiel().setVerbose(false);
-        feld=ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
+        feld = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
         //GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
     /*
@@ -283,17 +292,17 @@ public class BOTgegenBOTGridController  implements Initializable  {
         GameGrid2 = new GridPane();
         labels2 = new Label[x][x];
         //lustige scale sachen
-        for(int a=x-1;a >= 0;a--) {
+        for (int a = x - 1; a >= 0; a--) {
             //System.out.println("for 2");
-            for(int b=x-1;b >= 0;b--) {
+            for (int b = x - 1; b >= 0; b--) {
 
                 //Game Labels (1)
-                labels [a] [b] = new Label();
-                labels[a][b].setMinSize(methoden.minsizeberechner(x),methoden.minsizeberechner(x));
+                labels[a][b] = new Label();
+                labels[a][b].setMinSize(methoden.minsizeberechner(x), methoden.minsizeberechner(x));
                 //labels[a][b].setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
 
                 //labels[a][b].setStyle("-fx-background-color: #03fcf4");
-                labels[a][b] = methoden.textureWasser(labels[a][b],x);
+                labels[a][b] = methoden.textureWasser(labels[a][b], x);
 
                 //lustige bilder zu den Labels
                 /*
@@ -309,13 +318,13 @@ public class BOTgegenBOTGridController  implements Initializable  {
                 //labels[a][b] = methoden.textureWasser(labels[a][b],x);
 
 
-                GridPane.setConstraints(labels[a][b],a,b,1,1,HPos.CENTER,VPos.CENTER);
+                GridPane.setConstraints(labels[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
                 GameGrid.getChildren().add(labels[a][b]);
 
                 //Game Labels (2)
-                labels2 [a] [b] = new Label();
+                labels2[a][b] = new Label();
                 //labels2[a][b].setMinSize(50,50);
-                labels2[a][b].setMinSize(methoden.minsizeberechner(x),methoden.minsizeberechner(x));
+                labels2[a][b].setMinSize(methoden.minsizeberechner(x), methoden.minsizeberechner(x));
 
                 //labels2[a][b].setStyle("-fx-background-color: #03fcf4");
 
@@ -328,10 +337,10 @@ public class BOTgegenBOTGridController  implements Initializable  {
                 labels2[a][b].setGraphic(view2);
 
                  */
-                labels2[a][b] = methoden.textureWasser(labels2[a][b],x);
+                labels2[a][b] = methoden.textureWasser(labels2[a][b], x);
 
 
-                GridPane.setConstraints(labels2[a][b],a,b,1,1,HPos.CENTER,VPos.CENTER);
+                GridPane.setConstraints(labels2[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
                 GameGrid2.getChildren().add(labels2[a][b]);
             }
         }
@@ -351,15 +360,16 @@ public class BOTgegenBOTGridController  implements Initializable  {
 
     public void gameStart(ActionEvent event) {
         gameStartButton.setVisible(false);
-        WUNDERVOLLERGEGNERBOT.dasSpiel.setAbschussSpieler((ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler()==1)?0:1);
+        WUNDERVOLLERGEGNERBOT.dasSpiel.setAbschussSpieler((ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler() == 1) ? 0 : 1);
         initoneSecondsWonder();
     }
-    private void initoneSecondsWonder(){
-        oneSecondsWonder=new Timeline(new KeyFrame(Duration.millis(speed), e->{
-            if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.isOver() /*|| b2.isFinOver()*/){
+
+    private void initoneSecondsWonder() {
+        oneSecondsWonder = new Timeline(new KeyFrame(Duration.millis(speed), e -> {
+            if (ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.isOver() || WUNDERVOLLERGEGNERBOT.isFinOver()) {
                 oneSecondsWonder.stop();
                 System.out.println("SPIEL ENDE");
-            }else {
+            } else {
                 shoot();
             }
         }));
@@ -368,21 +378,21 @@ public class BOTgegenBOTGridController  implements Initializable  {
     }
 
     private void shoot() {
-        if(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler()==0){
-            int[] xy=WUNDERVOLLERGEGNERBOT.getSchuss();
-            if(!ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.shoot(xy[0],xy[1],0,0,false)) {
+        if (ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler() == 0) {
+            int[] xy = WUNDERVOLLERGEGNERBOT.getSchuss();
+            if (!ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.shoot(xy[0], xy[1], 0, 0, false)) {
                 return;
             }
-            WUNDERVOLLERGEGNERBOT.setSchussFeld(xy[0],xy[1],feld[0][xy[0]][xy[1]],ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.istVersenkt());
+            WUNDERVOLLERGEGNERBOT.setSchussFeld(xy[0], xy[1], feld[0][xy[0]][xy[1]], ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.istVersenkt());
             if (ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.isOver()) {
                 methoden.GameEnd(true);
             }
-        }else{
-            int[] xy=ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getSchuss();
-            if(!WUNDERVOLLERGEGNERBOT.dasSpiel.shoot(xy[0],xy[1],0,0,false)) {
+        } else {
+            int[] xy = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getSchuss();
+            if (!WUNDERVOLLERGEGNERBOT.dasSpiel.shoot(xy[0], xy[1], 0, 0, false)) {
                 return;
             }
-            ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.setSchussFeld(xy[0],xy[1],WUNDERVOLLERGEGNERBOT.dasSpiel.getFeld()[0][xy[0]][xy[1]],WUNDERVOLLERGEGNERBOT.dasSpiel.istVersenkt());
+            ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.setSchussFeld(xy[0], xy[1], WUNDERVOLLERGEGNERBOT.dasSpiel.getFeld()[0][xy[0]][xy[1]], WUNDERVOLLERGEGNERBOT.dasSpiel.istVersenkt());
             if (WUNDERVOLLERGEGNERBOT.dasSpiel.isOver()) {
                 methoden.GameEnd(true);
             }
@@ -399,19 +409,19 @@ public class BOTgegenBOTGridController  implements Initializable  {
         // SAVE POP UP Fenster
         Stage newStage = new Stage();
         VBox comp = new VBox();
-        comp.setPadding(new Insets(10,10,10,10));
+        comp.setPadding(new Insets(10, 10, 10, 10));
         comp.setSpacing(5);
         comp.setStyle("-fx-background-color: DARKCYAN;");
         comp.setAlignment(Pos.CENTER);
         TextField DateiName = new TextField();
         DateiName.setText("Dateiname:");
         Button Save = new Button();
-        Save.setPrefSize(100,30);
+        Save.setPrefSize(100, 30);
         Save.setText("Save");
         Save.setOnAction(event1 -> {
             String name = String.valueOf(DateiName.getText());
-            System.out.println("Name: "+name);
-            new SaveGame(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST,WUNDERVOLLERGEGNERBOT,name);
+            System.out.println("Name: " + name);
+            new SaveGame(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST, WUNDERVOLLERGEGNERBOT, name);
             /*
             GOETTLICHESSPIELDERVERNICHTUNGMITbot.saveGame(name+"-S");
             ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.saveGame(name+"-B");
@@ -432,13 +442,13 @@ public class BOTgegenBOTGridController  implements Initializable  {
         }
         Parent root = FXMLLoader.load(getClass().getResource("BOTgegenBOTMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("BOTgegenBOTMenu");
         window.show();
     }
 
     public void printfeld(ActionEvent event) {
-        logic.logicOUTput.printFeld(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld(),true);
+        logic.logicOUTput.printFeld(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld(), true);
     }
 }

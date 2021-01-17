@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
 public class EinzelspielerController implements Initializable {
 
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -29,7 +28,7 @@ public class EinzelspielerController implements Initializable {
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("MainMenu");
         window.show();
@@ -38,7 +37,7 @@ public class EinzelspielerController implements Initializable {
     public void neuesSpiel(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("NeuesSpielMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("NeuesSpielMenu");
         window.show();
@@ -75,7 +74,7 @@ public class EinzelspielerController implements Initializable {
         GameGridController controller = loader.getController();
         controller.gameloader(id);
         Scene s = new Scene(r);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("GameGrid");
         window.show();
@@ -84,7 +83,7 @@ public class EinzelspielerController implements Initializable {
     public void BOTvsBOT(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("BOTgegenBOTMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("BvBMenu");
         window.show();

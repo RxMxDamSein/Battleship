@@ -1,4 +1,5 @@
 package GUI;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,9 +16,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class NeuesSpielMenuController implements Initializable {
-    @FXML private TextField GridSize;
-    @FXML private ChoiceBox<String> choiceBox;
-    private Integer x=0,bot=0;
+    @FXML
+    private TextField GridSize;
+    @FXML
+    private ChoiceBox<String> choiceBox;
+    private Integer x = 0, bot = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -52,16 +55,16 @@ public class NeuesSpielMenuController implements Initializable {
             bot = 4;
         }
         System.out.println("_______________");
-        System.out.println("GridSize: "+x);
-        System.out.println("Bot: "+ch);
+        System.out.println("GridSize: " + x);
+        System.out.println("Bot: " + ch);
         System.out.println("_______________");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GameGrid.fxml"));
         Parent r = loader.load();
         GameGridController controller = loader.getController();
-        controller.setInteger(x,bot);
+        controller.setInteger(x, bot);
         Scene s = new Scene(r);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("Game");
         window.show();
@@ -69,11 +72,10 @@ public class NeuesSpielMenuController implements Initializable {
     }
 
 
-
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("EinzelspielerMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("EinzelspielerMenu");
         window.show();

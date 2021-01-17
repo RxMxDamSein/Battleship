@@ -17,10 +17,13 @@ import java.util.ResourceBundle;
 
 public class BOTgegenBOTMenuController implements Initializable {
 
-    @FXML private ChoiceBox<String> choiceBox1;
-    @FXML private ChoiceBox<String> choiceBox2;
-    @FXML private TextField GridSize;
-    private Integer x=0,bot1=0,bot2=0;
+    @FXML
+    private ChoiceBox<String> choiceBox1;
+    @FXML
+    private ChoiceBox<String> choiceBox2;
+    @FXML
+    private TextField GridSize;
+    private Integer x = 0, bot1 = 0, bot2 = 0;
 
 
     @Override
@@ -42,7 +45,7 @@ public class BOTgegenBOTMenuController implements Initializable {
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("MainMenu");
         window.show();
@@ -92,16 +95,16 @@ public class BOTgegenBOTMenuController implements Initializable {
             bot2 = 4;
         }
         System.out.println("_______________");
-        System.out.println("GridSize: "+x);
-        System.out.println("Bot 1: "+ch1+" Bot 2: "+ch2);
+        System.out.println("GridSize: " + x);
+        System.out.println("Bot 1: " + ch1 + " Bot 2: " + ch2);
         System.out.println("_______________");
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("BotgegenBOTGrid.fxml"));
         Parent r = loader.load();
         BOTgegenBOTGridController controller = loader.getController();
-        controller.setInteger(x,bot1,bot2);
+        controller.setInteger(x, bot1, bot2);
         Scene s = new Scene(r);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("BvB");
         window.show();

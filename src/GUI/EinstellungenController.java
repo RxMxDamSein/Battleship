@@ -19,10 +19,12 @@ import java.util.ResourceBundle;
 
 public class EinstellungenController implements Initializable {
 
-    @FXML private Label label1;
-    public static int skin=0;
+    @FXML
+    private Label label1;
+    public static int skin = 0;
 
-    public EinstellungenController() {}
+    public EinstellungenController() {
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -38,9 +40,9 @@ public class EinstellungenController implements Initializable {
     }
 
     public void backbutton(ActionEvent event) throws IOException {
-    Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
-    Scene s = new Scene(root);
-    Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+        Scene s = new Scene(root);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("MainMenu");
         window.show();

@@ -22,25 +22,25 @@ public class MehrspielerMenuController implements Initializable {
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("MainMenu");
         window.show();
     }
 
-    public void hostButton(ActionEvent event) throws IOException{
+    public void hostButton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("HostMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("HostMenu");
         window.show();
     }
 
-    public void joinButton(ActionEvent event) throws IOException{
+    public void joinButton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("JoinMenu.fxml"));
         Scene s = new Scene(root);
-        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(s);
         window.setTitle("JoinMenu");
         window.show();

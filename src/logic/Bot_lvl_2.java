@@ -1,6 +1,6 @@
 package logic;
 
-public class Bot_lvl_2 extends Bot{
+public class Bot_lvl_2 extends Bot {
 
 
     public Bot_lvl_2(int x, int y) {
@@ -9,16 +9,16 @@ public class Bot_lvl_2 extends Bot{
 
     @Override
     public boolean shipSizesToAdd(int[] s) {
-        return addShipsRDMly(s,dasSpiel,rdm,x,y);
+        return addShipsRDMly(s, dasSpiel, rdm, x, y);
     }
 
 
     @Override
     public int[] getSchuss() {
-        if(slayship)
+        if (slayship)
             return getSlayShoot();
         else
-            return rdmSchuss(dasSpiel,rdm,x,y);
+            return rdmSchuss(dasSpiel, rdm, x, y);
     }
 
 

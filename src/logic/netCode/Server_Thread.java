@@ -8,14 +8,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-public class Server_Thread extends Thread
-{
+public class Server_Thread extends Thread {
     public Spiel dasSpiel;
     public BufferedReader in;
     public Writer out;
     public Socket s;
     private int port;
-    private int x,y;
+    private int x, y;
     public boolean wait;
     public ServerSocket ss;
 
@@ -41,8 +40,8 @@ public class Server_Thread extends Thread
         }
         lx = ly = -1;
 
-        sendSocket("size "+x+" "+y);
-        if(!receiveSocket().contains("next")){
+        sendSocket("size " + x + " " + y);
+        if (!receiveSocket().contains("next")) {
             System.err.println("Klient ist falsch!");
         }
     }
@@ -173,49 +172,45 @@ public class Server_Thread extends Thread
 
          */
 
-    private String antwort="";
-    private String nachricht="";
+    private String antwort = "";
+    private String nachricht = "";
     private int sCount = 0;
-    private int lx,ly;
+    private int lx, ly;
 
 
-    public Server_Thread(int x,int y, int port){
-        dasSpiel=new Spiel(x,y,true);
+    public Server_Thread(int x, int y, int port) {
+        dasSpiel = new Spiel(x, y, true);
         dasSpiel.init();
-        this.x=x;
-        this.y=y;
-        this.port=port;
+        this.x = x;
+        this.y = y;
+        this.port = port;
     }
 
 
-
-    public  void sendSocket(String antwort){
+    public void sendSocket(String antwort) {
         System.out.print("Zu Client: " + antwort + "\n");
         try {
             out.write(String.format("%s%n", antwort));
             out.flush();
-        }catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Can not send Antwort to Client!");
             e.printStackTrace();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.err.println("can not sent anything if it does not exist!");
             e.printStackTrace();
         }
     }
 
-    public String receiveSocket(){
+    public String receiveSocket() {
         try {
             nachricht = in.readLine();
             System.out.println("Von Client: " + nachricht);
-        }catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Can not receive Nachricht from Client!");
             e.printStackTrace();
         }
         return nachricht;
     }
-
-
-
 
 
 }
