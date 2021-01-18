@@ -88,9 +88,9 @@ public class MultiClientBotController implements Initializable, Serializable {
                 }
                 GridUpdater();
                 updateTimeline.stop();
-            } else if (Client.change) {
-                GridUpdater();
+            } else if (Client.status>1 && Client.change) {
                 Client.change = false;
+                GridUpdater();
                 //System.out.println("update!");
 
             }
