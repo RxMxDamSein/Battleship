@@ -200,7 +200,7 @@ public class BOTgegenBOTGridController implements Initializable {
                         //labels[a][b].setStyle("-fx-background-color: blue");
                         break;
                     case 4:
-                        labels[a][b].setStyle("-fx-background-color: black");
+                        labels[a][b] = methoden.textureversenkt(labels[a][b],x);
                         break;
                 }
                 /*

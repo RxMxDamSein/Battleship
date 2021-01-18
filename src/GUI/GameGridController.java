@@ -340,7 +340,7 @@ public class GameGridController implements Initializable, Serializable {
             return;
         }
         //Treffer auf Schiff
-        if (hit == 2 || hit == 1) {
+        if (hit == 2 || hit == 1 || hit == 4) {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.istVersenkt()) {
                 GridUpdater();
                 //labels[xy[0]][xy[1]] = methoden.textureversenkt(labels[xy[0]][xy[1]],x);
@@ -352,6 +352,7 @@ public class GameGridController implements Initializable, Serializable {
                     GameTopLabel1.setStyle("-fx-background-color: red");
                     GameTopLabel1.setText("BOT HAT GEWONNEN!!!");
                     methoden.GameEnd(false);
+                    return;
                 }
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     Botschiesst();

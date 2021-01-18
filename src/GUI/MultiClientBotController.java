@@ -4,6 +4,8 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -16,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,6 +44,8 @@ public class MultiClientBotController implements Initializable, Serializable {
     private static final long serialVersionUID = 1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML
+    private Slider BotSpeedSlider;
+    @FXML
     private StackPane StackPane;
     @FXML
     private StackPane StackPane2;
@@ -51,13 +56,15 @@ public class MultiClientBotController implements Initializable, Serializable {
     private Label GameTopLabel1;
     @FXML
     private Button gameStartButton;
-    private boolean spielstatus = false;
+    private boolean spielstatus = false,changingSlider=false;
     private GridPane GameGrid;
     private GridPane GameGrid2;
     private Label[][] labels;
     private Label[][] labels2;
     private Integer x, bot, count = 0;
     private int sx = -1, sy = -1, ex = -1, ey = -1;
+    private static final int sleeptime0 = 1000;
+    public static int sleeptime = sleeptime0;
 
     private nuetzlicheMethoden methoden;
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
@@ -459,6 +466,37 @@ public class MultiClientBotController implements Initializable, Serializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gameStartButton.setVisible(false);
+        BotSpeedSlider.setMin(1);
+        BotSpeedSlider.setValue(100);
+        BotSpeedSlider.setOnMouseReleased(event -> {
+            changeSlider();
+        });
+        BotSpeedSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                //System.out.println("observable: "+observable+" oldValue: "+oldValue+" newValue: "+newValue);
+                changeSlider();
+            }
+        });
+    }
+    private void changeSlider() {
+        if (changingSlider)
+            return;
+        changingSlider = true;
+        double value = BotSpeedSlider.getValue();
+        sleeptime = (int) (sleeptime0 * (value / 100));
+        System.out.println("NewSleeptime: " +sleeptime );
+        Runnable runnable = () ->
+        {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            changingSlider = false;
+        };
+        Thread t = new Thread(runnable);
+        t.start();
     }
 
 

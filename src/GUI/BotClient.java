@@ -204,6 +204,11 @@ public class BotClient {
             int x = xy[0];
             int y = xy[1];
             sendSocket("shot " + (x + 1) + " " + (y + 1));
+            try {
+                Thread.sleep(MultiClientBotController.sleeptime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {
@@ -221,6 +226,7 @@ public class BotClient {
 
                 //
                 if (dasSpiel.isOver()) {
+                    System.out.println("Spiel gewonnen!!");
                     methoden.GameEnd(true);
                 }
                 ////////////

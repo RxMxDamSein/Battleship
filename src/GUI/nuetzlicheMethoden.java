@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class nuetzlicheMethoden {
-    private int texture = 0;
+    private int texture = 1;
     private Image textureWasser, textureSchiff, textureSchiffTreffer, textureWasserTreffer, textureversenkt, textureauswahlWasser;
     private Timeline timeline;
 
@@ -44,7 +44,6 @@ public class nuetzlicheMethoden {
     }
 
     public nuetzlicheMethoden(int x) {
-        //TODO DENNIS MACH SACHEN (NUR IMAGE SPEICHERN)
         texture = EinstellungenController.skin;
         textureWasser = new Image("GUI/Textures/WundervollesWasser.png");
 

@@ -187,6 +187,11 @@ public class BotHost {
         Runnable runnable = () -> {
             int[] xy = derBot.getSchuss();
             sendSocket("shot " + (xy[0] + 1) + " " + (xy[1] + 1));
+            try {
+                Thread.sleep(MultiHostBotController.sleeptime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {

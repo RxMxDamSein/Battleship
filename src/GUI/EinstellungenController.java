@@ -21,7 +21,7 @@ public class EinstellungenController implements Initializable {
 
     @FXML
     private Label label1;
-    public static int skin = 0;
+    public static int skin = 1;
 
     public EinstellungenController() {
     }
