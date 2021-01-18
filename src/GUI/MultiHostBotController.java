@@ -97,6 +97,7 @@ public class MultiHostBotController implements Initializable, Serializable {
 
     //Konstruktor normal
     public void setVariables(Integer Port, Integer FeldGroesse, int bot) {
+        sleeptime=sleeptime0;
         methoden = new nuetzlicheMethoden(FeldGroesse);
         x = FeldGroesse;
         this.bot = bot;

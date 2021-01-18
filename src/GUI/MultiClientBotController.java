@@ -89,8 +89,10 @@ public class MultiClientBotController implements Initializable, Serializable {
                 GridUpdater();
                 updateTimeline.stop();
             } else if (Client.change) {
-                Client.change = false;
                 GridUpdater();
+                Client.change = false;
+                //System.out.println("update!");
+
             }
         }));
         updateTimeline.setCycleCount(Animation.INDEFINITE);
@@ -98,6 +100,7 @@ public class MultiClientBotController implements Initializable, Serializable {
     }
 
     public void setVariables(BotClient Client) {
+        sleeptime=sleeptime0;
         methoden = new nuetzlicheMethoden(Client.dasSpiel.getSizeX());
         x = Client.dasSpiel.getSizeX();
         //bot = b;
@@ -113,8 +116,9 @@ public class MultiClientBotController implements Initializable, Serializable {
 
 
     public void GridUpdater() {
-        int feld[][][] = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld();
+        int feld[][][] =Client.dasSpiel.getFeld();
         //for (int s=0;s<2;s++){
+        System.out.println("UPDATE");
         for (int a = x - 1; a >= 0; a--) {
             for (int b = x - 1; b >= 0; b--) {
                 switch (feld[0][a][b]) {

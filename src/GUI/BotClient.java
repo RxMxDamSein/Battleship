@@ -154,6 +154,16 @@ public class BotClient {
             }
     }
 
+    private void changeTrue(){
+        change=true;
+        //System.out.println("CHANGE!");
+        try {
+            Thread.sleep(MultiClientBotController.sleeptime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String receiveSocket() {
         String nachricht = "ERROR";
         try {
@@ -204,11 +214,6 @@ public class BotClient {
             int x = xy[0];
             int y = xy[1];
             sendSocket("shot " + (x + 1) + " " + (y + 1));
-            try {
-                Thread.sleep(MultiClientBotController.sleeptime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {
@@ -217,12 +222,12 @@ public class BotClient {
             if (z.contains("1")) {
                 dasSpiel.shoot(x, y, 1, 1, false);
                 derBot.setSchussFeld(x, y, 2, false);
-                change = true;
+                changeTrue();
                 schuss();
             } else if (z.contains("2")) {
                 dasSpiel.shoot(x, y, 1, 1, true);
                 derBot.setSchussFeld(x, y, 2, true);
-                change = true;
+                changeTrue();
 
                 //
                 if (dasSpiel.isOver()) {
@@ -234,7 +239,7 @@ public class BotClient {
             } else if (z.contains("0")) {
                 dasSpiel.shoot(x, y, 1, 0, false);
                 derBot.setSchussFeld(x, y, 3, false);
-                change = true;
+                changeTrue();
                 sendSocket("next");
                 String nachricht = receiveSocket();
                 if (nachricht.contains("shot")) {
@@ -244,7 +249,7 @@ public class BotClient {
             } else {
                 CutConnection();
             }
-            change = true;
+            changeTrue();
         };
         Thread t = new Thread(runnable);
         t.start();

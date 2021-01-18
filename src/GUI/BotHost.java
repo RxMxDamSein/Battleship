@@ -187,11 +187,6 @@ public class BotHost {
         Runnable runnable = () -> {
             int[] xy = derBot.getSchuss();
             sendSocket("shot " + (xy[0] + 1) + " " + (xy[1] + 1));
-            try {
-                Thread.sleep(MultiHostBotController.sleeptime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             String z = receiveSocket();
             System.out.println(z);
             if (!z.contains("answer")) {
@@ -200,17 +195,17 @@ public class BotHost {
             if (z.contains("1")) {
                 dasSpiel.shoot(xy[0], xy[1], 1, 1, false);
                 derBot.setSchussFeld(xy[0], xy[1], 2, false);
-                change = true;
+                changeTrue();
                 schuss();
             } else if (z.contains("2")) {
                 dasSpiel.shoot(xy[0], xy[1], 1, 1, true);
                 derBot.setSchussFeld(xy[0], xy[1], 2, true);
-                change = true;
+                changeTrue();
                 schuss();
             } else if (z.contains("0")) {
                 dasSpiel.shoot(xy[0], xy[1], 1, 0, false);
                 derBot.setSchussFeld(xy[0], xy[1], 3, false);
-                change = true;
+                changeTrue();
                 sendSocket("next");
                 nachricht = receiveSocket();
                 if (nachricht.contains("shot")) {
@@ -220,7 +215,7 @@ public class BotHost {
             } else {
                 CutConnection();
             }
-            change = true;
+            changeTrue();
         };
         Thread t = new Thread(runnable);
         t.start();
@@ -231,7 +226,7 @@ public class BotHost {
         int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
         dasSpiel.shoot(x, y, 0, 0, false);
         //derBot.setSchussFeld(x,y,);
-        change = true;
+        changeTrue();
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:
@@ -259,6 +254,14 @@ public class BotHost {
             return;
         }
         sonderNachrichten(z);
+    }
+    private void changeTrue(){
+        change=true;
+        try {
+            Thread.sleep(MultiHostBotController.sleeptime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sonderNachrichten(String nachricht) {
