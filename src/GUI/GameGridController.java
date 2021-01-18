@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import logic.*;
 
 import logic.save.ResourceManager;
+import logic.save.SAFE_SOME;
 import logic.save.SaveData;
 
 import java.io.IOException;
@@ -71,18 +72,23 @@ public class GameGridController implements Initializable, Serializable {
         Spielinit();
     }
 
-    public void gameloader(String id) {
+    public void gameloader(SAFE_SOME SAFE) {
+        GOETTLICHESSPIELDERVERNICHTUNGMITbot = SAFE.spiele[0];
+        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = SAFE.bots[0];
+        /*
         SaveGame save = (SaveGame) SaveGame.load(id);
         Spiel s = save.g;
         Bot b = save.b;
+
+         */
         /*
         Bot b =(Bot) Bot.load(id+"-B");
         Spiel s = Spiel.load(id+"-S");
          */
-        x = s.getSizeX();
+        x = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getSizeX();
         methoden = new nuetzlicheMethoden(x);
-        GOETTLICHESSPIELDERVERNICHTUNGMITbot = s;
-        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = b;
+        //GOETTLICHESSPIELDERVERNICHTUNGMITbot = s;
+        //ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = b;
 
         Gridinit();
         GridUpdater();
@@ -589,8 +595,11 @@ public class GameGridController implements Initializable, Serializable {
         Save.setText("Save");
         Save.setOnAction(event1 -> {
             String name = String.valueOf(DateiName.getText());
+            name = name + "-S";
             System.out.println("Name: " + name);
-            new SaveGame(GOETTLICHESSPIELDERVERNICHTUNGMITbot, ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST, name);
+            String hash = "" + this.hashCode();
+            new SAFE_SOME(new Bot[]{ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST},new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot},2,hash,name);
+            //new SaveGame(GOETTLICHESSPIELDERVERNICHTUNGMITbot, ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST, name);
             /*
             GOETTLICHESSPIELDERVERNICHTUNGMITbot.saveGame(name+"-S");
             ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.saveGame(name+"-B");

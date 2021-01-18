@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import logic.save.SAFE_SOME;
 
 
 import java.io.File;
@@ -58,6 +59,36 @@ public class EinzelspielerController implements Initializable {
         //System.out.println("Path: "+file.getAbsolutePath());
         String id = file.getName();
         //System.out.println("Name: "+id1);
+        SAFE_SOME SAFE = SAFE_SOME.load(id);
+        switch (SAFE.game) {
+            //1P vs B
+            case 2:
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("GameGrid.fxml"));
+                Parent r = loader.load();
+                GameGridController controller = loader.getController();
+                controller.gameloader(SAFE);
+                Scene s = new Scene(r);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(s);
+                window.setTitle("GameGrid");
+                window.show();
+                return;
+            //BvB
+            case 3:
+                FXMLLoader loader2 = new FXMLLoader(getClass().getResource("BotgegenBOTGrid.fxml"));
+                Parent r2 = loader2.load();
+                BOTgegenBOTGridController controller2 = loader2.getController();
+                controller2.gameloader(SAFE);
+                Scene s2 = new Scene(r2);
+                Stage window2 = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window2.setScene(s2);
+                window2.setTitle("BvB");
+                window2.show();
+                return;
+            default:
+                System.err.println("Falsche Datei Ausgewählt!!");
+                return;
+        }
 
         /*
         //Id für Bot Datei
@@ -68,16 +99,6 @@ public class EinzelspielerController implements Initializable {
         String id2 = i.getName();
         System.out.println("");
          */
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("GameGrid.fxml"));
-        Parent r = loader.load();
-        GameGridController controller = loader.getController();
-        controller.gameloader(id);
-        Scene s = new Scene(r);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(s);
-        window.setTitle("GameGrid");
-        window.show();
     }
 
     public void BOTvsBOT(ActionEvent event) throws IOException {

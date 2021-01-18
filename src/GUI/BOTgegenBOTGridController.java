@@ -24,6 +24,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.*;
+import logic.save.SAFE_SOME;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,7 +35,7 @@ public class BOTgegenBOTGridController implements Initializable {
     //@FXML private AnchorPane anchoroanegamegrid;
     @FXML
     private Slider BotSpeedSlider;
-    private boolean changingSlider = false;
+    private boolean changingSlider = false,load=false;
     @FXML
     private StackPane StackPane;
     @FXML
@@ -120,6 +121,15 @@ public class BOTgegenBOTGridController implements Initializable {
         Gridinit();
         GridUpdater();
 
+    }
+    public void gameloader(SAFE_SOME SAFE){
+        ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = SAFE.bots[0];
+        WUNDERVOLLERGEGNERBOT = SAFE.bots[1];
+        methoden = new nuetzlicheMethoden(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getSizeX());
+        x = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getSizeX();
+        feld = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
+        Gridinit();
+        GridUpdater();
     }
 
     public void GridUpdater() {
@@ -360,6 +370,12 @@ public class BOTgegenBOTGridController implements Initializable {
 
     public void gameStart(ActionEvent event) {
         gameStartButton.setVisible(false);
+        /*
+        if (!load) {
+            WUNDERVOLLERGEGNERBOT.dasSpiel.setAbschussSpieler((ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler() == 1) ? 0 : 1);
+        }
+
+         */
         WUNDERVOLLERGEGNERBOT.dasSpiel.setAbschussSpieler((ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler() == 1) ? 0 : 1);
         initoneSecondsWonder();
     }
@@ -394,7 +410,7 @@ public class BOTgegenBOTGridController implements Initializable {
             }
             ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.setSchussFeld(xy[0], xy[1], WUNDERVOLLERGEGNERBOT.dasSpiel.getFeld()[0][xy[0]][xy[1]], WUNDERVOLLERGEGNERBOT.dasSpiel.istVersenkt());
             if (WUNDERVOLLERGEGNERBOT.dasSpiel.isOver()) {
-                methoden.GameEnd(true);
+                methoden.GameEnd(false);
             }
         }
         GridUpdater();
@@ -420,8 +436,11 @@ public class BOTgegenBOTGridController implements Initializable {
         Save.setText("Save");
         Save.setOnAction(event1 -> {
             String name = String.valueOf(DateiName.getText());
+            name = name + "-B";
             System.out.println("Name: " + name);
-            new SaveGame(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST, WUNDERVOLLERGEGNERBOT, name);
+            String hash = "" + this.hashCode();
+            new SAFE_SOME(new Bot[]{ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST,WUNDERVOLLERGEGNERBOT},null,3,hash,name);
+            //new SaveGame(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST, WUNDERVOLLERGEGNERBOT, name);
             /*
             GOETTLICHESSPIELDERVERNICHTUNGMITbot.saveGame(name+"-S");
             ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.saveGame(name+"-B");
