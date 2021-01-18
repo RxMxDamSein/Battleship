@@ -502,6 +502,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         Save.setText("Save");
         Save.setOnAction(event1 -> {
             String name = String.valueOf(DateiName.getText());
+            name = name + "-M";
             System.out.println("Name: " + name);
             //Speichern
             String hash = "" + this.hashCode();
