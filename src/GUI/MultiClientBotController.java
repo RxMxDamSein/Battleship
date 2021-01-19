@@ -79,8 +79,15 @@ public class MultiClientBotController implements Initializable, Serializable {
             System.err.println("Timeline existiert bereits!!!");
             return;
         }
-        updateTimeline = new Timeline(new KeyFrame(Duration.millis(sleeptime), event -> {
+        updateTimeline = new Timeline(new KeyFrame(Duration.millis(10), event -> {
             GridUpdater();
+            if (Client.change) {
+                Client.change = false;
+
+                //GridUpdater();
+                //System.out.println("update!");
+
+            }
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
@@ -90,14 +97,10 @@ public class MultiClientBotController implements Initializable, Serializable {
                 GridUpdater();
                 updateTimeline.stop();
                 return;
-            } else if (Client.change) {
-                Client.change = false;
-                //GridUpdater();
-                //System.out.println("update!");
-
             }
         }));
         updateTimeline.setCycleCount(Animation.INDEFINITE);
+        updateTimeline.setDelay(Duration.millis((sleeptime>200)?sleeptime/4:50));
         updateTimeline.play();
     }
 
