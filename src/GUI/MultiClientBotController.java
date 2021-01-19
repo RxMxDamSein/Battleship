@@ -123,7 +123,7 @@ public class MultiClientBotController implements Initializable, Serializable {
     public void GridUpdater() {
         int feld[][][] =Client.dasSpiel.getFeld();
         //for (int s=0;s<2;s++){
-        System.out.println("UPDATE");
+        //System.out.println("UPDATE");
         for (int a = x - 1; a >= 0; a--) {
             for (int b = x - 1; b >= 0; b--) {
                 switch (feld[0][a][b]) {

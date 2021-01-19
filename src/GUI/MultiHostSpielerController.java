@@ -419,7 +419,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
 
     //versetzt Spiel in Feuermodus
     public void gameStart(ActionEvent event) {
-        if (spielstatus) {
+        if (spielstatus|| !Host.Connected) {
             System.err.println("Spiel bereits im gange!!");
             return;
         }
