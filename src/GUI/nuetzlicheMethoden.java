@@ -53,7 +53,7 @@ public class nuetzlicheMethoden {
 
         textureWasserTreffer = new Image("GUI/Textures/trefferWasser.png");
 
-        textureversenkt = new Image("GUI/Textures/trefferSchiff.png");
+        textureversenkt = new Image("GUI/Textures/versenkt.png");
 
         textureauswahlWasser = new Image("GUI/Textures/ausgeaehltesWasser.png");
     }
