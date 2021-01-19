@@ -92,6 +92,7 @@ public class MultiHostBotController implements Initializable, Serializable {
             }
         }));
         updateTimeline.setCycleCount(Animation.INDEFINITE);
+        updateTimeline.setDelay(Duration.millis((sleeptime>400)?sleeptime/8:50));
         updateTimeline.play();
     }
 
@@ -467,6 +468,8 @@ public class MultiHostBotController implements Initializable, Serializable {
         changingSlider = true;
         double value = BotSpeedSlider.getValue();
         sleeptime = (int) (sleeptime0 * (value / 100));
+        if(updateTimeline!=null)
+            updateTimeline.setDelay(Duration.millis((sleeptime>400)?sleeptime/8:50));
         System.out.println("NewSleeptime: " +sleeptime );
         Runnable runnable = () ->
         {

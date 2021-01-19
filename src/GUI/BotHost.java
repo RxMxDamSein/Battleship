@@ -21,7 +21,8 @@ public class BotHost {
     private OutputStreamWriter out;
     public boolean Spielstartet = false;
     public boolean ERROR = false;
-    public boolean Connected = false, change = false, load = false;
+    public boolean Connected = false, load = false;
+    public volatile boolean change = false;
     public boolean Hosted;
     public String nachricht = "", id;
     private Spiel dasSpiel;

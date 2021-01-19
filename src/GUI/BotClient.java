@@ -14,12 +14,12 @@ public class BotClient {
     private Socket s;
     private BufferedReader in;
     private OutputStreamWriter out;
-    public boolean ERROR = false, change = false, loaded = false, pause = false;
+    public boolean ERROR = false, loaded = false, pause = false;
+    public volatile boolean change = false;
     public Spiel dasSpiel;
     public Bot derBot;
     public int[] ships;//if ships is added make it -1
     public int status = 0;
-    private nuetzlicheMethoden methoden;
     // 0 = keine verbindung
     // 1 = Verbindung und Spielfeld
     // 2 = Schiffsgrößen erhalten
@@ -39,7 +39,6 @@ public class BotClient {
                     dasSpiel = safe_some.spiele[0];
                     int x = dasSpiel.getSizeX();
                     int y = dasSpiel.getSizeY();
-                    methoden = new nuetzlicheMethoden(dasSpiel.getSizeX());
                     switch (bot) {
                         case 1:
                             derBot = new RDM_Bot(x, y);
@@ -232,7 +231,6 @@ public class BotClient {
                 //
                 if (dasSpiel.isOver()) {
                     System.out.println("Spiel gewonnen!!");
-                    methoden.GameEnd(true);
                 }
                 ////////////
                 schuss();
@@ -259,7 +257,7 @@ public class BotClient {
         int x = Integer.parseInt(nachricht.split(" ")[1]) - 1;
         int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
         dasSpiel.shoot(x, y, 0, 0, false);
-        change = true;
+        changeTrue();
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:

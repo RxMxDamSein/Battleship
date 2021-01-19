@@ -79,7 +79,8 @@ public class MultiClientBotController implements Initializable, Serializable {
             System.err.println("Timeline existiert bereits!!!");
             return;
         }
-        updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+        updateTimeline = new Timeline(new KeyFrame(Duration.millis(sleeptime), event -> {
+            GridUpdater();
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
@@ -88,9 +89,10 @@ public class MultiClientBotController implements Initializable, Serializable {
                 }
                 GridUpdater();
                 updateTimeline.stop();
-            } else if (Client.status>1 && Client.change) {
+                return;
+            } else if (Client.change) {
                 Client.change = false;
-                GridUpdater();
+                //GridUpdater();
                 //System.out.println("update!");
 
             }
@@ -490,6 +492,8 @@ public class MultiClientBotController implements Initializable, Serializable {
         double value = BotSpeedSlider.getValue();
         sleeptime = (int) (sleeptime0 * (value / 100));
         System.out.println("NewSleeptime: " +sleeptime );
+        if(updateTimeline!=null)
+            updateTimeline.setDelay(Duration.millis((sleeptime>200)?sleeptime/4:50));
         Runnable runnable = () ->
         {
             try {
