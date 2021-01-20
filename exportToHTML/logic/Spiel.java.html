@@ -1,0 +1,764 @@
+<html>
+<head>
+<title>Spiel.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #629755; font-style: italic;}
+.s3 { color: #6897bb;}
+.s4 { color: #808080;}
+.s5 { color: #629755; font-weight: bold; font-style: italic;}
+.s6 { color: #6a8759;}
+.s7 { color: #77b767; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Spiel.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">logic</span><span class="s0">;</span>
+
+
+<span class="s0">import </span><span class="s1">logic.save.ResourceManager</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.io.IOException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.io.Serializable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Random</span><span class="s0">;</span>
+
+
+<span class="s0">public class </span><span class="s1">Spiel </span><span class="s0">implements </span><span class="s1">Serializable {</span>
+    <span class="s2">/** Serialization Nummer */</span>
+    <span class="s0">private static final long </span><span class="s1">serialVersionUID = </span><span class="s3">1337L</span><span class="s0">;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* x=Breite des Spielfelds</span>
+     <span class="s2">* y=Höhe des Spielfelds</span>
+     <span class="s2">* */</span>
+    <span class="s0">private int </span><span class="s1">x = </span><span class="s3">20</span><span class="s0">, </span><span class="s1">y = </span><span class="s3">20</span><span class="s0">;</span>
+    <span class="s4">// 0 frei, 1 Schiff, 2 Treffer, 3 Wasser, 4 versenkt</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Spielfeld für beide Spieler feld[0][x][y] Spieler 0/1 feld[1][x][y] Spieler 1/2</span>
+     <span class="s2">* Wert=0 leeres &amp; unbeschossenes Feld</span>
+     <span class="s2">* Wert=1 nicht getroffenes Schiffsfeld</span>
+     <span class="s2">* Wert=2 getroffenes Schiffsfeld</span>
+     <span class="s2">* Wert=3 leeres &amp; beschossenes Feld</span>
+     <span class="s2">* Wert=4 versenktes Schiff</span>
+     <span class="s2">*/</span>
+    <span class="s0">private int</span><span class="s1">[][][] feld</span><span class="s0">;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Zeigt an ob das Spielfeld erstellt worden ist, und dementsprechend die Feldgröße noch beeinflussbar ist.</span>
+     <span class="s2">* false feld null</span>
+     <span class="s2">* true feld existiert und die Spielfeldgröße ist jetzt fest</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">init = </span><span class="s0">false;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Zeigt an ob die Schiffe fest stehen und man sich jetzt abschießen darf</span>
+     <span class="s2">* true schießen</span>
+     <span class="s2">* false schießen verboten</span>
+     <span class="s2">*/</span>
+    <span class="s0">private boolean </span><span class="s1">started = </span><span class="s0">false;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Zeigt an ob das Spiel vorbei ist</span>
+     <span class="s2">* true Spiel ist vorbei</span>
+     <span class="s2">* false Spiel ist nicht vorbei</span>
+     <span class="s2">*/</span>
+    <span class="s0">private boolean </span><span class="s1">fin = </span><span class="s0">false;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Zeigt an ob im letztem Zug ein Schiff versenkt wurde</span>
+     <span class="s2">* true im letzten Zug wurde ein Schiff versenkt</span>
+     <span class="s2">* false im letzten Zug wurde kein Schiff versenkt</span>
+     <span class="s2">*/</span>
+    <span class="s0">private boolean </span><span class="s1">versenkt = </span><span class="s0">false;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Eine Liste an Schiffobjekten für Gegner Schiffe und die Eigenen</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">ArrayList&lt;Schiff&gt; schiffe</span><span class="s0">;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Die Stelle im Schiffsarray, an der die Gegner Schiffe anfangen</span>
+     <span class="s2">*/</span>
+    <span class="s0">private int </span><span class="s1">enemyS</span><span class="s0">;</span>
+    <span class="s2">/** Zufallsgenerator */</span>
+    <span class="s0">private </span><span class="s1">Random random = </span><span class="s0">new </span><span class="s1">Random()</span><span class="s0">;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Zeigt an welcher Spieler abzuschießen ist</span>
+     <span class="s2">* Wert=0 Spieler 0/1</span>
+     <span class="s2">* Wert=1 Spieler 1/2</span>
+     <span class="s2">* sonst undefiniert</span>
+     <span class="s2">*/</span>
+    <span class="s0">private int </span><span class="s1">abschussSpieler = -</span><span class="s3">1</span><span class="s0">;</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Zeigt an ob bei Fehlern eine Ausgabe in die Konsole getätigt werden soll</span>
+     <span class="s2">* true stderr an</span>
+     <span class="s2">* false stderr aus</span>
+     <span class="s2">*/</span>
+    <span class="s0">private boolean </span><span class="s1">verbose = </span><span class="s0">true;</span>
+    <span class="s4">//if remote -&gt; both sides are known; !remote -&gt; only your side is known! and you are player 0(1)</span>
+    <span class="s2">/**</span>
+     <span class="s2">* Zeigt an ob es ein Spiel ist, bei dem das Spiel das Gegnerfeld kennt oder nicht</span>
+     <span class="s2">* true man weiß nicht wo die Gegnerschiffe sind</span>
+     <span class="s2">* false man weiß wo die Gegnerschiffe sind</span>
+     <span class="s2">*/</span>
+    <span class="s0">private boolean </span><span class="s1">remote</span><span class="s0">;</span>
+
+    <span class="s0">public void </span><span class="s1">setSpielFeld(</span><span class="s0">int</span><span class="s1">[][][] f) {</span>
+        <span class="s0">this</span><span class="s1">.feld = f</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* make Spiel object</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Spiel() {</span>
+        <span class="s1">schiffe = </span><span class="s0">new </span><span class="s1">ArrayList&lt;Schiff&gt;()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">setAbschussSpieler(</span><span class="s0">int </span><span class="s1">abschussSpieler) {</span>
+        <span class="s0">this</span><span class="s1">.abschussSpieler = abschussSpieler</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Lädt das Spiel anhand der ID</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">id die Id des zu laden dem Objekts</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">null Failure, sonst Erfolg</span>
+     <span class="s2">*/</span>
+    <span class="s0">public static </span><span class="s1">Spiel load(String id) {</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s0">return </span><span class="s1">(Spiel) ResourceManager.load(id)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(IOException e) {</span>
+            <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(ClassNotFoundException e) {</span>
+            <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">System.err.println(</span><span class="s6">&quot;load error&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">return null;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public boolean </span><span class="s1">getVerbose() {</span>
+        <span class="s0">return </span><span class="s1">verbose</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Verbose soll setzen ob prints gemacht werden oder nicht!</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">verbose</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">setVerbose(</span><span class="s0">boolean </span><span class="s1">verbose) {</span>
+        <span class="s0">this</span><span class="s1">.verbose = verbose</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* make Spiel object</span>
+     <span class="s2">* remote is set to false</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">x horizontal size</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">y vertical size</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Spiel(</span><span class="s0">int </span><span class="s1">x</span><span class="s0">, int </span><span class="s1">y) {</span>
+        <span class="s0">this</span><span class="s1">()</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.x = x</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.y = y</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.remote = </span><span class="s0">false;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* make Spiel object</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">x      horizontal size</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">y      vertical size</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">remote set if both player sides are known or not</span>
+     <span class="s2">*/</span>
+    <span class="s0">public </span><span class="s1">Spiel(</span><span class="s0">int </span><span class="s1">x</span><span class="s0">, int </span><span class="s1">y</span><span class="s0">, boolean </span><span class="s1">remote) {</span>
+        <span class="s0">this</span><span class="s1">(x</span><span class="s0">, </span><span class="s1">y)</span><span class="s0">;</span>
+        <span class="s0">this</span><span class="s1">.remote = remote</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">gibt zurück ob beim letzten erfolgreichen Schuss ein Schiff versunken wurde</span>
+     <span class="s2">* true -&gt; versenkt, false -&gt; nicht versenkt</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">istVersenkt() {</span>
+        <span class="s0">return </span><span class="s1">versenkt</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true Spiel ist vorbei, false noch nicht!</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">isOver() {</span>
+        <span class="s0">return </span><span class="s1">fin</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Initialisiert das Spielbrett!</span>
+     <span class="s2">* Nur 1 mal möglich!</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">boolean Erfolgreich oder nicht Erfolgreich</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">init() {</span>
+        <span class="s0">if </span><span class="s1">(init) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Das Spiel wurde bereits Initialisiert erstelle lieber ein NEUES!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(x &lt; </span><span class="s3">1 </span><span class="s1">|| y &lt; </span><span class="s3">1</span><span class="s1">) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Feld eingabe zu klein x: &quot; </span><span class="s1">+ x + </span><span class="s6">&quot;y: &quot; </span><span class="s1">+ y + </span><span class="s6">&quot; sollen mindestens 1 sein!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s1">feld = </span><span class="s0">new int</span><span class="s1">[</span><span class="s3">2</span><span class="s1">][x][y]</span><span class="s0">;</span>
+        <span class="s1">init = </span><span class="s0">true;</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* This Function just prints the winner.</span>
+     <span class="s2">* Works only when called right after checkGameOver()==true</span>
+     <span class="s2">*/</span>
+    <span class="s0">private void </span><span class="s1">gameOver() {</span>
+        <span class="s1">logicOUTput.printFeld(feld</span><span class="s0">, true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">System.out.println(</span><span class="s6">&quot;Der Sieger der Partie ist Spieler &quot; </span><span class="s1">+ ((abschussSpieler == </span><span class="s3">0</span><span class="s1">) ? </span><span class="s6">&quot;2(1)&quot; </span><span class="s1">: </span><span class="s6">&quot;1(0)&quot;</span><span class="s1">))</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private boolean </span><span class="s1">chekEnemyLost() {</span>
+        <span class="s0">return false;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* checks if a winner is decided</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true if one player has won!</span>
+     <span class="s2">*/</span>
+    <span class="s0">private boolean </span><span class="s1">checkGameOver() {</span>
+        <span class="s0">if </span><span class="s1">(!started) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Game has not started yet!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s0">boolean </span><span class="s1">spieler1TOT = </span><span class="s0">true;</span>
+        <span class="s0">boolean </span><span class="s1">spieler2TOT = </span><span class="s0">true;</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">i &lt; schiffe.size()</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s1">Schiff s = schiffe.get(i)</span><span class="s0">;</span>
+            <span class="s0">if </span><span class="s1">(spieler1TOT &amp;&amp; s.schifflebt == </span><span class="s0">true </span><span class="s1">&amp;&amp; s.spieler == </span><span class="s3">0</span><span class="s1">)</span>
+                <span class="s1">spieler1TOT = </span><span class="s0">false;</span>
+            <span class="s0">if </span><span class="s1">(spieler2TOT &amp;&amp; s.schifflebt == </span><span class="s0">true </span><span class="s1">&amp;&amp; s.spieler == </span><span class="s3">1</span><span class="s1">)</span>
+                <span class="s1">spieler2TOT = </span><span class="s0">false;</span>
+            <span class="s0">if </span><span class="s1">(!spieler1TOT &amp;&amp; !spieler2TOT)</span>
+                <span class="s0">break;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(spieler1TOT || spieler2TOT) {</span>
+            <span class="s1">fin = </span><span class="s0">true;</span>
+            <span class="s0">return true;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">return false;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Possibility for remote host to say he lost</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true if success</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">setGameOver() {</span>
+        <span class="s0">if </span><span class="s1">(!remote) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;You can only set GameOver while playing remote!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(abschussSpieler == </span><span class="s3">0</span><span class="s1">) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Only remote can set GameOver!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">(!started) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Game has not started yet!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s1">fin = </span><span class="s0">true;</span>
+        <span class="s1">gameOver()</span><span class="s0">;</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">gibt den Spieler der jetzt abgeschossen wird zurück.</span>
+     <span class="s2">* </span><span class="s7">&lt;br&gt;</span>
+     <span class="s2">* </span><span class="s7">&lt;br&gt;</span>
+     <span class="s2">* 0 ist dein Gegner schiesst auf dich.</span>
+     <span class="s2">* </span><span class="s7">&lt;br&gt;</span>
+     <span class="s2">* 1 is du schiesst auf den Gegner.</span>
+     <span class="s2">* </span><span class="s7">&lt;br&gt;</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getAbschussSpieler() {</span>
+        <span class="s0">return </span><span class="s1">abschussSpieler</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* setzt das Spiel in spiel Zustand.</span>
+     <span class="s2">* Das heißt ab jetzt kann geschossen werden.</span>
+     <span class="s2">* Dafür können keine Schiffe mehr hinzugefügt werden!</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true -&gt; das Spiel wurde gestartet, false -&gt; FEHLER!</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">starteSpiel() {</span>
+        <span class="s0">if </span><span class="s1">(started) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Das Spiel ist bereits im Gange!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s4">//wenn remote müssen jetzt die unwissenden Gegner schiffe kreiert werden!</span>
+        <span class="s0">if </span><span class="s1">(remote) {</span>
+            <span class="s0">int </span><span class="s1">len = schiffe.size()</span><span class="s0">;</span>
+            <span class="s1">enemyS = len</span><span class="s0">;</span>
+            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">i &lt; len</span><span class="s0">; </span><span class="s1">i++) {</span>
+                <span class="s1">Schiff s = </span><span class="s0">new </span><span class="s1">Schiff()</span><span class="s0">;</span>
+                <span class="s1">s.schifflaenge = schiffe.get(i).schifflaenge</span><span class="s0">;</span>
+                <span class="s1">s.spieler = </span><span class="s3">1</span><span class="s0">;</span>
+                <span class="s1">s.schifflebt = </span><span class="s0">true;</span>
+                <span class="s1">schiffe.add(s)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+
+        <span class="s1">started = </span><span class="s0">true;</span>
+        <span class="s0">if </span><span class="s1">(abschussSpieler &lt; </span><span class="s3">0</span><span class="s1">) {</span>
+            <span class="s1">abschussSpieler = random.nextInt(</span><span class="s3">2</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s4">//System.out.println(&quot;abzuschiesender Spieler ist &quot;+abschussSpieler);</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(checkGameOver()) {</span>
+            <span class="s1">gameOver()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* setzt das Spiel in spiel Zustand.</span>
+     <span class="s2">* Das heißt ab jetzt kann geschossen werden.</span>
+     <span class="s2">* Dafür können keine Schiffe mehr hinzugefügt werden!</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">spieler setzt den Spieler der als erstes angeschossen wird 0 oder 1</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true -&gt; das Spiel wurde gestartet, false -&gt; FEHLER!</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">starteSpiel(</span><span class="s0">int </span><span class="s1">spieler) {</span>
+        <span class="s0">if </span><span class="s1">(!starteSpiel())</span>
+            <span class="s0">return false;</span>
+        <span class="s1">abschussSpieler = spieler</span><span class="s0">;</span>
+        <span class="s4">//System.out.println(&quot;abzuschiesender Spieler ist &quot;+abschussSpieler);</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Schießt auf ein Feld(x|y) auf dem Spielbrett des angegebenen Spielers</span>
+     <span class="s2">* setzt zudem denn nächsten zu beschiesenden Spieler</span>
+     <span class="s2">* Nur verwendbar wenn remote==false</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">x       X Koordinate des Schusses</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">y       Y Koordinate des Schusses</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">spieler der abzuschiesende Spieler</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true -&gt; es wurde geschossen, false -&gt; es wurde nicht geschossen FEHLER!</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">shoot(</span><span class="s0">int </span><span class="s1">x</span><span class="s0">, int </span><span class="s1">y</span><span class="s0">, int </span><span class="s1">spieler) {</span>
+        <span class="s0">if </span><span class="s1">(remote) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;use other shoot function while playing remote!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s0">return </span><span class="s1">abstractShoot(x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s1">spieler</span><span class="s0">, </span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Schießt auf ein Feld(x|y) auf dem Spielbrett des angegebenen Spielers</span>
+     <span class="s2">* setzt zudem denn nächsten zu beschiesenden Spieler</span>
+     <span class="s2">* Nur verwendbar wenn remote==true</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">x          X Koordinate des Schusses</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">y          Y Koordinate des Schusses</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">spieler    der abzuschiesende Spieler</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">p_hit      Value des getroffenen Feldes auf dem Remotefeld 0 frei 1 Schiff 2 getroffen 3 Wasser| wenn man auf Spieler 0 schießt wird diese Eingabe ignoriert!</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">p_versenkt true wenn bei Remote ein Schiff versenkt wurde, false wenn bei Remote kein Schiff versenkt wurde</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true -&gt; es wurde geschossen, false -&gt; es wurde nicht geschossen FEHLER!</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">shoot(</span><span class="s0">int </span><span class="s1">x</span><span class="s0">, int </span><span class="s1">y</span><span class="s0">, int </span><span class="s1">spieler</span><span class="s0">, int </span><span class="s1">p_hit</span><span class="s0">, boolean </span><span class="s1">p_versenkt) {</span>
+        <span class="s0">if </span><span class="s1">(!remote) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;use other shoot function while playing local!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s0">boolean </span><span class="s1">ret = abstractShoot(x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s1">spieler</span><span class="s0">, </span><span class="s1">p_hit)</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(ret &amp;&amp; spieler == </span><span class="s3">1</span><span class="s1">) {</span>
+            <span class="s1">versenkt = p_versenkt</span><span class="s0">;</span>
+            <span class="s4">//kill ships in schiffe for player 1</span>
+            <span class="s0">if </span><span class="s1">(versenkt) {</span>
+                <span class="s0">if </span><span class="s1">(!killEnemyShipfromPos(x</span><span class="s0">, </span><span class="s1">y) &amp;&amp; verbose) {</span><span class="s4">//ToDo some error with this!</span>
+                    <span class="s1">System.err.println(</span><span class="s6">&quot;ship could not sink!!!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s1">Bot.waterAround(spieler</span><span class="s0">, </span><span class="s1">x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s1">feld</span><span class="s0">, this</span><span class="s1">.x</span><span class="s0">, this</span><span class="s1">.y)</span><span class="s0">;</span>
+
+                <span class="s1">checkGameOver()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s0">return </span><span class="s1">ret</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Hilfsfunktion für die ShootFunktionen</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">x</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">y</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">spieler</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">p_hit</span>
+     <span class="s2">* </span><span class="s5">@return</span>
+     <span class="s2">*/</span>
+    <span class="s0">private boolean </span><span class="s1">abstractShoot(</span><span class="s0">int </span><span class="s1">x</span><span class="s0">, int </span><span class="s1">y</span><span class="s0">, int </span><span class="s1">spieler</span><span class="s0">, int </span><span class="s1">p_hit) {</span>
+        <span class="s0">if </span><span class="s1">(!started) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Game has not started yet!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(fin) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Game is Over!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(spieler != abschussSpieler &amp;&amp; p_hit != </span><span class="s3">31</span><span class="s1">) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Wrong Player to shoot!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">if </span><span class="s1">(x &gt;= </span><span class="s0">this</span><span class="s1">.x || y &gt;= </span><span class="s0">this</span><span class="s1">.y || x &lt; </span><span class="s3">0 </span><span class="s1">|| y &lt; </span><span class="s3">0</span><span class="s1">) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Shoot out of boundaries! (&quot;</span><span class="s1">+x+</span><span class="s6">&quot;|&quot;</span><span class="s1">+y+</span><span class="s6">&quot;)&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(remote &amp;&amp; spieler == </span><span class="s3">1 </span><span class="s1">&amp;&amp; feld[spieler][x][y] == </span><span class="s3">0</span><span class="s1">)</span>
+            <span class="s1">feld[spieler][x][y] = p_hit</span><span class="s0">;</span>
+        <span class="s0">switch </span><span class="s1">(feld[spieler][x][y]) {</span>
+            <span class="s0">default</span><span class="s1">:</span>
+                <span class="s0">if </span><span class="s1">(verbose)</span>
+                    <span class="s1">System.err.println(</span><span class="s6">&quot;undefined feld state&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">return false;</span>
+            <span class="s0">case </span><span class="s3">2</span><span class="s1">:</span>
+            <span class="s0">case </span><span class="s3">3</span><span class="s1">:</span>
+            <span class="s0">case </span><span class="s3">4</span><span class="s1">:</span>
+                <span class="s0">if </span><span class="s1">(verbose)</span>
+                    <span class="s1">System.err.println(</span><span class="s6">&quot;Selected Field was already shot s &quot; </span><span class="s1">+ spieler + </span><span class="s6">&quot; xy &quot; </span><span class="s1">+ x + </span><span class="s6">&quot; &quot; </span><span class="s1">+ y)</span><span class="s0">;</span>
+                <span class="s0">return false;</span>
+            <span class="s0">case </span><span class="s3">1</span><span class="s1">:</span><span class="s4">//Treffer</span>
+                <span class="s1">feld[spieler][x][y] = </span><span class="s3">2</span><span class="s0">;</span>
+                <span class="s4">//find ship and update its getroffen Attribute</span>
+                <span class="s0">if </span><span class="s1">(!remote || (remote &amp;&amp; spieler == </span><span class="s3">0</span><span class="s1">)) {</span>
+                    <span class="s1">versenkt = </span><span class="s0">false;</span>
+                    <span class="s1">Schiff s = findSchiffFromPos(x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s1">spieler)</span><span class="s0">;</span>
+                    <span class="s0">if </span><span class="s1">(!Schiff.setGetroffenWposAship(x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s1">s)) {</span>
+                        <span class="s0">if </span><span class="s1">(verbose)</span>
+                            <span class="s1">System.err.println(</span><span class="s6">&quot;Es wurde ein Treffer erzielt, aber es sollte dort kein Schiff sein!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                    <span class="s0">if </span><span class="s1">(!s.schifflebt) {</span><span class="s4">//Schiff ist versenkt!</span>
+                        <span class="s1">Schiff.killShipfields(s</span><span class="s0">, </span><span class="s1">feld)</span><span class="s0">;</span>
+                        <span class="s0">if </span><span class="s1">(spieler == </span><span class="s3">1</span><span class="s1">) {</span>
+                            <span class="s1">Bot.waterAround(</span><span class="s3">1</span><span class="s0">, </span><span class="s1">x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s1">feld</span><span class="s0">, this</span><span class="s1">.x</span><span class="s0">, this</span><span class="s1">.y)</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s1">versenkt = </span><span class="s0">true;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+                <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s3">0</span><span class="s1">:</span><span class="s4">//Wasser oder ehr noch frei</span>
+                <span class="s1">versenkt = </span><span class="s0">false;</span>
+                <span class="s1">feld[spieler][x][y] = </span><span class="s3">3</span><span class="s0">;</span>
+                <span class="s0">if </span><span class="s1">(spieler &gt; </span><span class="s3">0</span><span class="s1">) {</span>
+                    <span class="s1">abschussSpieler = </span><span class="s3">0</span><span class="s0">;</span>
+                    <span class="s4">//System.out.println(&quot;abzuschiesender Spieler ist &quot;+abschussSpieler);</span>
+                <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                    <span class="s1">abschussSpieler = </span><span class="s3">1</span><span class="s0">;</span>
+                    <span class="s4">//System.out.println(&quot;abzuschiesender Spieler ist &quot;+abschussSpieler);</span>
+                <span class="s1">}</span>
+                <span class="s0">break;</span>
+        <span class="s1">}</span>
+        <span class="s4">//System.out.println(&quot;Player &quot;+spieler+&quot;/&quot;+abschussSpieler+&quot; was shot at (&quot;+x+&quot;|&quot;+y+&quot;)&quot;);</span>
+        <span class="s0">if </span><span class="s1">(checkGameOver()) {</span>
+            <span class="s1">gameOver()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+
+
+    <span class="s0">private boolean </span><span class="s1">killEnemyShipfromPos(</span><span class="s0">int </span><span class="s1">x</span><span class="s0">, int </span><span class="s1">y) {</span>
+        <span class="s0">int </span><span class="s1">horizontal = </span><span class="s3">2</span><span class="s0">;  </span><span class="s4">//-1 undefined, 0 horizontal, 1 vertical, 2 shipsize=1(both)</span>
+        <span class="s0">if </span><span class="s1">((x &gt; </span><span class="s3">0 </span><span class="s1">&amp;&amp; feld[</span><span class="s3">1</span><span class="s1">][x - </span><span class="s3">1</span><span class="s1">][y] == </span><span class="s3">1</span><span class="s1">) || (x &gt; </span><span class="s3">0 </span><span class="s1">&amp;&amp; feld[</span><span class="s3">1</span><span class="s1">][x - </span><span class="s3">1</span><span class="s1">][y] == </span><span class="s3">2</span><span class="s1">) || (x &lt; </span><span class="s0">this</span><span class="s1">.x - </span><span class="s3">1 </span><span class="s1">&amp;&amp; feld[</span><span class="s3">1</span><span class="s1">][x + </span><span class="s3">1</span><span class="s1">][y] == </span><span class="s3">1</span><span class="s1">) || (x &lt; </span><span class="s0">this</span><span class="s1">.x - </span><span class="s3">1 </span><span class="s1">&amp;&amp; feld[</span><span class="s3">1</span><span class="s1">][x + </span><span class="s3">1</span><span class="s1">][y] == </span><span class="s3">2</span><span class="s1">)) {</span>
+            <span class="s1">horizontal = </span><span class="s3">0</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">((y &gt; </span><span class="s3">0 </span><span class="s1">&amp;&amp; feld[</span><span class="s3">1</span><span class="s1">][x][y - </span><span class="s3">1</span><span class="s1">] == </span><span class="s3">1</span><span class="s1">) || (y &gt; </span><span class="s3">0 </span><span class="s1">&amp;&amp; feld[</span><span class="s3">1</span><span class="s1">][x][y - </span><span class="s3">1</span><span class="s1">] == </span><span class="s3">2</span><span class="s1">) || (y &lt; </span><span class="s0">this</span><span class="s1">.y - </span><span class="s3">1 </span><span class="s1">&amp;&amp; feld[</span><span class="s3">1</span><span class="s1">][x][y + </span><span class="s3">1</span><span class="s1">] == </span><span class="s3">1</span><span class="s1">) || (y &lt; </span><span class="s0">this</span><span class="s1">.y - </span><span class="s3">1 </span><span class="s1">&amp;&amp; feld[</span><span class="s3">1</span><span class="s1">][x][y + </span><span class="s3">1</span><span class="s1">] == </span><span class="s3">2</span><span class="s1">)) {</span>
+            <span class="s1">horizontal = </span><span class="s3">1</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">boolean </span><span class="s1">deleted = </span><span class="s0">false;</span>
+        <span class="s1">Schiff s = </span><span class="s0">null;</span>
+        <span class="s0">int </span><span class="s1">size = </span><span class="s3">1</span><span class="s0">;</span>
+        <span class="s0">switch </span><span class="s1">(horizontal) {</span>
+            <span class="s0">default</span><span class="s1">:</span>
+                <span class="s0">return false;</span>
+            <span class="s0">case </span><span class="s3">2</span><span class="s1">:</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = enemyS</span><span class="s0">; </span><span class="s1">i &lt; schiffe.size()</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s1">s = schiffe.get(i)</span><span class="s0">;</span>
+                    <span class="s0">if </span><span class="s1">(s.schifflaenge == size &amp;&amp; s.schifflebt) {</span>
+                        <span class="s1">s.schifflebt = </span><span class="s0">false;</span>
+                        <span class="s1">deleted = </span><span class="s0">true;</span>
+                        <span class="s0">break;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+                <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s3">0</span><span class="s1">:</span><span class="s4">//vertical</span>
+                <span class="s0">int </span><span class="s1">xz = x - </span><span class="s3">1</span><span class="s0">;</span>
+                <span class="s0">while </span><span class="s1">(xz &gt;= </span><span class="s3">0 </span><span class="s1">&amp;&amp; (feld[</span><span class="s3">1</span><span class="s1">][xz][y] == </span><span class="s3">2</span><span class="s1">)) {</span>
+                    <span class="s1">size++</span><span class="s0">;</span>
+                    <span class="s1">xz--</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s1">xz = x + </span><span class="s3">1</span><span class="s0">;</span>
+                <span class="s0">while </span><span class="s1">(xz &lt; </span><span class="s0">this</span><span class="s1">.x &amp;&amp; (feld[</span><span class="s3">1</span><span class="s1">][xz][y] == </span><span class="s3">2</span><span class="s1">)) {</span>
+                    <span class="s1">size++</span><span class="s0">;</span>
+                    <span class="s1">xz++</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = enemyS</span><span class="s0">; </span><span class="s1">i &lt; schiffe.size()</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s1">s = schiffe.get(i)</span><span class="s0">;</span>
+                    <span class="s0">if </span><span class="s1">(s.schifflaenge == size &amp;&amp; s.schifflebt) {</span>
+                        <span class="s1">s.schifflebt = </span><span class="s0">false;</span>
+                        <span class="s1">deleted = </span><span class="s0">true;</span>
+                        <span class="s0">break;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+                <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s3">1</span><span class="s1">:</span><span class="s4">//horizontal</span>
+                <span class="s0">int </span><span class="s1">yz = y - </span><span class="s3">1</span><span class="s0">;</span>
+                <span class="s0">while </span><span class="s1">(yz &gt;= </span><span class="s3">0 </span><span class="s1">&amp;&amp; (feld[</span><span class="s3">1</span><span class="s1">][x][yz] == </span><span class="s3">2</span><span class="s1">)) {</span>
+                    <span class="s1">size++</span><span class="s0">;</span>
+                    <span class="s1">yz--</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s1">yz = y + </span><span class="s3">1</span><span class="s0">;</span>
+                <span class="s0">while </span><span class="s1">(yz &lt; </span><span class="s0">this</span><span class="s1">.x &amp;&amp; (feld[</span><span class="s3">1</span><span class="s1">][x][yz] == </span><span class="s3">2</span><span class="s1">)) {</span>
+                    <span class="s1">size++</span><span class="s0">;</span>
+                    <span class="s1">yz++</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = enemyS</span><span class="s0">; </span><span class="s1">i &lt; schiffe.size()</span><span class="s0">; </span><span class="s1">i++) {</span>
+                    <span class="s1">s = schiffe.get(i)</span><span class="s0">;</span>
+                    <span class="s0">if </span><span class="s1">(s.schifflaenge == size &amp;&amp; s.schifflebt) {</span>
+                        <span class="s1">s.schifflebt = </span><span class="s0">false;</span>
+                        <span class="s1">deleted = </span><span class="s0">true;</span>
+                        <span class="s0">break;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+                <span class="s0">break;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">if </span><span class="s1">(!deleted)</span>
+            <span class="s0">return false;</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* ermöglicht ein Schiff Objekt zu erhalten anhand einer Postion und dem Spieler</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">x       X Koordinate eines Teiles des Schiffes</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">y       Y Koordinate eines Teiles des Schiffes</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">spieler dem das Schiffzugehöriger Spieler</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">das Schiffobjekt wenn erfolgreich ansonsten null</span>
+     <span class="s2">*/</span>
+    <span class="s0">private </span><span class="s1">Schiff findSchiffFromPos(</span><span class="s0">int </span><span class="s1">x</span><span class="s0">, int </span><span class="s1">y</span><span class="s0">, int </span><span class="s1">spieler) {</span>
+        <span class="s0">int </span><span class="s1">horizontal = </span><span class="s3">2</span><span class="s0">;  </span><span class="s4">//-1 undefined, 0 horizontal, 1 vertical, 2 shipsize=1(both)</span>
+        <span class="s0">if </span><span class="s1">((x &gt; </span><span class="s3">0 </span><span class="s1">&amp;&amp; feld[spieler][x - </span><span class="s3">1</span><span class="s1">][y] == </span><span class="s3">1</span><span class="s1">) || (x &gt; </span><span class="s3">0 </span><span class="s1">&amp;&amp; feld[spieler][x - </span><span class="s3">1</span><span class="s1">][y] == </span><span class="s3">2</span><span class="s1">) || (x &lt; </span><span class="s0">this</span><span class="s1">.x - </span><span class="s3">1 </span><span class="s1">&amp;&amp; feld[spieler][x + </span><span class="s3">1</span><span class="s1">][y] == </span><span class="s3">1</span><span class="s1">) || (x &lt; </span><span class="s0">this</span><span class="s1">.x - </span><span class="s3">1 </span><span class="s1">&amp;&amp; feld[spieler][x + </span><span class="s3">1</span><span class="s1">][y] == </span><span class="s3">2</span><span class="s1">)) {</span>
+            <span class="s1">horizontal = </span><span class="s3">0</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">else if </span><span class="s1">((y &gt; </span><span class="s3">0 </span><span class="s1">&amp;&amp; feld[spieler][x][y - </span><span class="s3">1</span><span class="s1">] == </span><span class="s3">1</span><span class="s1">) || (y &gt; </span><span class="s3">0 </span><span class="s1">&amp;&amp; feld[spieler][x][y - </span><span class="s3">1</span><span class="s1">] == </span><span class="s3">2</span><span class="s1">) || (y &lt; </span><span class="s0">this</span><span class="s1">.y - </span><span class="s3">1 </span><span class="s1">&amp;&amp; feld[spieler][x][y + </span><span class="s3">1</span><span class="s1">] == </span><span class="s3">1</span><span class="s1">) || (y &lt; </span><span class="s0">this</span><span class="s1">.y - </span><span class="s3">1 </span><span class="s1">&amp;&amp; feld[spieler][x][y + </span><span class="s3">1</span><span class="s1">] == </span><span class="s3">2</span><span class="s1">)) {</span>
+            <span class="s1">horizontal = </span><span class="s3">1</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">Schiff s = </span><span class="s0">null;</span>
+        <span class="s0">switch </span><span class="s1">(horizontal) {</span>
+            <span class="s0">default</span><span class="s1">:</span><span class="s4">//both(2) shipsize should be 1</span>
+                <span class="s1">s = Schiff.getSchiffFromOrigin(x</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s1">spieler</span><span class="s0">, </span><span class="s1">schiffe)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s3">0</span><span class="s1">:</span><span class="s4">//horizontal</span>
+                <span class="s0">int </span><span class="s1">xz = x</span><span class="s0">;</span>
+                <span class="s0">while </span><span class="s1">(xz &gt;= </span><span class="s3">0 </span><span class="s1">&amp;&amp; (feld[spieler][xz][y] == </span><span class="s3">1 </span><span class="s1">|| feld[spieler][xz][y] == </span><span class="s3">2</span><span class="s1">)) {</span>
+                    <span class="s1">xz--</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s1">xz++</span><span class="s0">;</span><span class="s4">//xOPos des Schiffes</span>
+                <span class="s1">s = Schiff.getSchiffFromOrigin(xz</span><span class="s0">, </span><span class="s1">y</span><span class="s0">, </span><span class="s1">spieler</span><span class="s0">, </span><span class="s1">schiffe)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s3">1</span><span class="s1">:</span><span class="s4">//vertical</span>
+                <span class="s0">int </span><span class="s1">yz = y</span><span class="s0">;</span>
+                <span class="s0">while </span><span class="s1">(yz &gt;= </span><span class="s3">0 </span><span class="s1">&amp;&amp; (feld[spieler][x][yz] == </span><span class="s3">1 </span><span class="s1">|| feld[spieler][x][yz] == </span><span class="s3">2</span><span class="s1">)) {</span>
+                    <span class="s1">yz--</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s1">yz++</span><span class="s0">;</span><span class="s4">//yOPos des Schiffes</span>
+                <span class="s1">s = Schiff.getSchiffFromOrigin(x</span><span class="s0">, </span><span class="s1">yz</span><span class="s0">, </span><span class="s1">spieler</span><span class="s0">, </span><span class="s1">schiffe)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(s == </span><span class="s0">null</span><span class="s1">) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Ship was not found error!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+        <span class="s0">return </span><span class="s1">s</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* fügt ein Schiff dem Feld hinzu!</span>
+     <span class="s2">*/</span>
+    <span class="s0">public void </span><span class="s1">feldAddSchiff(Schiff s) {</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">i &lt; s.schifflaenge</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s0">if </span><span class="s1">(s.horizontal) {</span>
+                <span class="s1">feld[s.spieler][s.xOPos + i][s.yOPos] = (s.getroffen[i] == </span><span class="s0">false</span><span class="s1">) ? </span><span class="s3">1 </span><span class="s1">: </span><span class="s3">2</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">feld[s.spieler][s.xOPos][s.yOPos + i] = (s.getroffen[i] == </span><span class="s0">false</span><span class="s1">) ? </span><span class="s3">1 </span><span class="s1">: </span><span class="s3">2</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">feldDELSchiff(Schiff s) {</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">i &lt; s.schifflaenge</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s0">if </span><span class="s1">(s.horizontal) {</span>
+                <span class="s1">feld[s.spieler][s.xOPos + i][s.yOPos] = </span><span class="s3">0</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">feld[s.spieler][s.xOPos][s.yOPos + i] = </span><span class="s3">0</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Soll überprüfen ob man das Schiff in das Spiel einfügen darf</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">s das zu überprüfende Schiff</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true ist in Ordnung, false illegal!</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">checkLegalSchiff(Schiff s) {</span>
+        <span class="s0">if </span><span class="s1">(s.xOPos &lt; </span><span class="s3">0 </span><span class="s1">|| s.xOPos &gt;= x || s.yOPos &lt; </span><span class="s3">0 </span><span class="s1">|| s.yOPos &gt;= y || (s.horizontal &amp;&amp; s.xOPos + s.schifflaenge &gt; x) || (!s.horizontal &amp;&amp; s.yOPos + s.schifflaenge &gt; y))</span>
+            <span class="s0">return false;</span>
+        <span class="s4">/*if(s.horizontal){ 
+            for(int i=s.xOPos-1;i&lt;=s.xOPos+s.schifflaenge;i++){ 
+                for(int j=s.yOPos-1;j) 
+            } 
+        }*/</span>
+        <span class="s0">int </span><span class="s1">z = (s.horizontal) ? s.xOPos : s.yOPos</span><span class="s0">;</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = (z - </span><span class="s3">1 </span><span class="s1">&lt; </span><span class="s3">0</span><span class="s1">) ? </span><span class="s3">0 </span><span class="s1">: z - </span><span class="s3">1</span><span class="s0">; </span><span class="s1">i &lt; z + s.schifflaenge + </span><span class="s3">1</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s0">if </span><span class="s1">(s.horizontal) {</span>
+                <span class="s0">if </span><span class="s1">(i &gt;= </span><span class="s0">this</span><span class="s1">.x)</span>
+                    <span class="s0">continue;</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">y = s.yOPos - </span><span class="s3">1</span><span class="s0">; </span><span class="s1">y &lt;= s.yOPos + </span><span class="s3">1</span><span class="s0">; </span><span class="s1">y++) {</span>
+                    <span class="s0">if </span><span class="s1">(y &lt; </span><span class="s3">0 </span><span class="s1">|| y &gt;= </span><span class="s0">this</span><span class="s1">.y)</span>
+                        <span class="s0">continue;</span>
+                    <span class="s0">if </span><span class="s1">(feld[s.spieler][i][y] != </span><span class="s3">0</span><span class="s1">)</span>
+                        <span class="s0">return false;</span>
+                <span class="s1">}</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s0">if </span><span class="s1">(i &gt;= </span><span class="s0">this</span><span class="s1">.y)</span>
+                    <span class="s0">continue;</span>
+                <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">x = s.xOPos - </span><span class="s3">1</span><span class="s0">; </span><span class="s1">x &lt;= s.xOPos + </span><span class="s3">1</span><span class="s0">; </span><span class="s1">x++) {</span>
+                    <span class="s0">if </span><span class="s1">(x &lt; </span><span class="s3">0 </span><span class="s1">|| x &gt;= </span><span class="s0">this</span><span class="s1">.x)</span>
+                        <span class="s0">continue;</span>
+                    <span class="s0">if </span><span class="s1">(feld[s.spieler][x][i] != </span><span class="s3">0</span><span class="s1">)</span>
+                        <span class="s0">return false;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* Ermöglicht ein Schiff dem Spiel hinzuzufügen.</span>
+     <span class="s2">* Nach Spielbeginn ist das nicht mehr erlaubt!</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">x          X Ankerpunkt (Startpunkt)</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">y          Y Ankerpunkt (Startpunkt)</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">horizontal true -&gt; das Schiff geht nach rechts weg, false -&gt; das Schiff geht nach unten weg</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">len        die Länge des Schiffes</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">spieler    0 oder 1 (in der Regel) besagt den Spieler dem das Schiff nacher gehört</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true erfolgreich hinzugefügt, false illegal!</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">addShip(</span><span class="s0">int </span><span class="s1">x</span><span class="s0">, int </span><span class="s1">y</span><span class="s0">, boolean </span><span class="s1">horizontal</span><span class="s0">, int </span><span class="s1">len</span><span class="s0">, int </span><span class="s1">spieler) {</span>
+        <span class="s0">if </span><span class="s1">(started) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Game has already started!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s0">if </span><span class="s1">(remote &amp;&amp; spieler == </span><span class="s3">1</span><span class="s1">) {</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;You can not set Enemy ships (Remote)&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">Schiff s = </span><span class="s0">new </span><span class="s1">Schiff()</span><span class="s0">;</span>
+        <span class="s1">s.xOPos = x</span><span class="s0">;</span>
+        <span class="s1">s.yOPos = y</span><span class="s0">;</span>
+        <span class="s1">s.horizontal = horizontal</span><span class="s0">;</span>
+        <span class="s1">s.schifflaenge = len</span><span class="s0">;</span>
+        <span class="s1">s.spieler = spieler</span><span class="s0">;</span>
+        <span class="s1">Schiff.initSchiff(s)</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(checkLegalSchiff(s)) {</span>
+            <span class="s1">schiffe.add(s)</span><span class="s0">;</span>
+            <span class="s1">feldAddSchiff(s)</span><span class="s0">;</span>
+            <span class="s0">return true;</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s0">if </span><span class="s1">(verbose)</span>
+                <span class="s1">System.err.println(</span><span class="s6">&quot;Illegales Schiff!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+
+    <span class="s2">/**</span>
+     <span class="s2">* Set specific field size later</span>
+     <span class="s2">* Do this before init! (also noch viel früher als Spielbeginn)</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">x horizontal size</span>
+     <span class="s2">* </span><span class="s5">@param </span><span class="s2">y vertical size</span>
+     <span class="s2">*/</span>
+
+    <span class="s0">public void </span><span class="s1">setSize(</span><span class="s0">int </span><span class="s1">x</span><span class="s0">, int </span><span class="s1">y) {</span>
+        <span class="s0">if </span><span class="s1">(!init) {</span>
+            <span class="s0">this</span><span class="s1">.x = x</span><span class="s0">;</span>
+            <span class="s0">this</span><span class="s1">.y = y</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* If false you can add ships if true you shall shoot</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true -&gt; game started false -&gt; game has not started</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">isStarted() {</span>
+        <span class="s0">return </span><span class="s1">started</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">Breite des Spielfeldes</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getSizeX() {</span>
+        <span class="s0">return </span><span class="s1">x</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">gibt das Spielfeld zurück</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int</span><span class="s1">[][][] getFeld() {</span>
+        <span class="s0">return </span><span class="s1">feld</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">Höhe des Spielfeldes</span>
+     <span class="s2">*/</span>
+    <span class="s0">public int </span><span class="s1">getSizeY() {</span>
+        <span class="s0">return </span><span class="s1">y</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">/**</span>
+     <span class="s2">* speichert das Spiel ab um später wieder geladen zu werden</span>
+     <span class="s2">*</span>
+     <span class="s2">* </span><span class="s5">@return </span><span class="s2">true erfolg, false failure</span>
+     <span class="s2">*/</span>
+    <span class="s0">public boolean </span><span class="s1">saveGame(String id) {</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">ResourceManager.save(</span><span class="s0">this, </span><span class="s1">id)</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(IOException e) {</span>
+            <span class="s1">System.err.println(</span><span class="s6">&quot;SAVE ERROR!&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">e.printStackTrace()</span><span class="s0">;</span>
+            <span class="s0">return false;</span>
+        <span class="s1">}</span>
+        <span class="s0">return true;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

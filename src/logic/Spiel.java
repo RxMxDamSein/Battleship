@@ -10,33 +10,97 @@ import java.util.Random;
 
 
 public class Spiel implements Serializable {
+    /** Serialization Nummer */
     private static final long serialVersionUID = 1337L;
+    /**
+     * x=Breite des Spielfelds
+     * y=Höhe des Spielfelds
+     * */
     private int x = 20, y = 20;
     // 0 frei, 1 Schiff, 2 Treffer, 3 Wasser, 4 versenkt
+    /**
+     * Spielfeld für beide Spieler feld[0][x][y] Spieler 0/1 feld[1][x][y] Spieler 1/2
+     * Wert=0 leeres & unbeschossenes Feld
+     * Wert=1 nicht getroffenes Schiffsfeld
+     * Wert=2 getroffenes Schiffsfeld
+     * Wert=3 leeres & beschossenes Feld
+     * Wert=4 versenktes Schiff
+     */
     private int[][][] feld;
+    /**
+     * Zeigt an ob das Spielfeld erstellt worden ist, und dementsprechend die Feldgröße noch beeinflussbar ist.
+     * false feld null
+     * true feld existiert und die Spielfeldgröße ist jetzt fest
+     */
     public boolean init = false;
+    /**
+     * Zeigt an ob die Schiffe fest stehen und man sich jetzt abschießen darf
+     * true schießen
+     * false schießen verboten
+     */
     private boolean started = false;
+    /**
+     * Zeigt an ob das Spiel vorbei ist
+     * true Spiel ist vorbei
+     * false Spiel ist nicht vorbei
+     */
     private boolean fin = false;
+    /**
+     * Zeigt an ob im letztem Zug ein Schiff versenkt wurde
+     * true im letzten Zug wurde ein Schiff versenkt
+     * false im letzten Zug wurde kein Schiff versenkt
+     */
     private boolean versenkt = false;
+    /**
+     * Eine Liste an Schiffobjekten für Gegner Schiffe und die Eigenen
+     */
     public ArrayList<Schiff> schiffe;
+    /**
+     * Die Stelle im Schiffsarray, an der die Gegner Schiffe anfangen
+     */
     private int enemyS;
+    /** Zufallsgenerator */
     private Random random = new Random();
+    /**
+     * Zeigt an welcher Spieler abzuschießen ist
+     * Wert=0 Spieler 0/1
+     * Wert=1 Spieler 1/2
+     * sonst undefiniert
+     */
     private int abschussSpieler = -1;
+    /**
+     * Zeigt an ob bei Fehlern eine Ausgabe in die Konsole getätigt werden soll
+     * true stderr an
+     * false stderr aus
+     */
     private boolean verbose = true;
     //if remote -> both sides are known; !remote -> only your side is known! and you are player 0(1)
+    /**
+     * Zeigt an ob es ein Spiel ist, bei dem das Spiel das Gegnerfeld kennt oder nicht
+     * true man weiß nicht wo die Gegnerschiffe sind
+     * false man weiß wo die Gegnerschiffe sind
+     */
     private boolean remote;
 
+    /**
+     * bittet die Möglichkeit das Spielfeld zu überschrieben
+     * @param f ein Spielfeld im Format int[2][x][y]
+     */
     public void setSpielFeld(int[][][] f) {
         this.feld = f;
     }
 
     /**
-     * make Spiel object
+     * kreiert Spielobjekt
      */
     public Spiel() {
         schiffe = new ArrayList<Schiff>();
     }
 
+    /**
+     * Ermöglicht den abzuschießenden Spieler zu überschreiben
+     * @param abschussSpieler der neue abzuschießender Spieler
+     */
     public void setAbschussSpieler(int abschussSpieler) {
         this.abschussSpieler = abschussSpieler;
     }
@@ -59,25 +123,28 @@ public class Spiel implements Serializable {
         return null;
     }
 
+    /**
+     * Methode um abzufragen ob im Fehlerfall Kommentare dazu in stderr geschrieben werden.
+     * @return true ja, false nein
+     */
     public boolean getVerbose() {
         return verbose;
     }
 
     /**
-     * Verbose soll setzen ob prints gemacht werden oder nicht!
+     * Verbose soll setzen ob prints nach stderr gemacht werden oder nicht!
      *
-     * @param verbose
+     * @param verbose der neue verbose Wert
      */
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
 
     /**
-     * make Spiel object
-     * remote is set to false
+     * kreiert ein Spielobjekt, für ein Spiel bei dem beide Spieler bekannt sind.
      *
-     * @param x horizontal size
-     * @param y vertical size
+     * @param x Spielfeldbreite
+     * @param y Spielfeldhöhe
      */
     public Spiel(int x, int y) {
         this();
@@ -87,11 +154,11 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * make Spiel object
+     * kreiert ein Spielobjekt, bei dem man wählen kann, ob der Gegner bekannt ist oder nicht.
      *
-     * @param x      horizontal size
-     * @param y      vertical size
-     * @param remote set if both player sides are known or not
+     * @param x Spielfeldbreite
+     * @param y Spielfeldhöhe
+     * @param remote true Gegner nicht bekannt. false Gegner nicht bekannt.
      */
     public Spiel(int x, int y, boolean remote) {
         this(x, y);
@@ -102,6 +169,8 @@ public class Spiel implements Serializable {
      * @return gibt zurück ob beim letzten erfolgreichen Schuss ein Schiff versunken wurde
      * true -> versenkt, false -> nicht versenkt
      */
+
+
     public boolean istVersenkt() {
         return versenkt;
     }
@@ -115,7 +184,7 @@ public class Spiel implements Serializable {
 
     /**
      * Initialisiert das Spielbrett!
-     * Nur 1 mal möglich!
+     * Einmal erfolgreich erstellt so ist dies fest.
      *
      * @return boolean Erfolgreich oder nicht Erfolgreich
      */
@@ -136,8 +205,8 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * This Function just prints the winner.
-     * Works only when called right after checkGameOver()==true
+     * Schreibt den Gewinner in die Konsole
+     * Sollte nur nach abgeschlossenem Spiel aufgerufen werden.
      */
     private void gameOver() {
         logicOUTput.printFeld(feld, true);
@@ -149,9 +218,9 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * checks if a winner is decided
+     * Überprüft ob das Spiel vorbei ist.
      *
-     * @return true if one player has won!
+     * @return true wenn das Spiel vorbei ist.
      */
     private boolean checkGameOver() {
         if (!started) {
@@ -180,8 +249,9 @@ public class Spiel implements Serializable {
 
     /**
      * Possibility for remote host to say he lost
+     * Ermöglicht dem Gegner aufzugeben oder zu sagen er hat verloren, falls desen Spielbrett nicht bekannt ist
      *
-     * @return true if success
+     * @return true bei Erfolg, sont false
      */
     public boolean setGameOver() {
         if (!remote) {
@@ -202,14 +272,9 @@ public class Spiel implements Serializable {
         return true;
     }
 
+
     /**
-     * @return gibt den Spieler der jetzt abgeschossen wird zurück.
-     * <br>
-     * <br>
-     * 0 ist dein Gegner schiesst auf dich.
-     * <br>
-     * 1 is du schiesst auf den Gegner.
-     * <br>
+     * @return gibt den Spieler der als nächster abgeschossen werden soll zurück.
      */
     public int getAbschussSpieler() {
         return abschussSpieler;
@@ -257,7 +322,7 @@ public class Spiel implements Serializable {
      * Das heißt ab jetzt kann geschossen werden.
      * Dafür können keine Schiffe mehr hinzugefügt werden!
      *
-     * @param spieler setzt den Spieler der als erstes angeschossen wird 0 oder 1
+     * @param spieler setzt den Spieler der als erstes abgeschossen wird 0 oder 1
      * @return true -> das Spiel wurde gestartet, false -> FEHLER!
      */
     public boolean starteSpiel(int spieler) {
@@ -270,12 +335,12 @@ public class Spiel implements Serializable {
 
     /**
      * Schießt auf ein Feld(x|y) auf dem Spielbrett des angegebenen Spielers
-     * setzt zudem denn nächsten zu beschiesenden Spieler
+     * setzt zudem denn nächsten zu beschießenden Spieler
      * Nur verwendbar wenn remote==false
      *
      * @param x       X Koordinate des Schusses
      * @param y       Y Koordinate des Schusses
-     * @param spieler der abzuschiesende Spieler
+     * @param spieler der abzuschießende Spieler
      * @return true -> es wurde geschossen, false -> es wurde nicht geschossen FEHLER!
      */
     public boolean shoot(int x, int y, int spieler) {
@@ -294,7 +359,7 @@ public class Spiel implements Serializable {
      *
      * @param x          X Koordinate des Schusses
      * @param y          Y Koordinate des Schusses
-     * @param spieler    der abzuschiesende Spieler
+     * @param spieler    der abzuschießende Spieler
      * @param p_hit      Value des getroffenen Feldes auf dem Remotefeld 0 frei 1 Schiff 2 getroffen 3 Wasser| wenn man auf Spieler 0 schießt wird diese Eingabe ignoriert!
      * @param p_versenkt true wenn bei Remote ein Schiff versenkt wurde, false wenn bei Remote kein Schiff versenkt wurde
      * @return true -> es wurde geschossen, false -> es wurde nicht geschossen FEHLER!
@@ -324,10 +389,10 @@ public class Spiel implements Serializable {
     /**
      * Hilfsfunktion für die ShootFunktionen
      *
-     * @param x
-     * @param y
-     * @param spieler
-     * @param p_hit
+     * @param x X Koordinate des Schusses
+     * @param y Y Koordinate des Schusses
+     * @param spieler der abzuschießende Spieler
+     * @param p_hit falls spieler==1 und der Gegner unbekannt ist, ist dies der neue Wert fürs Feld
      * @return
      */
     private boolean abstractShoot(int x, int y, int spieler, int p_hit) {
