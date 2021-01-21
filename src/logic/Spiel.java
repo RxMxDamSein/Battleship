@@ -8,46 +8,47 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+/**
+ * Die Klasse Spiel beinhaltet das Spielbrett und fängt einige falsche Eingaben ab.
+ */
 public class Spiel implements Serializable {
     /** Serialization Nummer */
     private static final long serialVersionUID = 1337L;
-    /**
-     * x=Breite des Spielfelds
-     * y=Höhe des Spielfelds
-     * */
-    private int x = 20, y = 20;
+    /** x=Breite des Spielfelds */
+    private int x = 20;
+    /** y=Höhe des Spielfelds */
+    private int y = 20;
     // 0 frei, 1 Schiff, 2 Treffer, 3 Wasser, 4 versenkt
     /**
-     * Spielfeld für beide Spieler feld[0][x][y] Spieler 0/1 feld[1][x][y] Spieler 1/2
-     * Wert=0 leeres & unbeschossenes Feld
-     * Wert=1 nicht getroffenes Schiffsfeld
-     * Wert=2 getroffenes Schiffsfeld
-     * Wert=3 leeres & beschossenes Feld
+     * Spielfeld für beide Spieler feld[0][x][y] Spieler 0/1 feld[1][x][y] Spieler 1/2.
+     * Wert=0 leeres und unbeschossenes Feld,
+     * Wert=1 nicht getroffenes Schiffsfeld,
+     * Wert=2 getroffenes Schiffsfeld,
+     * Wert=3 leeres und beschossenes Feld,
      * Wert=4 versenktes Schiff
      */
     private int[][][] feld;
     /**
      * Zeigt an ob das Spielfeld erstellt worden ist, und dementsprechend die Feldgröße noch beeinflussbar ist.
-     * false feld null
+     * false feld null,
      * true feld existiert und die Spielfeldgröße ist jetzt fest
      */
     public boolean init = false;
     /**
-     * Zeigt an ob die Schiffe fest stehen und man sich jetzt abschießen darf
-     * true schießen
+     * Zeigt an ob die Schiffe fest stehen und man sich jetzt abschießen darf.
+     * true schießen,
      * false schießen verboten
      */
     private boolean started = false;
     /**
-     * Zeigt an ob das Spiel vorbei ist
-     * true Spiel ist vorbei
+     * Zeigt an ob das Spiel vorbei ist.
+     * true Spiel ist vorbei,
      * false Spiel ist nicht vorbei
      */
     private boolean fin = false;
     /**
-     * Zeigt an ob im letztem Zug ein Schiff versenkt wurde
-     * true im letzten Zug wurde ein Schiff versenkt
+     * Zeigt an ob im letztem Zug ein Schiff versenkt wurde.
+     * true im letzten Zug wurde ein Schiff versenkt,
      * false im letzten Zug wurde kein Schiff versenkt
      */
     private boolean versenkt = false;
@@ -62,28 +63,28 @@ public class Spiel implements Serializable {
     /** Zufallsgenerator */
     private Random random = new Random();
     /**
-     * Zeigt an welcher Spieler abzuschießen ist
-     * Wert=0 Spieler 0/1
-     * Wert=1 Spieler 1/2
+     * Zeigt an welcher Spieler abzuschießen ist.
+     * Wert=0 Spieler 0/1,
+     * Wert=1 Spieler 1/2,
      * sonst undefiniert
      */
     private int abschussSpieler = -1;
     /**
-     * Zeigt an ob bei Fehlern eine Ausgabe in die Konsole getätigt werden soll
-     * true stderr an
+     * Zeigt an ob bei Fehlern eine Ausgabe in die Konsole getätigt werden soll.
+     * true stderr an,
      * false stderr aus
      */
     private boolean verbose = true;
     //if remote -> both sides are known; !remote -> only your side is known! and you are player 0(1)
     /**
-     * Zeigt an ob es ein Spiel ist, bei dem das Spiel das Gegnerfeld kennt oder nicht
-     * true man weiß nicht wo die Gegnerschiffe sind
+     * Zeigt an ob es ein Spiel ist, bei dem das Spiel, das Gegnerfeld kennt oder nicht.
+     * true man weiß nicht wo die Gegnerschiffe sind,
      * false man weiß wo die Gegnerschiffe sind
      */
     private boolean remote;
 
     /**
-     * bittet die Möglichkeit das Spielfeld zu überschrieben
+     * bietet die Möglichkeit das Spielfeld zu überschrieben
      * @param f ein Spielfeld im Format int[2][x][y]
      */
     public void setSpielFeld(int[][][] f) {
@@ -91,7 +92,7 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * kreiert Spielobjekt
+     * kreiert ein Spielobjekt
      */
     public Spiel() {
         schiffe = new ArrayList<Schiff>();
@@ -166,11 +167,9 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * @return gibt zurück ob beim letzten erfolgreichen Schuss ein Schiff versunken wurde
-     * true -> versenkt, false -> nicht versenkt
+     * gibt zurück ob beim letzten erfolgreichen Schuss ein Schiff versunken wurde
+     * @return true versenkt, false nicht versenkt
      */
-
-
     public boolean istVersenkt() {
         return versenkt;
     }
@@ -248,10 +247,10 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * Possibility for remote host to say he lost
-     * Ermöglicht dem Gegner aufzugeben oder zu sagen er hat verloren, falls desen Spielbrett nicht bekannt ist
+     * Possibility for remote host to say he lost.
+     * Ermöglicht dem Gegner aufzugeben oder zu sagen er hat verloren, falls desen Spielbrett nicht bekannt ist.
      *
-     * @return true bei Erfolg, sont false
+     * @return true bei Erfolg, sonst false
      */
     public boolean setGameOver() {
         if (!remote) {
@@ -274,7 +273,7 @@ public class Spiel implements Serializable {
 
 
     /**
-     * @return gibt den Spieler der als nächster abgeschossen werden soll zurück.
+     * @return gibt den Spieler, der als nächster abgeschossen werden soll, zurück.
      */
     public int getAbschussSpieler() {
         return abschussSpieler;
@@ -285,7 +284,7 @@ public class Spiel implements Serializable {
      * Das heißt ab jetzt kann geschossen werden.
      * Dafür können keine Schiffe mehr hinzugefügt werden!
      *
-     * @return true -> das Spiel wurde gestartet, false -> FEHLER!
+     * @return true das Spiel wurde gestartet, false FEHLER!
      */
     public boolean starteSpiel() {
         if (started) {
@@ -323,7 +322,7 @@ public class Spiel implements Serializable {
      * Dafür können keine Schiffe mehr hinzugefügt werden!
      *
      * @param spieler setzt den Spieler der als erstes abgeschossen wird 0 oder 1
-     * @return true -> das Spiel wurde gestartet, false -> FEHLER!
+     * @return true das Spiel wurde gestartet, false FEHLER!
      */
     public boolean starteSpiel(int spieler) {
         if (!starteSpiel())
@@ -334,14 +333,14 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * Schießt auf ein Feld(x|y) auf dem Spielbrett des angegebenen Spielers
-     * setzt zudem denn nächsten zu beschießenden Spieler
-     * Nur verwendbar wenn remote==false
+     * Schießt auf ein Feld(x|y) auf dem Spielbrett des angegebenen Spielers.
+     * Setzt zudem denn nächsten zu beschießenden Spieler.
+     * Nur verwendbar wenn remote==false.
      *
      * @param x       X Koordinate des Schusses
      * @param y       Y Koordinate des Schusses
      * @param spieler der abzuschießende Spieler
-     * @return true -> es wurde geschossen, false -> es wurde nicht geschossen FEHLER!
+     * @return true es wurde geschossen, false es wurde nicht geschossen FEHLER!
      */
     public boolean shoot(int x, int y, int spieler) {
         if (remote) {
@@ -353,16 +352,16 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * Schießt auf ein Feld(x|y) auf dem Spielbrett des angegebenen Spielers
-     * setzt zudem denn nächsten zu beschiesenden Spieler
-     * Nur verwendbar wenn remote==true
+     * Schießt auf ein Feld(x|y) auf dem Spielbrett des angegebenen Spielers.
+     * Setzt zudem denn nächsten zu beschiesenden Spieler.
+     * Nur verwendbar wenn remote==true.
      *
      * @param x          X Koordinate des Schusses
      * @param y          Y Koordinate des Schusses
      * @param spieler    der abzuschießende Spieler
      * @param p_hit      Value des getroffenen Feldes auf dem Remotefeld 0 frei 1 Schiff 2 getroffen 3 Wasser| wenn man auf Spieler 0 schießt wird diese Eingabe ignoriert!
-     * @param p_versenkt true wenn bei Remote ein Schiff versenkt wurde, false wenn bei Remote kein Schiff versenkt wurde
-     * @return true -> es wurde geschossen, false -> es wurde nicht geschossen FEHLER!
+     * @param p_versenkt true wenn beim Remotespieler ein Schiff versenkt wurde, false wenn beim Remotespieler kein Schiff versenkt wurde
+     * @return true es wurde geschossen, false es wurde nicht geschossen FEHLER!
      */
     public boolean shoot(int x, int y, int spieler, int p_hit, boolean p_versenkt) {
         if (!remote) {
@@ -393,7 +392,7 @@ public class Spiel implements Serializable {
      * @param y Y Koordinate des Schusses
      * @param spieler der abzuschießende Spieler
      * @param p_hit falls spieler==1 und der Gegner unbekannt ist, ist dies der neue Wert fürs Feld
-     * @return
+     * @return true Erfolg false nicht geschossen
      */
     private boolean abstractShoot(int x, int y, int spieler, int p_hit) {
         if (!started) {
@@ -468,7 +467,12 @@ public class Spiel implements Serializable {
         return true;
     }
 
-
+    /**
+     * zerstört das Gegnerschiffobjekt an angegebener Position
+     * @param x X Koordinate
+     * @param y Y Koordinate
+     * @return true Erfolg false Misslungen
+     */
     private boolean killEnemyShipfromPos(int x, int y) {
         int horizontal = 2;  //-1 undefined, 0 horizontal, 1 vertical, 2 shipsize=1(both)
         if ((x > 0 && feld[1][x - 1][y] == 1) || (x > 0 && feld[1][x - 1][y] == 2) || (x < this.x - 1 && feld[1][x + 1][y] == 1) || (x < this.x - 1 && feld[1][x + 1][y] == 2)) {
@@ -540,7 +544,7 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * ermöglicht ein Schiff Objekt zu erhalten anhand einer Postion und dem Spieler
+     * ermöglicht ein Schiff Objekt zu erhalten anhand einer Position und dem Spieler
      *
      * @param x       X Koordinate eines Teiles des Schiffes
      * @param y       Y Koordinate eines Teiles des Schiffes
@@ -586,6 +590,7 @@ public class Spiel implements Serializable {
 
     /**
      * fügt ein Schiff dem Feld hinzu!
+     * @param s das zu hinzufügende Schiffsobjekt
      */
     public void feldAddSchiff(Schiff s) {
         for (int i = 0; i < s.schifflaenge; i++) {
@@ -597,6 +602,10 @@ public class Spiel implements Serializable {
         }
     }
 
+    /**
+     * ersetzt alles Stellen des übergebenen Schiffes mit nicht beschossenem Wasser
+     * @param s das zu entfernende Schiffsobjekt
+     */
     public void feldDELSchiff(Schiff s) {
         for (int i = 0; i < s.schifflaenge; i++) {
             if (s.horizontal) {
@@ -652,7 +661,7 @@ public class Spiel implements Serializable {
      *
      * @param x          X Ankerpunkt (Startpunkt)
      * @param y          Y Ankerpunkt (Startpunkt)
-     * @param horizontal true -> das Schiff geht nach rechts weg, false -> das Schiff geht nach unten weg
+     * @param horizontal true das Schiff geht nach rechts weg, false das Schiff geht nach unten weg
      * @param len        die Länge des Schiffes
      * @param spieler    0 oder 1 (in der Regel) besagt den Spieler dem das Schiff nacher gehört
      * @return true erfolgreich hinzugefügt, false illegal!
@@ -687,13 +696,12 @@ public class Spiel implements Serializable {
 
 
     /**
-     * Set specific field size later
-     * Do this before init! (also noch viel früher als Spielbeginn)
+     * Setzt die Spielfeldgröße
+     * Nur möglich bevor das Spielfeld initialisiert wurde(inti())
      *
      * @param x horizontal size
      * @param y vertical size
      */
-
     public void setSize(int x, int y) {
         if (!init) {
             this.x = x;
@@ -702,15 +710,16 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * If false you can add ships if true you shall shoot
+     * Gibt zurück, ob das Spiel in Spielzustand, also Schusszustand ist oder nicht.
      *
-     * @return true -> game started false -> game has not started
+     * @return true es wird geschossen, false es wird nicht geschossen
      */
     public boolean isStarted() {
         return started;
     }
 
     /**
+     * Gibt die Breite des Spielfelds zurück.
      * @return Breite des Spielfeldes
      */
     public int getSizeX() {
@@ -718,13 +727,15 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * @return gibt das Spielfeld zurück
+     * Gibt das Spielfeld zurück
+     * @return int[2][x][y]
      */
     public int[][][] getFeld() {
         return feld;
     }
 
     /**
+     * Gibt die Höhe des Spielfeldes zurück.
      * @return Höhe des Spielfeldes
      */
     public int getSizeY() {
@@ -732,9 +743,9 @@ public class Spiel implements Serializable {
     }
 
     /**
-     * speichert das Spiel ab um später wieder geladen zu werden
-     *
-     * @return true erfolg, false failure
+     * speichert das Spiel ab um später wieder geladen zu werden.
+     * @param id Die ID anhand der das Spiel wieder geladen werden kann.
+     * @return true erfolg, false Misslungen
      */
     public boolean saveGame(String id) {
         try {
