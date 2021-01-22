@@ -117,7 +117,7 @@ public class BotHost {
 
                 ss = new ServerSocket(port);
 
-                ss.setSoTimeout(60000);
+                ss.setSoTimeout(600000);
                 ss.setReuseAddress(true);
                 Hosted = true;
                 System.out.println("Waiting for client ...");

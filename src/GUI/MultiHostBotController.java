@@ -152,7 +152,9 @@ public class MultiHostBotController implements Initializable, Serializable {
     //Konstruktor normal
     /**
      * initialisiert das Spiel
-     * @param Client BotClient aus dem JoinMenu
+     * @param Port Der Prot auf dem gehört wird
+     * @param FeldGroesse Spielfeldgröße
+     * @param bot Bot Schwierigkeitsgrad
      */
     public void setVariables(Integer Port, Integer FeldGroesse, int bot) {
         sleeptime=sleeptime0;

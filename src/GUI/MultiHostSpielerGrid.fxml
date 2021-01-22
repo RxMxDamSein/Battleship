@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane style="-fx-background-color: DARKCYAN;" xmlns="http://javafx.com/javafx/11.0.1"
+<AnchorPane style="-fx-background-color: DARKCYAN;" xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.MultiHostSpielerController">
     <children>
         <HBox alignment="CENTER" prefHeight="617.0" prefWidth="1200.0" spacing="52.0" AnchorPane.bottomAnchor="0.0"

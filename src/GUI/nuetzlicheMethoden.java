@@ -584,8 +584,18 @@ public class nuetzlicheMethoden {
             }
 
              */
-            while (!controller.Host.Hosted) {
-                if (controller.Host.ERROR) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (!controller.Host.Hosted) {
+                try {
+                    Thread.sleep(800);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (controller.Host.ERROR || !controller.Host.Hosted) {
                     return false;
                 }
             }
@@ -619,8 +629,18 @@ public class nuetzlicheMethoden {
             Parent r = loader.load();
             MultiHostBotController controller = loader.getController();
             controller.setVariables(Port, Feldgroesse, bot);
-            while (!controller.Host.Hosted) {
-                if (controller.Host.ERROR) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (!controller.Host.Hosted) {
+                try {
+                    Thread.sleep(800);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (controller.Host.ERROR || !controller.Host.Hosted) {
                     return false;
                 }
             }
