@@ -121,6 +121,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
+                Host.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {
@@ -491,11 +492,9 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-        try {
-            Host.CutConnection();
-        } catch (Exception e) {
 
-        }
+        Host.CutConnection();
+
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

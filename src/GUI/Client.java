@@ -68,7 +68,9 @@ public class Client {
     public Client(String IP, Integer PORT) {
         Runnable runnable = () -> {
             try {
+
                 s = new Socket(IP, PORT);
+                s.setReuseAddress(true);
                 System.out.println("Connected!");
                 in = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 out = new OutputStreamWriter(s.getOutputStream());
@@ -191,9 +193,18 @@ public class Client {
         ERROR = true;
         System.out.println("Closing Connection!");
         try {
-            s.close();
-            in.close();
-            out.close();
+            if(s!=null){
+                s.setSoTimeout(10);
+                s.shutdownInput();
+                s.shutdownOutput();
+                s.close();
+            }
+            if(in!=null){
+                in.close();
+            }
+            if(out!=null){
+                out.close();
+            }
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
             e.printStackTrace();
@@ -329,7 +340,8 @@ public class Client {
             }
 
         };
-        runnable.run();
+        Thread t=new Thread(runnable);
+        t.start();
         return true;
     }
 }

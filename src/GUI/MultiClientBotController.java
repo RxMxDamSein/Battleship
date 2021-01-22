@@ -131,8 +131,11 @@ public class MultiClientBotController implements Initializable, Serializable {
      */
     private BotClient Client;
 
-    public MultiClientBotController() { }
 
+    /**
+     * int Variable um ein Upadete zu foren
+     */
+    private int forceUpdate=0;
     /**
      * initialisiert und startet die updateTimeline
      */
@@ -141,9 +144,12 @@ public class MultiClientBotController implements Initializable, Serializable {
             System.err.println("Timeline existiert bereits!!!");
             return;
         }
-        updateTimeline = new Timeline(new KeyFrame(Duration.millis(10), event -> {
-            GridUpdater();
+        updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+            if(forceUpdate%10==0)
+                GridUpdater();
+            forceUpdate++;
             if (Client.change) {
+                GridUpdater();
                 Client.change = false;
 
                 //GridUpdater();
@@ -151,6 +157,7 @@ public class MultiClientBotController implements Initializable, Serializable {
 
             }
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
+                Client.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {
@@ -186,12 +193,17 @@ public class MultiClientBotController implements Initializable, Serializable {
     }
 
     /**
+     * einfache Zaehlvariable
+     */
+    private int ccount=0;
+    /**
      * Aktuallisiert die beiden Grids des Spiels.
      */
     public void GridUpdater() {
+
         int feld[][][] =Client.dasSpiel.getFeld();
         //for (int s=0;s<2;s++){
-        //System.out.println("UPDATE");
+       System.out.println("UPDATE "+ccount++);
         for (int a = x - 1; a >= 0; a--) {
             for (int b = x - 1; b >= 0; b--) {
                 switch (feld[0][a][b]) {
@@ -213,6 +225,7 @@ public class MultiClientBotController implements Initializable, Serializable {
                         labels[a][b] = methoden.textureversenkt(labels[a][b], x);
                         break;
                 }
+
                 switch (feld[1][a][b]) {
                     default:
                         break;
@@ -232,6 +245,8 @@ public class MultiClientBotController implements Initializable, Serializable {
                         labels2[a][b] = methoden.textureversenkt(labels2[a][b], x);
                         break;
                 }
+                labels[a][b].requestLayout();
+                labels2[a][b].requestLayout();
             }
         }
         //}
@@ -527,10 +542,9 @@ public class MultiClientBotController implements Initializable, Serializable {
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-        try {
-            Client.CutConnection();
-        } catch (Exception e) {
-        }
+
+        Client.CutConnection();
+
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

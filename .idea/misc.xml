@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavadocGenerationManager">
+<<<<<<< HEAD
     <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../../../../../Dokumente/DOC" />
+=======
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../../../../../Roman/schule/prak Schiffeverseneken/javadoc" />
+>>>>>>> e2c2ac34cdb0aedd7cf459730013b017bc1994b4
     <option name="OPTION_SCOPE" value="private" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
