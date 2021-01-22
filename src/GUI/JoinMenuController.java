@@ -17,15 +17,32 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Klaase fuer das Join Menu
+ */
 public class JoinMenuController implements Initializable {
+
     @FXML
     private Label joinLabel;
+    /**
+     * Textfield zum eingeben der IP und des Ports des Hosts
+     */
     @FXML
     private TextField IPText, PortText;
+    /**
+     * ChoiceBox zum Einstellen der Spielart und der Bot-Schwierigkeit
+     */
     @FXML
     private ChoiceBox<String> SpielartChoice, BotChoice;
+    /**
+     * zusatz Klasse mit verschiedenen Funktionen
+     */
     private nuetzlicheMethoden methoden;
-
+    /**
+     * initialize Funktion von JavaFX, welche die CHoiceBoxen initiealisiert
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         methoden = new nuetzlicheMethoden();
@@ -33,14 +50,15 @@ public class JoinMenuController implements Initializable {
         BotChoice.getItems().add("Mittel");
         BotChoice.getItems().add("Schwer");
         BotChoice.setValue("Mittel");
-        //BotChoice.hide();
-
         SpielartChoice.getItems().add("Spieler");
         SpielartChoice.getItems().add("Bot");
         SpielartChoice.setValue("Spieler");
-
     }
-
+    /**
+     * Button um zuruck zum MehrspielerMenu zu kommen
+     * @param event
+     * @throws IOException
+     */
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);
@@ -50,6 +68,11 @@ public class JoinMenuController implements Initializable {
         window.show();
     }
 
+    /**
+     * Button zum beitreten eines Spiels
+     * @param event
+     * @throws IOException
+     */
     public void StartButton(ActionEvent event) throws IOException {
         Integer p;
         try {

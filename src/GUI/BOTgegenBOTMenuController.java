@@ -15,17 +15,39 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Menu des Spiels Bot gegen Bot
+ */
 public class BOTgegenBOTMenuController implements Initializable {
-
+    /**
+     * ChoiceBox um die Schwierigkeit des 1.Bot einzustellen
+     */
     @FXML
     private ChoiceBox<String> choiceBox1;
+    /**
+     * ChoiceBox um die Schwierigkeit des 1.Bot einzustellen
+     */
     @FXML
     private ChoiceBox<String> choiceBox2;
+    /**
+     * TextField zum eingeben der Feldgroesse
+     */
     @FXML
     private TextField GridSize;
+    /**
+     * x = Feldgroesse
+     * <br>
+     * bot1 = Schwierigkeit des 1.Bot
+     * <br>
+     * bot2 = Schwierigkeit des 2.Bot
+     */
     private Integer x = 0, bot1 = 0, bot2 = 0;
 
-
+    /**
+     * initialize methode von JAVAFX, welche die choiceBox1 und choiceBox2 initialisiert
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         choiceBox1.getItems().add("Einfach");
@@ -42,6 +64,11 @@ public class BOTgegenBOTMenuController implements Initializable {
 
     }
 
+    /**
+     * zurück button zum MeinMenu
+     * @param event
+     * @throws IOException
+     */
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Scene s = new Scene(root);
@@ -51,10 +78,19 @@ public class BOTgegenBOTMenuController implements Initializable {
         window.show();
     }
 
+    /**
+     * loescht die Eingabe im Gridsize Textfield
+     * @param event
+     */
     public void clearButton(ActionEvent event) {
         GridSize.clear();
     }
 
+    /**
+     * startet das Spiel mit den eingestellten Werten
+     * @param event
+     * @throws IOException
+     */
     public void StartButton(ActionEvent event) throws IOException {
         String sx = String.valueOf(GridSize.getText()); //Text aus der Benutzereingabe
         Object value1 = choiceBox1.getValue();

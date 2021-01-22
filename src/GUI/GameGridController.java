@@ -34,36 +34,85 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Klasse für das Spiel: Spieler gegen Bot
+ */
 public class GameGridController implements Initializable, Serializable {
     private static final long serialVersionUID = 1337L;
     //@FXML private AnchorPane anchoroanegamegrid;
+    /**
+     * linkes Spielfeld
+     */
     @FXML
     private StackPane StackPane;
+    /**
+     * rechtes Spielfeld
+     */
     @FXML
     private StackPane StackPane2;
-    //@FXML private Button placebutton;
+    /**
+     * Label über dem linken Feld
+     */
     @FXML
     private Label GameTopLabel;
+    /**
+     * Label über dem rechten Feld
+     */
     @FXML
     private Label GameTopLabel1;
+    /**
+     * Start-Button des Spiels.
+     */
     @FXML
     private Button gameStartButton;
+    /**
+     * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
+     */
     private boolean spielstatus = false;
+    /**
+     * linkes Spielfeld
+     */
     private GridPane GameGrid;
+    /**
+     * rechtes Spielfeld
+     */
     private GridPane GameGrid2;
+    /**
+     * Labels des linken Spielfelds zum anzeigen des Spiels
+     */
     private Label[][] labels;
+    /**
+     * Labels des rechten Spielfelds zum anzeigen des Spiels
+     */
     private Label[][] labels2;
+    /**
+     * x ist die Spielfeldgroesse, bot ist welche bot-schwierigkeit ausgewählt worden ist und count ist eine einfach Zähl Variable.
+     */
     private Integer x, bot, count = 0;
+    /**
+     * Variablen zum setzen von Schiffen
+     */
     private int sx = -1, sy = -1, ex = -1, ey = -1;
-    boolean FensterClosed = false;
-
+    /**
+     * zusatz Klasse mit verschiedenen Funktionen
+     */
     private nuetzlicheMethoden methoden;
+    /**
+     * Ein Spiel aus dem Logic Packege
+     */
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+    /**
+     * Eins Bot aus dem Logic Packege
+     */
     private Bot ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST;
 
-    public GameGridController() {
-    }
+    public GameGridController() { }
 
+    /**
+     * setzt die Variablen, welche zuvor vom User festgelegt wurden
+     * @param a Größe des Spielfelds
+     * @param b Botschwierigkeit
+     */
     public void setInteger(Integer a, Integer b) {
         methoden = new nuetzlicheMethoden(a);
         x = a;
@@ -72,6 +121,10 @@ public class GameGridController implements Initializable, Serializable {
         Spielinit();
     }
 
+    /**
+     * Wird aufgerufen um ein Gespeichertes SAFE-Game zu laden
+     * @param SAFE gespeichertes Spiel
+     */
     public void gameloader(SAFE_SOME SAFE) {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = SAFE.spiele[0];
         ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = SAFE.bots[0];
@@ -109,6 +162,9 @@ public class GameGridController implements Initializable, Serializable {
 
     }
 
+    /**
+     * Aktuallisiert die beiden Grids des Spiels.
+     */
     public void GridUpdater() {
         int feld[][][] = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld();
         //for (int s=0;s<2;s++){
@@ -159,6 +215,10 @@ public class GameGridController implements Initializable, Serializable {
     }
 
     //Initialisiert das Spiel und den Bot
+
+    /**
+     * Startet das Spiel und legt fest welcher Bot verwendet wird.
+     */
     public void Spielinit() {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x, x, true);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.setVerbose(false);
@@ -199,6 +259,10 @@ public class GameGridController implements Initializable, Serializable {
      */
 
     //Grid und Labels initialisieren
+
+    /**
+     * initialisiert die beiden Spielfelder des Spiels
+     */
     public void Gridinit() {
         //initialisieren Label und Grid (1)
         GameGrid = new GridPane();
@@ -260,6 +324,12 @@ public class GameGridController implements Initializable, Serializable {
     }
 
     //ActionHandler für Label 2 (Grid 2) gedrückt
+
+    /**
+     * Methode zum schießen auf dem linken Grid.
+     * @param a x-Koordinate
+     * @param b y-Koordinate
+     */
     private void label2click(int a, int b) {
         int phit;
         boolean schuss;
@@ -313,6 +383,9 @@ public class GameGridController implements Initializable, Serializable {
         }
     }
 
+    /**
+     * Methode, welche das schießen des Bot uebernimmt
+     */
     private void Botschiesst() {
         //Bot schießt auf Spieler
         if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 1) {
@@ -371,6 +444,9 @@ public class GameGridController implements Initializable, Serializable {
 
     }
 
+    /**
+     * Methode zum plazieren eines Schiffes
+     */
     public void shippplace() {
         boolean shippaddo;
         int size;
@@ -478,6 +554,9 @@ public class GameGridController implements Initializable, Serializable {
         illegalesSchiff();
     }
 
+    /**
+     * Methode zum zurücksetzen der Auswahl bei illigalem Schiff
+     */
     private void illegalesSchiff() {
         System.err.println("Ungültiges Schiff");
         //labels[sx][sy].setStyle("-fx-background-color: #03fcf4");
@@ -492,6 +571,12 @@ public class GameGridController implements Initializable, Serializable {
 
 
     //ActionHandler für Label 1 (Grid 1) gedrückt
+
+    /**
+     * Methode zum setzten der Schiffe, durch klicken  auf zwei verschiedene Labels
+     * @param a x-Koordinate
+     * @param b y-Koordinate
+     */
     private void labelclick(int a, int b) {
         System.out.println("x= " + a + " y= " + b);
 
@@ -529,6 +614,11 @@ public class GameGridController implements Initializable, Serializable {
     }
 
     //versetzt Spiel in Feuermodus
+
+    /**
+     * Start-Knopf des Spiels
+     * @param event
+     */
     public void gameStart(ActionEvent event) {
         spielstatus = true;
         System.out.println("Spielstatus: " + spielstatus);
@@ -559,6 +649,11 @@ public class GameGridController implements Initializable, Serializable {
         }
     }
 
+    /**
+     * Button um zuruck zum EinzelspielerMenu zu kommen.
+     * @param event
+     * @throws IOException
+     */
     public void BacktoMenu(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("EinzelspielerMenu.fxml"));
         Scene s = new Scene(root);
@@ -568,6 +663,11 @@ public class GameGridController implements Initializable, Serializable {
         window.show();
     }
 
+    /**
+     * initialize von JavaFX
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //nuetzlicheMethoden.setStageCenter();
@@ -578,6 +678,11 @@ public class GameGridController implements Initializable, Serializable {
         logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(), true);
     }
 
+    /**
+     * Methode zum speicheren des Spiels
+     * @param event
+     * @throws IOException
+     */
     public void Speichern(ActionEvent event) throws IOException {
 
         //SaveData data = new SaveData();

@@ -12,23 +12,77 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Klasse fuer den Multiplayer-Bot-Host
+ */
 public class BotHost {
-
+    /**
+     * Verbindungs-Server-Socket
+     */
     private ServerSocket ss;
+    /**
+     * Verbindungs-Socket
+     */
     private Socket s;
+    /**
+     * Port und Feldgroesse
+     */
     private int port, Feldg;
+    /**
+     * ließt die ankommenden Nachrichten des Client
+     */
     private BufferedReader in;
+    /**
+     * schreibt die Nachrichten fuer den Client
+     */
     private OutputStreamWriter out;
+    /**
+     * Variable die angibt ob das Spiel gestartet ist
+     */
     public boolean Spielstartet = false;
+    /**
+     * true wenn es einen Verbindungsfehler gibt
+     */
     public boolean ERROR = false;
+    /**
+     * Connected ist true wenn ein Client sich mit dem Server verbunden hat.
+     * <br>
+     * load gibt an ob ein geladenes Spiel genutzt wird
+     */
     public boolean Connected = false, load = false;
+    /**
+     * change Variable, welche true wird wenn das Spielfeld aktualiesiert werden soll.
+     */
     public volatile boolean change = false;
+    /**
+     * true wenn man den Server erstellen konnte
+     */
     public boolean Hosted;
+    /**
+     * nachrichten die geschickt oder versendet werden
+     * <br>
+     * id zum Speichern des Spiels
+     */
     public String nachricht = "", id;
+    /**
+     * Spiel aus dem Logic-package
+     */
     private Spiel dasSpiel;
+    /**
+     * Bot aus dem Logic-package
+     */
     private Bot derBot;
+    /**
+     * pause, true wenn der Bot pausieren soll.
+     */
     public boolean pause = false;
 
+    /**
+     * Normaler Konstrukter von BotHost
+     * @param p Port
+     * @param g Feldgroesse
+     * @param derBot Bot-Schwierigkeit
+     */
     public BotHost(int p, int g, Bot derBot) {
         port = p;
         Feldg = g;
@@ -36,6 +90,13 @@ public class BotHost {
         this.derBot = derBot;
     }
 
+    /**
+     * Konstruktor zum laden eines Spielstandes
+     * @param p Port
+     * @param g Feldgroesse
+     * @param derBot Bot-Schwierigkeit
+     * @param id Spielstand-ID
+     */
     public BotHost(int p, int g, Bot derBot, String id) {
         load = true;
         port = p;
@@ -45,6 +106,9 @@ public class BotHost {
         this.id = id;
     }
 
+    /**
+     * initialisiert den Server,sendet je nach dem die Feldgroesse oder Spielstand-ID
+     */
     public void init() {
         Runnable Runnable = () -> {
             ss = null;
@@ -108,7 +172,10 @@ public class BotHost {
 
 
     }
-
+    /**
+     * Funktion zum der Nachrichten an den Host
+     * @param antwort Die Nachricht fuer den Host
+     */
     public void sendSocket(String antwort) {
         System.out.print("Zu Client: " + antwort + "\n");
         try {
@@ -122,7 +189,10 @@ public class BotHost {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Funktion um die Nachricht vom Host zu bekommen
+     * @return Nachricht vom Host
+     */
     public String receiveSocket() {
         String nachricht = "ERROR";
         try {
@@ -138,6 +208,10 @@ public class BotHost {
         return nachricht;
     }
 
+    /**
+     * sendet die Plazierten Schieffgroessen an den Client
+     * @param shipSizes Array mit den Schiffgroesse
+     */
     public void senships(int[] shipSizes) {
         if (Spielstartet) {
             System.err.println("Spiel bereit gestartet!!");
@@ -166,6 +240,9 @@ public class BotHost {
         t.start();
     }
 
+    /**
+     * Schliesst die Verbindung
+     */
     public void CutConnection() {
         ERROR = true;
         System.out.println("Closing Connection!");
@@ -178,7 +255,9 @@ public class BotHost {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Funktion zum schiessen des Host.
+     */
     public void schuss() {
         while (pause) ;
         if (dasSpiel.getAbschussSpieler() != 1 || dasSpiel.isOver() || !dasSpiel.isStarted()) {
@@ -221,7 +300,10 @@ public class BotHost {
         Thread t = new Thread(runnable);
         t.start();
     }
-
+    /**
+     * Funktion um auf den Schuss des Clients zu antworten
+     * @param nachricht Schuss-Nachricht des Hosts
+     */
     private void Clientshot(String nachricht) {
         int x = Integer.parseInt(nachricht.split(" ")[1]) - 1;
         int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
@@ -256,6 +338,9 @@ public class BotHost {
         }
         sonderNachrichten(z);
     }
+    /**
+     * aendert change auf true
+     */
     private void changeTrue(){
         change=true;
         try {
@@ -264,7 +349,10 @@ public class BotHost {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Moegliche vom Client
+     * @param nachricht Sondernachricht vom Host
+     */
     private void sonderNachrichten(String nachricht) {
         if (nachricht.contains("save")) {
             new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1]);
@@ -279,6 +367,10 @@ public class BotHost {
 
     }
 
+    /**
+     * Speichert das Spiel
+     * @param hash Speicher-ID
+     */
     public void save(String hash) {
         sendSocket("save " + hash);
         if (!receiveSocket().contains("done")) {

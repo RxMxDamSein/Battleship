@@ -10,21 +10,66 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * Klasse fuer den Multiplayer-Bot-Client
+ */
 public class BotClient {
+    /**
+     * Verbindungs-Socket
+     */
     private Socket s;
+    /**
+     * ließt die ankommenden Nachrichten des Host
+     */
     private BufferedReader in;
+    /**
+     * schreibt die Nachrichten fuer den Host
+     */
     private OutputStreamWriter out;
+    /**
+     * ERROR, true wenn ein Verbindungsfehler oder aehnliches auftritt.
+     * <br>
+     * loaded, true wenn des Spiel geladen werden soll.
+     * <br>
+     * pause, true wenn der Bot pausieren soll.
+     */
     public boolean ERROR = false, loaded = false, pause = false;
+    /**
+     * change Variable, welche true wird wenn das Spielfeld aktualiesiert werden soll.
+     */
     public volatile boolean change = false;
+    /**
+     * Spiel aus dem Logic-package
+     */
     public Spiel dasSpiel;
+    /**
+     * Bot aus dem Logic-package
+     */
     public Bot derBot;
+    /**
+     * Schiffgroessen vom Host
+     */
     public int[] ships;//if ships is added make it -1
+    /**
+     * Verbindungsstatus:
+     * <br>
+     * 0 = keine Verbindung
+     * <br>
+     * 1 = Verbindung hergestellt und Spielfeldgroesse bekommen
+     * <br>
+     * 2 = Schiffsgroessen erhalten
+     */
     public int status = 0;
     // 0 = keine verbindung
     // 1 = Verbindung und Spielfeld
     // 2 = Schiffsgrößen erhalten
 
-
+    /**
+     * Konstruktor fuer die BotClient-Klasse, welche sich  mit dem Host verbindet
+     * @param IP IP-Adresse vom Host
+     * @param PORT PORT vom Host
+     * @param bot Bot-Schwierigkeit
+     */
     public BotClient(String IP, Integer PORT, int bot) {
         Runnable runnable = () -> {
             try {
@@ -120,6 +165,10 @@ public class BotClient {
 
     }
 
+    /**
+     * Funktion zum der Nachrichten an den Host
+     * @param antwort Die Nachricht fuer den Host
+     */
     public void sendSocket(String antwort) {
         System.out.print("Zu Server: " + antwort + "\n");
         try {
@@ -134,7 +183,11 @@ public class BotClient {
         }
     }
 
-
+    /**
+     * Funktion um fest zu stellen ob die gewählte Schiffsgroesse zulaessig ist.
+     * @param len Schiffgroesse
+     * @return false wenn
+     */
     public boolean inShips(int len) {
         if (ships == null)
             return false;
@@ -145,6 +198,10 @@ public class BotClient {
         return false;
     }
 
+    /**
+     * loescht verwendete Schiffgroessen.
+     * @param len Schiffgroesse
+     */
     public void deleteShip(int len) {
         for (int i = 0; i < ships.length; i++)
             if (ships[i] == len) {
@@ -153,6 +210,9 @@ public class BotClient {
             }
     }
 
+    /**
+     * aendert change auf true
+     */
     private void changeTrue(){
         change=true;
         //System.out.println("CHANGE!");
@@ -163,6 +223,10 @@ public class BotClient {
         }
     }
 
+    /**
+     * Funktion um die Nachricht vom Host zu bekommen
+     * @return Nachricht vom Host
+     */
     public String receiveSocket() {
         String nachricht = "ERROR";
         try {
@@ -178,6 +242,9 @@ public class BotClient {
         return nachricht;
     }
 
+    /**
+     * Trennt die Verbindung zum Host
+     */
     public void CutConnection() {
         ERROR = true;
         System.out.println("Closing Connection!");
@@ -191,6 +258,11 @@ public class BotClient {
         }
     }
 
+    /**
+     * Speichert das Spiel
+     * @param hash Speicher-Id
+     * @param dname Speicher-Name
+     */
     public void save(String hash, String dname) {
         new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, hash, dname);
         sendSocket("save " + hash);
@@ -202,6 +274,9 @@ public class BotClient {
         CutConnection();
     }
 
+    /**
+     * Funktion zum schiessen des Clients.
+     */
     public void schuss() {
         if (dasSpiel.getAbschussSpieler() != 1 || !dasSpiel.isStarted() || dasSpiel.isOver()) {
             System.err.println("NIX SCHUSS");
@@ -253,6 +328,10 @@ public class BotClient {
         t.start();
     }
 
+    /**
+     * Funktion um auf den Schuss des Hosts zu antworten
+     * @param nachricht Schuss-Nachricht des Hosts
+     */
     private void Servershot(String nachricht) {
         int x = Integer.parseInt(nachricht.split(" ")[1]) - 1;
         int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
@@ -285,6 +364,10 @@ public class BotClient {
         sonderNachrichten(z);
     }
 
+    /**
+     * Moegliche vom Host
+     * @param nachricht Sondernachricht vom Host
+     */
     private void sonderNachrichten(String nachricht) {
         if (nachricht.contains("save")) {
             new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1]);
@@ -298,6 +381,10 @@ public class BotClient {
 
     }
 
+    /**
+     * Funktion um die Schiffgroessen vom Host zu setzen und um das Spiel zu starten.
+     * @return returnt ob man die Schiff stzen konnte oder nicht.
+     */
     public boolean senships() {
         Runnable runnable = () -> {
             if (!derBot.shipSizesToAdd(ships)) {

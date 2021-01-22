@@ -17,15 +17,28 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Klasse fuer das EinstellMenu
+ */
 public class EinstellungenController implements Initializable {
-
+    /**
+     * Label, welches Anzeigt ob der Skin an ist.
+     */
     @FXML
     private Label label1;
+    /**
+     * Variable um zu Speichern ob der Skin an oder aus sein soll
+     */
     public static int skin = 1;
 
     public EinstellungenController() {
     }
 
+    /**
+     * initialize funktion von JAVAFX
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (skin == 0) {
@@ -39,6 +52,11 @@ public class EinstellungenController implements Initializable {
 
     }
 
+    /**
+     * Button um zuruck zum MainMenu zu kommen.
+     * @param event
+     * @throws IOException
+     */
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Scene s = new Scene(root);
@@ -48,6 +66,10 @@ public class EinstellungenController implements Initializable {
         window.show();
     }
 
+    /**
+     * Button setSkin
+     * @param event
+     */
     public void setskin(ActionEvent event) {
         if (skin == 0) {
             label1.setText("true");
@@ -59,9 +81,5 @@ public class EinstellungenController implements Initializable {
             skin = 0;
             return;
         }
-    }
-
-    public int getSkin() {
-        return skin;
     }
 }

@@ -15,13 +15,32 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Klasse fuer das Neues Spiel Menu
+ */
 public class NeuesSpielMenuController implements Initializable {
+    /**
+     * TextField zum eingeben der Spielfeldgroesse
+     */
     @FXML
     private TextField GridSize;
+    /**
+     * ChoiceBox zum auswaehlen der Bot-Schwierigkeit
+     */
     @FXML
     private ChoiceBox<String> choiceBox;
+    /**
+     * x ist die Spielfeldgroesse
+     * <br>
+     * bot ist die Bot-Schwierigkeit
+     */
     private Integer x = 0, bot = 0;
 
+    /**
+     * initialize Funktion von JavaFX und initielisiert die ChoiceBox
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         choiceBox.getItems().add("Einfach");
@@ -32,6 +51,11 @@ public class NeuesSpielMenuController implements Initializable {
 
     }
 
+    /**
+     * Button zum starten des Spiels mit den angegebenen Werten
+     * @param event
+     * @throws IOException
+     */
     public void StartButton(ActionEvent event) throws IOException {
         String sx = String.valueOf(GridSize.getText()); //Text aus der Benutzereingabe
         Object value = choiceBox.getValue();
@@ -41,6 +65,7 @@ public class NeuesSpielMenuController implements Initializable {
         if (sx.equals("")) {
             sx = "10";
         }
+
         x = Integer.parseInt(sx);
         if (ch.equals("Einfach")) {
             bot = 1;
@@ -72,6 +97,11 @@ public class NeuesSpielMenuController implements Initializable {
     }
 
 
+    /**
+     * Button um zuruck zum EinzelspielerMenu zu kommen
+     * @param event
+     * @throws IOException
+     */
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("EinzelspielerMenu.fxml"));
         Scene s = new Scene(root);
@@ -81,6 +111,10 @@ public class NeuesSpielMenuController implements Initializable {
         window.show();
     }
 
+    /**
+     * loescht die Gridsize eingabe
+     * @param event
+     */
     public void clearButton(ActionEvent event) {
         GridSize.clear();
     }

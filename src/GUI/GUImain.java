@@ -6,6 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Die Gui-Main Klasse, welche das Hauptmenu des Spiels öffnet.
+ */
 public class GUImain extends Application {
 
     public static void main(String[] args) {

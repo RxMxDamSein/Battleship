@@ -30,45 +30,100 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Klasse für das Spiel: Bot gegen Bot
+ */
 public class BOTgegenBOTGridController implements Initializable {
-    private static final long serialVersionUID = 1337L;
-    //@FXML private AnchorPane anchoroanegamegrid;
+    /**
+     * Slider zum einstellen der Botgeschwindigkeit
+     */
     @FXML
     private Slider BotSpeedSlider;
+    /**
+     * changingSlider ist true wenn der Slider veraendert worden ist.
+     */
     private boolean changingSlider = false,load=false;
+    /**
+     * linkes Spielfeld
+     */
     @FXML
     private StackPane StackPane;
+    /**
+     * rechtes Spielfeld
+     */
     @FXML
     private StackPane StackPane2;
-    //@FXML private Button placebutton;
+
     @FXML
     private Label GameTopLabel;
     @FXML
     private Label GameTopLabel1;
+    /**
+     * Button zum starten des Spiels
+     */
     @FXML
     Button gameStartButton;
     private boolean spielstatus = false;
+    /**
+     * rechtes Spielfeld
+     */
     private GridPane GameGrid;
+    /**
+     * linkes Spielfeld
+     */
     private GridPane GameGrid2;
+    /**
+     * linke Labels des Spielfeld
+     */
     private Label[][] labels;
+    /**
+     * rechte Labels des Spielfeld
+     */
     private Label[][] labels2;
+    /**
+     * x ist die Spielfeldgroesse
+     * <br>
+     * bot1 schwierigkeit des 1.Bots
+     * <br>
+     * bot2 schwierigkeit des 2.Bots
+     */
     private Integer x, bot1, bot2, count = 0;
-    private int sx = -1, sy = -1, ex = -1, ey = -1;
+    /**
+     * Timeline zum schießen der beiden Bots
+     */
     private Timeline oneSecondsWonder;
-    //private int speed=100;
+    /**
+     * Standartgeschwindigkeit der Timeline
+     */
     private final int Ospeed = 500;
+    /**
+     * neu eingestellte Geschwindigkeit fuer den Bot
+     */
     private int speed = Ospeed;
+    /**
+     * Spielfeld
+     */
     private int[][][] feld;
-
+    /**
+     * Klasse mit nuetzliche Methoden
+     */
     private nuetzlicheMethoden methoden;
-
-    //private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+    /**
+     * 1.Bot des Spiels
+     */
     private Bot ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST;
+    /**
+     * 2.Bot des Spiels
+     */
     private Bot WUNDERVOLLERGEGNERBOT;
 
-    public BOTgegenBOTGridController() {
-    }
+    public BOTgegenBOTGridController() {}
 
+    /**
+     * initialize methode von JavaFX, welche den Botslider einstellt
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Duration duration = new Duration();
@@ -86,7 +141,9 @@ public class BOTgegenBOTGridController implements Initializable {
         });
     }
 
-
+    /**
+     * Funktion um die Geschwindigkeit des Bots zu aendern anhand des Sliders
+     */
     private void changeSlider() {
         if (changingSlider)
             return;
@@ -112,6 +169,12 @@ public class BOTgegenBOTGridController implements Initializable {
         t.start();
     }
 
+    /**
+     * Funktion die verschiedene Variablen setzt und das Spiel initialisiert
+     * @param a Spielfeldgroesse
+     * @param b1 Bot.1-Schwierigkeit
+     * @param b2 Bot.2-Schwierigkeit
+     */
     public void setInteger(Integer a, Integer b1, Integer b2) {
         methoden = new nuetzlicheMethoden(a);
         x = a;
@@ -122,6 +185,11 @@ public class BOTgegenBOTGridController implements Initializable {
         GridUpdater();
 
     }
+
+    /**
+     * Funktion um ein Spiel zu intitialisiern mit einem save-game
+     * @param SAFE Ein gespeichertes Spiel
+     */
     public void gameloader(SAFE_SOME SAFE){
         ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = SAFE.bots[0];
         WUNDERVOLLERGEGNERBOT = SAFE.bots[1];
@@ -132,6 +200,9 @@ public class BOTgegenBOTGridController implements Initializable {
         GridUpdater();
     }
 
+    /**
+     * Aktualissiert die beiden Spielfelder
+     */
     public void GridUpdater() {
         int feld1[][][] = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
         //for (int s=0;s<2;s++){
@@ -228,6 +299,9 @@ public class BOTgegenBOTGridController implements Initializable {
 
     }
 
+    /**
+     * initialisiert die Bots und fuegt diesen ihre Schiffe hinzu
+     */
     public void Spielinit() {
         //GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x,x,true);
         System.out.println(x + " " + x);
@@ -275,25 +349,11 @@ public class BOTgegenBOTGridController implements Initializable {
         WUNDERVOLLERGEGNERBOT.shipSizesToAdd(add);
         //WUNDERVOLLERGEGNERBOT.getDasSpiel().setVerbose(false);
         feld = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
-        //GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
-    }
-    /*
-    public double minsizeberechner() {
-        Rectangle2D screen = Screen.getPrimary().getBounds();
-        //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
-        //return -((double)x-10)+50;
-        //return -(0.75* (double) x-7.5)+50;
-        //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
-        double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
-        zahl*= 0.7;
-        zahl = (zahl/2)/x;
-        //System.out.println("Wundervolle Zahl: "+zahl);
-        if (zahl > 200) zahl=200;
-        return zahl;
     }
 
+    /**
+     * intitialliesiert die beiden Spielfelder
      */
-
     public void Gridinit() {
         //initialisieren Label und Grid (1)
         GameGrid = new GridPane();
@@ -368,6 +428,10 @@ public class BOTgegenBOTGridController implements Initializable {
         StackPane2.getChildren().add(GameGrid2);
     }
 
+    /**
+     * Funktion welche das Spiel startet
+     * @param event
+     */
     public void gameStart(ActionEvent event) {
         gameStartButton.setVisible(false);
         /*
@@ -380,6 +444,9 @@ public class BOTgegenBOTGridController implements Initializable {
         initoneSecondsWonder();
     }
 
+    /**
+     * Initialisiert die Timeline oneSecondsWonder
+     */
     private void initoneSecondsWonder() {
         oneSecondsWonder = new Timeline(new KeyFrame(Duration.millis(speed), e -> {
             if (ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.isOver() || WUNDERVOLLERGEGNERBOT.isFinOver()) {
@@ -393,6 +460,9 @@ public class BOTgegenBOTGridController implements Initializable {
         oneSecondsWonder.play();
     }
 
+    /**
+     * laesst je nach dem welcher Bot am zug ist diessen schiessen
+     */
     private void shoot() {
         if (ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler() == 0) {
             int[] xy = WUNDERVOLLERGEGNERBOT.getSchuss();
@@ -416,6 +486,10 @@ public class BOTgegenBOTGridController implements Initializable {
         GridUpdater();
     }
 
+    /**
+     * Speichert das Spiel
+     * @param event
+     */
     public void Speichern(ActionEvent event) {
         if (oneSecondsWonder != null) {
             oneSecondsWonder.stop();
@@ -455,6 +529,11 @@ public class BOTgegenBOTGridController implements Initializable {
         newStage.show();
     }
 
+    /**
+     * Button um zurueck zum BOTgegenBOTMenu zu kommen
+     * @param event
+     * @throws IOException
+     */
     public void BacktoMenu(ActionEvent event) throws IOException {
         if (oneSecondsWonder != null) {
             oneSecondsWonder.stop();

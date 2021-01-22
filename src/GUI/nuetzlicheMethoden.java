@@ -29,7 +29,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Klasse mit nuetzliche Methoden
+ */
 public class nuetzlicheMethoden {
+    //TODO DOC
     private int texture = 1;
     private Image textureWasser, textureSchiff, textureSchiffTreffer, textureWasserTreffer, textureversenkt, textureauswahlWasser;
     private Timeline timeline;
@@ -41,6 +45,7 @@ public class nuetzlicheMethoden {
     String id = " ";
 
     public nuetzlicheMethoden() {
+        texture = EinstellungenController.skin;
     }
 
     public nuetzlicheMethoden(int x) {
