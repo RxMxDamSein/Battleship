@@ -26,37 +26,85 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import java.util.concurrent.TimeUnit;
+/**
+ * Klasse für das Spiel: Mehrspieler-Host-Spieler
+ */
 public class MultiHostSpielerController implements Initializable, Serializable {
     private static final long serialVersionUID = 1337L;
-    //@FXML private AnchorPane anchoroanegamegrid;
+    /**
+     * linkes Spielfeld
+     */
     @FXML
     private StackPane StackPane;
+    /**
+     * rechtes Spielfeld
+     */
     @FXML
     private StackPane StackPane2;
-    //@FXML private Button placebutton;
+    /**
+     * Label über dem linken Feld
+     */
     @FXML
     private Label GameTopLabel;
+    /**
+     * Label über dem rechten Feld
+     */
     @FXML
     private Label GameTopLabel1;
+    /**
+     * Start-Button des Spiels.
+     */
     @FXML
     private Button gameStartButton;
+    /**
+     * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
+     */
     private boolean spielstatus = false;
+    /**
+     * linkes Spielfeld
+     */
     private GridPane GameGrid;
+    /**
+     * rechtes Spielfeld
+     */
     private GridPane GameGrid2;
+    /**
+     * Labels des linken Spielfelds zum anzeigen des Spiels
+     */
     private Label[][] labels;
+    /**
+     * Labels des rechten Spielfelds zum anzeigen des Spiels
+     */
     private Label[][] labels2;
-    private Integer x, bot, count = 0;
+    /**
+     * x ist die Spielfeldgroesse, count ist eine einfach Zähl Variable.
+     */
+    private Integer x, count = 0;
+    /**
+     * Variablen zum setzen von Schiffen
+     */
     private int sx = -1, sy = -1, ex = -1, ey = -1;
-
+    /**
+     * zusatz Klasse mit verschiedenen Funktionen
+     */
     private nuetzlicheMethoden methoden;
+    /**
+     * Ein Spiel aus dem Logic Package
+     */
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+    /**
+     * Ein Spiel aus dem Logic Package
+     */
     public Host Host;
+    /**
+     * updateTimeline zum aktualisieren der Spielfelder und time zum aufrufen von shiplabel()
+     */
     private Timeline updateTimeline;
 
-
-    public MultiHostSpielerController() {
-    }
-
+    /**
+     * initialisiert updateTimeline
+     */
     private void initupdateTimeline() {
         if (updateTimeline != null) {
             System.err.println("Timeline existiert bereits!!!");
@@ -81,6 +129,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         updateTimeline.play();
     }
 
+    /**
+     * initialisiert das Spiel
+     * @param Port
+     * @param FeldGroesse
+     */
     public void setVariables(Integer Port, Integer FeldGroesse) {
         methoden = new nuetzlicheMethoden(FeldGroesse);
         x = FeldGroesse;
@@ -93,6 +146,12 @@ public class MultiHostSpielerController implements Initializable, Serializable {
 
     }
 
+    /**
+     * initialisiert ein zu ladendes Spiel
+     * @param Port
+     * @param SAFE SAVE-Game
+     * @param id Save-ID
+     */
     public void setVariables(Integer Port, SAFE_SOME SAFE, String id) {
         if (SAFE.id != null) {
             id = SAFE.id;
@@ -109,7 +168,9 @@ public class MultiHostSpielerController implements Initializable, Serializable {
 
     }
 
-
+    /**
+     * Aktuallisiert die beiden Grids des Spiels.
+     */
     public void GridUpdater() {
         int feld[][][] = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld();
         //for (int s=0;s<2;s++){
@@ -156,33 +217,20 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             }
         }
         //}
-
     }
-
-    //Initialisiert das Spiel und den Bot
+    /**
+     * initialisiert das Spiel
+     */
     public void Spielinit() {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = new Spiel(x, x, true);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.setVerbose(false);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
-    /*
-    public double minsizeberechner() {
-        Rectangle2D screen = Screen.getPrimary().getBounds();
-        //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
-        //return -((double)x-10)+50;
-        //return -(0.75* (double) x-7.5)+50;
-        //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
-        double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
-        zahl*= 0.7;
-        zahl = (zahl/2)/x;
-        //System.out.println("Wundervolle Zahl: "+zahl);
-        if (zahl > 200) zahl=200;
-        return zahl;
-    }
-     */
-
 
     //Grid und Labels initialisieren
+    /**
+     * initialisiert die Grids und Labels
+     */
     public void Gridinit() {
         //initialisieren Label und Grid (1)
         GameGrid = new GridPane();
@@ -200,22 +248,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
                 labels[a][b].setMinSize(methoden.minsizeberechner(x), methoden.minsizeberechner(x));
                 //labels[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels[a][b] = methoden.textureWasser(labels[a][b], x);
-
-                //lustige bilder zu den Labels
-                /*
-                Image img = new Image("GUI/Textures/42.jpg");
-                ImageView view = new ImageView(img);
-                view.setFitHeight(100);
-                view.setPreserveRatio(true);
-                labels[a][b].setGraphic(view);
-                 */
-
                 //final int ca=a,cb=b;
                 int ca = a, cb = b;
                 labels[a][b].setOnMouseClicked(e -> labelclick(ca, cb));
                 GridPane.setConstraints(labels[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
                 GameGrid.getChildren().add(labels[a][b]);
-
                 //Game Labels (2)
                 labels2[a][b] = new Label();
                 //labels2[a][b].setMinSize(50,50);
@@ -223,13 +260,10 @@ public class MultiHostSpielerController implements Initializable, Serializable {
                 //labels2[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels2[a][b] = methoden.textureWasser(labels2[a][b], x);
                 labels2[a][b].setOnMouseClicked(e -> label2click(ca, cb));
-
-
                 GridPane.setConstraints(labels2[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
                 GameGrid2.getChildren().add(labels2[a][b]);
             }
         }
-
         // GameGrid 1 zu Stackpane 1 hinzufügen
         GameGrid.setAlignment(Pos.CENTER);
         GameGrid.setHgap(1);
@@ -244,12 +278,19 @@ public class MultiHostSpielerController implements Initializable, Serializable {
     }
 
     //ActionHandler für Label 2 (Grid 2) gedrückt
+    /**
+     * Funktion zum Schiessen des Host, wenn man auf ein Label Clickt
+     * @param a x-Koordinate
+     * @param b y-Koordinate
+     */
     private void label2click(int a, int b) {
         System.out.println("Grid 2 pressed in x: " + a + " y: " + b);
         Host.schuss(a, b);
     }
 
-
+    /**
+     * Funktion zum setzen eines Schiffes
+     */
     public void shippplace() {
         boolean shippaddo;
         int size;
@@ -356,7 +397,9 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         //System.out.println("Ungültiges Schiff");
         illegalesSchiff();
     }
-
+    /**
+     * Funktion wenn man ein illegales Schiff gesetzt hat
+     */
     private void illegalesSchiff() {
         System.err.println("Ungültiges Schiff");
         //labels[sx][sy].setStyle("-fx-background-color: #03fcf4");
@@ -371,6 +414,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
 
 
     //ActionHandler für Label 1 (Grid 1) gedrückt
+    /**
+     * ActionHandler für Label 1, um die zwei Koordinaten zum plazieren eines Schiffes zu bekommen
+     * @param a x-Koordinate
+     * @param b y-Koordinate
+     */
     private void labelclick(int a, int b) {
         System.out.println("x= " + a + " y= " + b);
 
@@ -393,21 +441,13 @@ public class MultiHostSpielerController implements Initializable, Serializable {
                 shippplace();
             }
         }
-
-        /*
-        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-        if(spieler == 0) {
-            if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b,1,0,false)) {
-                labels[a][b].setStyle("-fx-background-color: red");
-            }
-            labels[a][b].setStyle("-fx-background-color: pink");
-        }
-
-         */
-
     }
 
     //versetzt Spiel in Feuermodus
+    /**
+     * Startet das Spiel
+     * @param event
+     */
     public void gameStart(ActionEvent event) {
         if (spielstatus|| !Host.Connected) {
             System.err.println("Spiel bereits im gange!!");
@@ -419,14 +459,6 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
 
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
-        /*
-        System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
-        int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);
-        System.out.println("Schiff anzahl: "+penis.length);
-        for (int i = 0;i != penis.length;i++) {
-        System.out.println("Schiff "+i+" größe: "+penis[i]);
-        }
-         */
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         //System.out.println("Spieler: "+spieler);
         System.out.println("Spieler: " + spieler);
@@ -442,7 +474,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         gameStartButton.setVisible(false);
         initupdateTimeline();
     }
-
+    /**
+     * Button um zuruck zum MehrspielerMenu zu kommen.
+     * @param event
+     * @throws IOException
+     */
     public void BacktoMenu(ActionEvent event) throws IOException {
         if (updateTimeline != null) {
             updateTimeline.stop();
@@ -458,6 +494,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         window.show();
     }
 
+    /**
+     * initialize Funktionvon JavaFX
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -468,6 +509,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(), true);
     }
 
+    /**
+     * Speichert das Spiel
+     * @param event
+     * @throws IOException
+     */
     public void Speichern(ActionEvent event) throws IOException {
         if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
             System.err.println("nur speichern wenn du dran bist!");

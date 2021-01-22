@@ -18,14 +18,26 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
+/**
+ * Klasse fuer das Einzelspieler Menu
+ */
 public class EinzelspielerController implements Initializable {
 
 
+    /**
+     * initialize von JavaFX
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
     }
-
+    /**
+     * Button um zuruck zum MainMenu zu kommen
+     * @param event
+     * @throws IOException
+     */
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Scene s = new Scene(root);
@@ -34,7 +46,11 @@ public class EinzelspielerController implements Initializable {
         window.setTitle("MainMenu");
         window.show();
     }
-
+    /**
+     * Button um zum NeuesSpielMenu zu kommen
+     * @param event
+     * @throws IOException
+     */
     public void neuesSpiel(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("NeuesSpielMenu.fxml"));
         Scene s = new Scene(root);
@@ -44,6 +60,11 @@ public class EinzelspielerController implements Initializable {
         window.show();
     }
 
+    /**
+     * Button um ein Spiel zu laden
+     * @param event
+     * @throws IOException
+     */
     public void spielladen(ActionEvent event) throws IOException {
         //String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
         //System.out.println(currentPath);
@@ -89,18 +110,12 @@ public class EinzelspielerController implements Initializable {
                 System.err.println("Falsche Datei Ausgewählt!!");
                 return;
         }
-
-        /*
-        //Id für Bot Datei
-        fileChooser.setTitle("Wähle Bot Datei!");
-        fileChooser.setInitialDirectory(new File("C:\\Users\\Dennis\\Documents\\Hochschule Aalen\\Semester 3\\ProgrammierPraktikum\\Battleship\\save"));
-        System.out.println("Wähle Bot Datei!");
-        File i = fileChooser.showOpenDialog(theStage);
-        String id2 = i.getName();
-        System.out.println("");
-         */
     }
-
+    /**
+     * Button um zum BOTgegenBOTMenu zu kommen
+     * @param event
+     * @throws IOException
+     */
     public void BOTvsBOT(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("BOTgegenBOTMenu.fxml"));
         Scene s = new Scene(root);

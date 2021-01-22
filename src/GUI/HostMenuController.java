@@ -20,19 +20,40 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Klasse fuer das Host-Menu
+ */
 public class HostMenuController implements Initializable {
-
+    /**
+     * TextField zum zum Eingeben des Ports
+     */
     @FXML
     private TextField PortText;
+    /**
+     * TextField zum zum Eingeben der Spielfeldgroesse
+     */
     @FXML
     private TextField SpielGroesseText;
+    /**
+     * ChoiceBox zum Einstellen der Spielart
+     */
     @FXML
     private ChoiceBox<String> SpielartChoice;
+    /**
+     * ChoiceBox zum auswaehlen der Bot-Schwierigkeit
+     */
     @FXML
     private ChoiceBox<String> BotChoice;
+    /**
+     * zusatz Klasse mit verschiedenen Funktionen
+     */
     private nuetzlicheMethoden methoden;
 
-
+    /**
+     * initialize Funktion von JavaFX, welche die CHoiceBoxen initiealisiert
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         methoden = new nuetzlicheMethoden();
@@ -40,15 +61,16 @@ public class HostMenuController implements Initializable {
         BotChoice.getItems().add("Mittel");
         BotChoice.getItems().add("Schwer");
         BotChoice.setValue("Einfach");
-        //BotChoice.hide();
-
         SpielartChoice.getItems().add("Spieler");
         SpielartChoice.getItems().add("Bot");
         SpielartChoice.setValue("Spieler");
-
-
     }
 
+    /**
+     * Button um zuruck zum MainMenu zu kommen
+     * @param event
+     * @throws IOException
+     */
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Scene s = new Scene(root);
@@ -58,6 +80,11 @@ public class HostMenuController implements Initializable {
         window.show();
     }
 
+    /**
+     * Button um ein Spiel zu laden
+     * @param event
+     * @throws IOException
+     */
     public void ladenbutton(ActionEvent event) throws IOException {
         Node source = (Node) event.getSource();
         Window theStage = source.getScene().getWindow();
@@ -119,6 +146,11 @@ public class HostMenuController implements Initializable {
 
     }
 
+    /**
+     * Button-Funktion um den Server mit den angegebenen Werten zu Starten
+     * @param event
+     * @throws IOException
+     */
     public void StartButton(ActionEvent event) throws IOException {
         Integer p;
         try {

@@ -24,37 +24,85 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import java.util.concurrent.TimeUnit;
+/**
+ * Klasse für das Spiel: Mehrspieler-Client-Spieler
+ */
 public class MultiClientSpielerController implements Initializable, Serializable {
     private static final long serialVersionUID = 1337L;
-    //@FXML private AnchorPane anchoroanegamegrid;
-
+    /**
+     * linkes Spielfeld
+     */
     @FXML
     private StackPane StackPane;
+    /**
+     * rechtes Spielfeld
+     */
     @FXML
     private StackPane StackPane2;
-    //@FXML private Button placebutton;
+    /**
+     * Label über dem linken Feld
+     */
     @FXML
     private Label GameTopLabel;
+    /**
+     * Label über dem rechten Feld
+     */
     @FXML
     private Label GameTopLabel1;
-
+    /**
+     * Start-Button des Spiels.
+     */
     @FXML
     private Button gameStartButton;
-
+    /**
+     * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
+     */
     private boolean spielstatus = false;
+    /**
+     * linkes Spielfeld
+     */
     private GridPane GameGrid;
+    /**
+     * rechtes Spielfeld
+     */
     private GridPane GameGrid2;
+    /**
+     * Labels des linken Spielfelds zum anzeigen des Spiels
+     */
     private Label[][] labels;
+    /**
+     * Labels des rechten Spielfelds zum anzeigen des Spiels
+     */
     private Label[][] labels2;
-    private Integer x, bot, count = 0;
+    /**
+     * x ist die Spielfeldgroesse, count ist eine einfach Zähl Variable.
+     */
+    private Integer x, count = 0;
+    /**
+     * Variablen zum setzen von Schiffen
+     */
     private int sx = -1, sy = -1, ex = -1, ey = -1;
-
+    /**
+     * zusatz Klasse mit verschiedenen Funktionen
+     */
     private nuetzlicheMethoden methoden;
+    /**
+     * Ein Spiel aus dem Logic Package
+     */
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
-    private Timeline updateTimeline;
+    /**
+     * updateTimeline zum aktualisieren der Spielfelder und time zum aufrufen von shiplabel()
+     */
+    private Timeline updateTimeline,time;
+    /**
+     * KLasse Cleint, welche die Verbindung mit Host uebernimmt
+     */
     private Client Client;
 
-
+    /**
+     * Funktion um am linken Toplabel anzuzeigen, welche schiffe plaziert werden duerfen
+     */
     public void shipLabel() {
         StringBuilder s = new StringBuilder();
         s.append(Client.ships.length + " Schiffe mit groesse: ");
@@ -71,6 +119,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
         gameStartButton.setVisible(true);
     }
 
+    /**
+     * initialisiert updateTimeline
+     */
     private void initupdateTimeline() {
         if (updateTimeline != null) {
             System.err.println("Timeline existiert bereits!!!");
@@ -94,7 +145,10 @@ public class MultiClientSpielerController implements Initializable, Serializable
         updateTimeline.setCycleCount(Animation.INDEFINITE);
         updateTimeline.play();
     }
-
+    /**
+     * initialisiert das Spiel
+     * @param Client Client aus dem JoinMenu
+     */
     public void setVariables(Client Client) {
         gameStartButton.setVisible(false);
         GameTopLabel.setAlignment(Pos.CENTER);
@@ -120,39 +174,11 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }));
         time.setCycleCount(Animation.INDEFINITE);
         time.play();
-
-
     }
 
-    private Timeline time;
-    /*
-    private Timeline abschussLabel;
-
-    private void setAbschussLabel(){
-        if (!spielstatus  || GOETTLICHESSPIELDERVERNICHTUNGMITbot==null){
-            return;
-        }
-        abschussLabel = new Timeline(new KeyFrame(new Duration(100),event -> {
-            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()){
-                abschussLabel.stop();
-            }
-            int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-            if (spieler==0){
-                GameTopLabel.setText("Gegner schießt!");
-                GameTopLabel1.setText("");
-            }else if (spieler==1){
-                GameTopLabel.setText("");
-                GameTopLabel1.setText("Du schießt");
-            }
-        }));
-        abschussLabel.setCycleCount(Animation.INDEFINITE);
-        abschussLabel.play();
-    }
-
-
+    /**
+     * Aktuallisiert die beiden Grids des Spiels.
      */
-
-
     public void GridUpdater() {
         int feld[][][] = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld();
         //for (int s=0;s<2;s++){
@@ -204,6 +230,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
 
 
     //Grid und Labels initialisieren
+    /**
+     * initialisiert die Grids und Labels
+     */
     public void Gridinit() {
         //initialisieren Label und Grid (1)
         GameGrid = new GridPane();
@@ -265,18 +294,25 @@ public class MultiClientSpielerController implements Initializable, Serializable
     }
 
     //ActionHandler für Label 2 (Grid 2) gedrückt
+    /**
+     * Funktion zum Schiessen des Client, wenn man auf ein Label Clickt
+     * @param a x-Koordinate
+     * @param b y-Koordinate
+     */
     private void label2click(int a, int b) {
         System.out.println("Grid 2 pressed in x: " + a + " y: " + b);
         Client.schuss(a, b);
     }
 
-
+    /**
+     * Funktion zum setzen eines Schiffes
+     */
     public void shippplace() {
         boolean shippaddo;
         int size;
         System.out.println("Place ship");
         System.out.println("sx= " + sx + " sy= " + sy + " ex= " + ex + " ey= " + ey);
-        System.out.println("");
+        System.out.println("________________________________________________________ ");
         //sx == ex horizontal
         //sy == ey vertikal
         //sonst fail
@@ -402,7 +438,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
         //System.out.println("Ungültiges Schiff");
         illegalesSchiff();
     }
-
+    /**
+     * Funktion wenn man ein illegales Schiff gesetzt hat
+     */
     private void illegalesSchiff() {
         System.err.println("Ungültiges Schiff");
         //labels[sx][sy].setStyle("-fx-background-color: #03fcf4");
@@ -417,6 +455,11 @@ public class MultiClientSpielerController implements Initializable, Serializable
 
 
     //ActionHandler für Label 1 (Grid 1) gedrückt
+    /**
+     * ActionHandler für Label 1, um die zwei Koordinaten zum plazieren eines Schiffes zu bekommen
+     * @param a x-Koordinate
+     * @param b y-Koordinate
+     */
     private void labelclick(int a, int b) {
         System.out.println("x= " + a + " y= " + b);
 
@@ -439,21 +482,13 @@ public class MultiClientSpielerController implements Initializable, Serializable
                 shippplace();
             }
         }
-
-        /*
-        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-        if(spieler == 0) {
-            if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b,1,0,false)) {
-                labels[a][b].setStyle("-fx-background-color: red");
-            }
-            labels[a][b].setStyle("-fx-background-color: pink");
-        }
-
-         */
-
     }
 
     //versetzt Spiel in Feuermodus
+    /**
+     * Startet das Spiel
+     * @param event
+     */
     public void gameStart(ActionEvent event) {
         if (spielstatus) {
             System.err.println("Spiel bereits im gange!!");
@@ -463,38 +498,21 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Es wurden nicht alle Schiffe hinzugefügt!");
             return;
         }
-        //StartButton.setOpacity(0.5);
         spielstatus = true;
         gameStartButton.setVisible(false);
         System.out.println("Spielstatus: " + spielstatus);
-        //GameTopLabel.setText("Deine Schiffe:");
-        //GameTopLabel1.setText("Du schießt jetzt hier:");
-
-
-        /*
-        System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
-        int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);
-        System.out.println("Schiff anzahl: "+penis.length);
-        for (int i = 0;i != penis.length;i++) {
-        System.out.println("Schiff "+i+" größe: "+penis[i]);
-        }
-         */
         methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot, GameTopLabel, GameTopLabel1);
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         //System.out.println("Spieler: "+spieler);
         System.out.println("AbschussSpieler: " + spieler);
-        /*
-        GameTopLabel.setText("Spieler: "+spieler);
-        if (spieler == 0) {
-            GameTopLabel.setText("Bot schießt");
-            //Clinet Schießt
-            GameTopLabel.setText("Du schießt");
-        }
-         */
         GridUpdater();
         initupdateTimeline();
     }
-
+    /**
+     * Button um zuruck zum MehrspielerMenu zu kommen.
+     * @param event
+     * @throws IOException
+     */
     public void BacktoMenu(ActionEvent event) throws IOException {
         if (updateTimeline != null) {
             updateTimeline.stop();
@@ -512,6 +530,11 @@ public class MultiClientSpielerController implements Initializable, Serializable
         window.show();
     }
 
+    /**
+     * initialize Funktion von JavaFX
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -522,6 +545,11 @@ public class MultiClientSpielerController implements Initializable, Serializable
         logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(), true);
     }
 
+    /**
+     * Speichert das Spiel
+     * @param event
+     * @throws IOException
+     */
     public void Speichern(ActionEvent event) throws IOException {
         if (Client.dasSpiel.getAbschussSpieler() == 0) {
             System.err.println("Du kannst nur speichern, wenn du dran bist!");

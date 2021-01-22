@@ -11,26 +11,82 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+/**
+ * Klasse fuer den Multiplayer-Spieler-Host
+ */
 public class Host {
-
+    /**
+     * Verbindungs-Server-Socket
+     */
     private ServerSocket ss;
+    /**
+     * Verbindungs-Socket
+     */
     private Socket s;
+    /**
+     * Port und Feldgroesse
+     */
     private int port, Feldg;
+    /**
+     * ließt die ankommenden Nachrichten des Client
+     */
     private BufferedReader in;
+    /**
+     * schreibt die Nachrichten fuer den Client
+     */
     private OutputStreamWriter out;
+    /**
+     * Variable die angibt ob das Spiel gestartet ist
+     */
     private boolean Spielstartet = false;
+    /**
+     * true wenn es einen Verbindungsfehler gibt
+     */
     public boolean ERROR = false;
+    /**
+     * Connected ist true wenn ein Client sich mit dem Server verbunden hat.
+     * <br>
+     * load gibt an ob ein geladenes Spiel genutzt wird
+     */
     public boolean Connected = false, change = false, load = false;
+    /**
+     * true wenn gerade geschossen wird oder geschossen wurde
+     */
+    private boolean shooting = true;
+    /**
+     * true wenn man den Server erstellen konnte
+     */
     public boolean Hosted = false;
+    /**
+     * nachrichten die geschickt oder versendet werden
+     * <br>
+     * id zum Speichern des Spiels
+     */
     public String nachricht = "", id;
+    /**
+     * Spiel aus dem Logic-package
+     */
     private Spiel dasSpiel;
 
+    /**
+     * Nromaler Konstrukter von Host
+     * @param p Port
+     * @param g Feldgrosse
+     * @param dasSpiel Bot-Schwierigkeit
+     */
     public Host(int p, int g, Spiel dasSpiel) {
         port = p;
         Feldg = g;
         this.dasSpiel = dasSpiel;
     }
 
+    /**
+     * Konstruktor zum laden eines Spielstandes
+     * @param p Port
+     * @param g Feldgroesse
+     * @param dasSpiel gespeichertes Spiel
+     * @param id Spielstand-ID
+     */
     public Host(int p, int g, Spiel dasSpiel, String id) {
         load = true;
         port = p;
@@ -39,6 +95,9 @@ public class Host {
         this.id = id;
     }
 
+    /**
+     * initialisiert den Server,sendet je nach dem die Feldgroesse oder Spielstand-ID
+     */
     public void init() {
         Runnable Runnable = () -> {
             ss = null;
@@ -105,7 +164,10 @@ public class Host {
 
 
     }
-
+    /**
+     * Funktion zum der Nachrichten an den Host
+     * @param antwort Die Nachricht fuer den Host
+     */
     public void sendSocket(String antwort) {
         System.out.print("Zu Client: " + antwort + "\n");
         try {
@@ -119,7 +181,10 @@ public class Host {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Funktion um die Nachricht vom Host zu bekommen
+     * @return Nachricht vom Host
+     */
     public String receiveSocket() {
         String nachricht = "ERROR";
         try {
@@ -134,7 +199,10 @@ public class Host {
         }
         return nachricht;
     }
-
+    /**
+     * sendet die Plazierten Schieffgroessen an den Client
+     * @param shipSizes Array mit den Schiffgroesse
+     */
     public void senships(int[] shipSizes) {
         if (Spielstartet) {
             System.err.println("Spiel bereit gestartet!!");
@@ -162,7 +230,9 @@ public class Host {
         Thread t = new Thread(Runnable);
         t.start();
     }
-
+    /**
+     * Schliesst die Verbindung
+     */
     public void CutConnection() {
         ERROR = true;
         System.out.println("Closing Connection!");
@@ -188,8 +258,10 @@ public class Host {
         }
     }
 
-    private boolean shooting = true;
 
+    /**
+     * Funktion zum schiessen des Host.
+     */
     public void schuss(int x, int y) {
         if (dasSpiel.getAbschussSpieler() != 1 || !dasSpiel.isStarted() || dasSpiel.isOver() || shooting) {
             System.err.println("NIX SCHUSS");
@@ -225,7 +297,10 @@ public class Host {
         Thread t = new Thread(runnable);
         t.start();
     }
-
+    /**
+     * Funktion um auf den Schuss des Clients zu antworten
+     * @param nachricht Schuss-Nachricht des Hosts
+     */
     private void Clientshot(String nachricht) {
         int x = Integer.parseInt(nachricht.split(" ")[1]) - 1;
         int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
@@ -257,7 +332,10 @@ public class Host {
         }
         sonderNachrichten(z);
     }
-
+    /**
+     * Moegliche vom Client
+     * @param nachricht Sondernachricht vom Host
+     */
     private void sonderNachrichten(String nachricht) {
         if (nachricht.contains("save")) {
             new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1]);
@@ -270,7 +348,10 @@ public class Host {
         }
 
     }
-
+    /**
+     * Speichert das Spiel
+     * @param hash Speicher-ID
+     */
     public void save(String hash) {
         sendSocket("save " + hash);
         if (!receiveSocket().contains("done")) {

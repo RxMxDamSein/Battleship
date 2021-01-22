@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Haupt-Menu-Controller von dem Spiel
+ */
 public class MainMenuController implements Initializable {
     public static Stage primaryStage;
 
@@ -29,6 +32,11 @@ public class MainMenuController implements Initializable {
         //nuetzlicheMethoden.setStageCenter();
     }
 
+    /**
+     *
+     * @param event
+     * @throws IOException
+     */
     public void einzelspieler(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("EinzelspielerMenu.fxml"));
         Scene s = new Scene(root);

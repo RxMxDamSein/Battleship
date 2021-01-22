@@ -27,43 +27,107 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import java.util.concurrent.TimeUnit;
+/**
+ * Klasse für das Spiel: Mehrspieler-Client-Bot
+ */
 public class MultiClientBotController implements Initializable, Serializable {
     private static final long serialVersionUID = 1337L;
-
-
-    //@FXML private AnchorPane anchoroanegamegrid;
+    /**
+     * Slider zum einstellen der Botgeschwindigkeit
+     */
     @FXML
     private Slider BotSpeedSlider;
+    /**
+     * linkes Spielfeld
+     */
     @FXML
     private StackPane StackPane;
+    /**
+     * rechtes Spielfeld
+     */
     @FXML
     private StackPane StackPane2;
-    //@FXML private Button placebutton;
+    /**
+     * Label über dem linken Feld
+     */
     @FXML
     private Label GameTopLabel;
+    /**
+     * Label über dem rechten Feld
+     */
     @FXML
     private Label GameTopLabel1;
+    /**
+     * Start-Button des Spiels.
+     */
     @FXML
     private Button gameStartButton;
+    /**
+     * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
+     * <br>
+     * changingSlider ist true wenn der Slider veraendert worden ist
+     */
     private boolean spielstatus = false,changingSlider=false;
+    /**
+     * linkes Spielfeld
+     */
     private GridPane GameGrid;
+    /**
+     * rechtes Spielfeld
+     */
     private GridPane GameGrid2;
+    /**
+     * linke Labels des Spielfeld
+     */
     private Label[][] labels;
+    /**
+     * rechte Labels des Spielfeld
+     */
     private Label[][] labels2;
+    /**
+     * x ist die Spielfeldgroesse
+     * <br>
+     * count ist eine einfach Zaehl-Variable
+     */
     private Integer x, bot, count = 0;
+    /**
+     * Variablen zum setzen von Schiffen
+     */
     private int sx = -1, sy = -1, ex = -1, ey = -1;
+    /**
+     * Standartgeschwindigkeit der Timeline
+     */
     private static final int sleeptime0 = 1000;
+    /**
+     * neu eingestellte Geschwindigkeit fuer den Bot
+     */
     public static int sleeptime = sleeptime0;
-
+    /**
+     * Klasse mit nuetzliche Methoden
+     */
     private nuetzlicheMethoden methoden;
+    /**
+     * Ein Spiel aus dem Logic Packege
+     */
     private Spiel GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+    /**
+     * updateTimeline um das Spiel zu aktualissieren
+     */
     private Timeline updateTimeline;
+    /**
+     * BotClient-Klasse, welche die Verbindung zum Host uebernimmt
+     */
     private BotClient Client;
 
-    public MultiClientBotController() {
-    }
 
+    /**
+     * int Variable um ein Upadete zu foren
+     */
     private int forceUpdate=0;
+    /**
+     * initialisiert und startet die updateTimeline
+     */
     private void initupdateTimeline() {
         if (updateTimeline != null) {
             System.err.println("Timeline existiert bereits!!!");
@@ -98,6 +162,10 @@ public class MultiClientBotController implements Initializable, Serializable {
         updateTimeline.play();
     }
 
+    /**
+     * initialisiert das Spiel
+     * @param Client BotClient aus dem JoinMenu
+     */
     public void setVariables(BotClient Client) {
         sleeptime=sleeptime0;
         methoden = new nuetzlicheMethoden(Client.dasSpiel.getSizeX());
@@ -113,8 +181,13 @@ public class MultiClientBotController implements Initializable, Serializable {
         spielstatus = true;
     }
 
-
+    /**
+     * einfache Zaehlvariable
+     */
     private int ccount=0;
+    /**
+     * Aktuallisiert die beiden Grids des Spiels.
+     */
     public void GridUpdater() {
 
         int feld[][][] =Client.dasSpiel.getFeld();
@@ -170,7 +243,9 @@ public class MultiClientBotController implements Initializable, Serializable {
     }
 
 
-    //Grid und Labels initialisieren
+    /**
+     * initialisiert die Grids und Labels
+     */
     public void Gridinit() {
         //initialisieren Label und Grid (1)
         GameGrid = new GridPane();
@@ -236,7 +311,9 @@ public class MultiClientBotController implements Initializable, Serializable {
         System.out.println("Grid 2 pressed in x: " + a + " y: " + b);
     }
 
-
+    /**
+     * Funktion zum setzen eines Schiffes
+     */
     public void shippplace() {
         boolean shippaddo;
         int size;
@@ -369,6 +446,9 @@ public class MultiClientBotController implements Initializable, Serializable {
         illegalesSchiff();
     }
 
+    /**
+     * Funktion wenn man ein illegales Schiff gesetzt hat
+     */
     private void illegalesSchiff() {
         System.err.println("Ungültiges Schiff");
         //labels[sx][sy].setStyle("-fx-background-color: #03fcf4");
@@ -382,7 +462,11 @@ public class MultiClientBotController implements Initializable, Serializable {
     }
 
 
-    //ActionHandler für Label 1 (Grid 1) gedrückt
+    /**
+     * ActionHandler für Label 1, um die zwei Koordinaten zum plazieren eines Schiffes zu bekommen
+     * @param a x-Koordinate
+     * @param b y-Koordinate
+     */
     private void labelclick(int a, int b) {
         System.out.println("x= " + a + " y= " + b);
 
@@ -405,21 +489,14 @@ public class MultiClientBotController implements Initializable, Serializable {
                 shippplace();
             }
         }
-
-        /*
-        int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-        if(spieler == 0) {
-            if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.shoot(a,b,1,0,false)) {
-                labels[a][b].setStyle("-fx-background-color: red");
-            }
-            labels[a][b].setStyle("-fx-background-color: pink");
-        }
-
-         */
-
     }
 
     //versetzt Spiel in Feuermodus
+
+    /**
+     * Startet das Spiel
+     * @param event
+     */
     public void gameStart(ActionEvent event) {
         if (spielstatus) {
             System.err.println("Spiel bereits im gange!!");
@@ -435,17 +512,7 @@ public class MultiClientBotController implements Initializable, Serializable {
         gameStartButton.setVisible(false);
         System.out.println("Spielstatus: " + spielstatus);
         GameTopLabel1.setText("Du schießt jetzt hier:");
-
-        /*
-        System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
-        int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);
-        System.out.println("Schiff anzahl: "+penis.length);
-        for (int i = 0;i != penis.length;i++) {
-        System.out.println("Schiff "+i+" größe: "+penis[i]);
-        }
-         */
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
-        //System.out.println("Spieler: "+spieler);
         System.out.println("Spieler: " + spieler);
         GameTopLabel.setText("Spieler: " + spieler);
         if (spieler == 0) {
@@ -455,7 +522,11 @@ public class MultiClientBotController implements Initializable, Serializable {
         }
         initupdateTimeline();
     }
-
+    /**
+     * Button um zuruck zum MehrspielerMenu zu kommen.
+     * @param event
+     * @throws IOException
+     */
     public void BacktoMenu(ActionEvent event) throws IOException {
         if (updateTimeline != null) {
             updateTimeline.stop();
@@ -470,6 +541,11 @@ public class MultiClientBotController implements Initializable, Serializable {
         window.show();
     }
 
+    /**
+     *  initialize methode von JavaFX, welche den Botslider einstellt
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gameStartButton.setVisible(false);
@@ -486,6 +562,9 @@ public class MultiClientBotController implements Initializable, Serializable {
             }
         });
     }
+    /**
+     * Funktion um die Geschwindigkeit des Bots zu aendern anhand des Sliders
+     */
     private void changeSlider() {
         if (changingSlider)
             return;
@@ -512,7 +591,10 @@ public class MultiClientBotController implements Initializable, Serializable {
     public void printfeld(ActionEvent event) {
         logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(), true);
     }
-
+    /**
+     * Speichert das Spiel
+     * @param event
+     */
     public void Speichern(ActionEvent event) throws IOException {
         if (Client.dasSpiel.getAbschussSpieler() == 0) {
             System.err.println("Du kannst nur speichern, wenn du dran bist!");
