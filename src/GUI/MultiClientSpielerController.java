@@ -511,12 +511,12 @@ public class MultiClientSpielerController implements Initializable, Serializable
     public void BacktoMenu(ActionEvent event) throws IOException {
         if (updateTimeline != null) {
             updateTimeline.stop();
+            System.out.println("timeline should be stopped!");
         }
         time.stop();
-        try {
-            Client.CutConnection();
-        } catch (Exception e) {
-        }
+
+        Client.CutConnection();
+
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

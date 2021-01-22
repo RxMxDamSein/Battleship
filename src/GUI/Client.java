@@ -141,12 +141,18 @@ public class Client {
         ERROR = true;
         System.out.println("Closing Connection!");
         try {
-            s.shutdownInput();
-            s.shutdownOutput();
-            s.close();
-            in.close();
-            out.close();
-
+            if(s!=null){
+                s.setSoTimeout(10);
+                s.shutdownInput();
+                s.shutdownOutput();
+                s.close();
+            }
+            if(in!=null){
+                in.close();
+            }
+            if(out!=null){
+                out.close();
+            }
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
             e.printStackTrace();

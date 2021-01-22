@@ -35,7 +35,7 @@ public class BotClient {
                 in = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 out = new OutputStreamWriter(s.getOutputStream());
                 String z = receiveSocket();
-                if (z.contains("load")) {
+                if (z!=null && z.contains("load")) {
                     loaded = true;
                     SAFE_SOME safe_some = SAFE_SOME.load(z.split(" ")[1]);
                     dasSpiel = safe_some.spiele[0];
@@ -67,12 +67,12 @@ public class BotClient {
                     }
                     sendSocket("ready");
                     z = receiveSocket();
-                    if (z.contains("shot"))
+                    if (z!=null && z.contains("shot"))
                         Servershot(z);
                     else
                         sonderNachrichten(z);
 
-                } else if (z.contains("size")) {
+                } else if (z!=null && z.contains("size")) {
                     int x = Integer.parseInt(z.split(" ")[1]), y = Integer.parseInt(z.split(" ")[1]);
                     switch (bot) {
                         case 1:
@@ -94,7 +94,7 @@ public class BotClient {
                     status = 1;
                     sendSocket("next");
                     z = receiveSocket();
-                    if (!z.contains("ships")) {
+                    if (z==null || !z.contains("ships")) {
                         System.err.println("Ships von Server erwartet!!");
                         CutConnection();
                         return;
@@ -184,15 +184,22 @@ public class BotClient {
         ERROR = true;
         System.out.println("Closing Connection!");
         try {
-            s.shutdownInput();
-            s.shutdownOutput();
-            s.close();
-            in.close();
-            out.close();
+            if(s!=null){
+                s.setSoTimeout(10);
+                s.shutdownInput();
+                s.shutdownOutput();
+                s.close();
+            }
+            if(in!=null){
+                in.close();
+            }
+            if(out!=null){
+                out.close();
+            }
 
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -220,8 +227,9 @@ public class BotClient {
             sendSocket("shot " + (x + 1) + " " + (y + 1));
             String z = receiveSocket();
             System.out.println(z);
-            if (!z.contains("answer")) {
+            if (z==null ||!z.contains("answer")) {
                 CutConnection();
+                return;
             }
             if (z.contains("1")) {
                 dasSpiel.shoot(x, y, 1, 1, false);
@@ -283,7 +291,7 @@ public class BotClient {
         }
         sendSocket(antwort);
         String z = receiveSocket();
-        if (z.contains("shot")) {
+        if (z!=null && z.contains("shot")) {
             Servershot(z);
             return;
         }
@@ -291,11 +299,11 @@ public class BotClient {
     }
 
     private void sonderNachrichten(String nachricht) {
-        if (nachricht.contains("save")) {
+        if (nachricht!=null && nachricht.contains("save")) {
             new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1]);
             sendSocket("done");
             CutConnection();
-        } else if (nachricht.contains("next")) {
+        } else if (nachricht!=null && nachricht.contains("next")) {
             schuss();
         } else {
             CutConnection();
@@ -320,7 +328,7 @@ public class BotClient {
             dasSpiel.starteSpiel(0);
             sendSocket("ready");
             String z = receiveSocket();
-            if (z.contains("shot")) {
+            if (z!=null && z.contains("shot")) {
                 Servershot(z);
             } else {
                 sonderNachrichten(z);
