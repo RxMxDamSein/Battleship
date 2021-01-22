@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class BotHost {
 
@@ -49,10 +50,16 @@ public class BotHost {
         Runnable Runnable = () -> {
             ss = null;
             try {
+
+
                 ss = new ServerSocket(port);
+
+                ss.setSoTimeout(60000);
+                ss.setReuseAddress(true);
                 Hosted = true;
                 System.out.println("Waiting for client ...");
                 s = ss.accept();
+                s.setReuseAddress(true);
                 System.out.println("Connection established");
                 Connected = true;
                 in = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -96,7 +103,9 @@ public class BotHost {
                     }
                 }
 
-            } catch (IOException e) {
+            } catch (SocketException e) {
+                System.out.println("Socket closed");
+            } catch (IOException e){
                 System.err.println("Can not create Socket!");
                 ERROR = true;
                 e.printStackTrace();
@@ -170,9 +179,21 @@ public class BotHost {
         ERROR = true;
         System.out.println("Closing Connection!");
         try {
-            s.close();
-            in.close();
-            out.close();
+            if(s!=null){
+                s.setSoTimeout(100);
+                s.shutdownInput();
+                s.shutdownOutput();
+                s.close();
+            }
+            ss.setSoTimeout(100);
+            if(in!=null){
+                in.close();
+            }
+            if(out!=null){
+                out.close();
+            }
+            ss.close();
+
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
             e.printStackTrace();

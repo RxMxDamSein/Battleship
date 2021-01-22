@@ -89,6 +89,7 @@ public class MultiClientBotController implements Initializable, Serializable {
 
             }
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
+                Client.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {
