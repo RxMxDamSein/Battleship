@@ -1,8 +1,15 @@
 package logic;
 
+/**
+ * Die mittlere Bot Schwierigkeitsstufe
+ */
 public class Bot_lvl_2 extends Bot {
 
-
+    /**
+     * kreiert das Botobjekt
+     * @param x Spielbrettbreite
+     * @param y Spielbretthöhe
+     */
     public Bot_lvl_2(int x, int y) {
         super(x, y);
     }

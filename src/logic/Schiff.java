@@ -3,14 +3,26 @@ package logic;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Eine Klasse für Schiffsobjekte
+ * und nützliche Funktionen zur Verwendung dieser
+ */
 public class Schiff implements Serializable {
+    /** Serialization Nummer */
     private static final long serialVersionUID = 1337L;
+    /** Der Spieler dem das Schiff gehört */
     public int spieler;
+    /** Länge des Schiffes */
     public int schifflaenge;
+    /** gibt an ob das Schiff zerstört ist oder nicht */
     public boolean schifflebt;
+    /** XAnkerpunkt des Schiffes */
     public int xOPos;
+    /** YAnkerpunkt des Schiffes */
     public int yOPos;
+    /** gibt an ob das Schiff horizontal oder vertical ist */
     public boolean horizontal;
+    /** ein Array über jede Schiffsstelle, das angibt ob es an dieser Stelle getroffen wurde */
     public boolean[] getroffen;
 
     /**
@@ -70,6 +82,11 @@ public class Schiff implements Serializable {
         return true;
     }
 
+    /**
+     * Setzt alle Felder des angegebenen Schiffes auf dem Spielbrett auf den Wert 4, d.h. auf den Wert eines zerstörten Schiffes
+     * @param s das zerstörte Schiffsobjekt
+     * @param f das Spielbrett
+     */
     public static void killShipfields(Schiff s, int[][][] f) {
         for (int i = 0; i < s.schifflaenge; i++) {
             if (s.horizontal) {

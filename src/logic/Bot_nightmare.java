@@ -1,11 +1,19 @@
 package logic;
-
 import java.io.Serializable;
 
+/**
+ * Dies ist ein schummelnder Bot
+ */
 public class Bot_nightmare extends Bot implements Serializable {
-    private static final long serialVersionUID = 1337L;
+    /** Das Spielobjekt des Gegners zum schummeln */
     public Spiel cheat;
 
+    /**
+     * erstellt einen Nightmare Bot
+     * @param x Spielfeldbreite
+     * @param y Spielfeldhöhe
+     * @param c Gegnerspielobjekt
+     */
     public Bot_nightmare(int x, int y, Spiel c) {
         super(x, y);
         cheat = c;
@@ -16,6 +24,7 @@ public class Bot_nightmare extends Bot implements Serializable {
         return Bot.addShipsRDMly(s, this.dasSpiel, this.rdm, this.x, this.y);
     }
 
+    /** er merkt sich wo er zuletzt hingeschossen hat um die Suche nach Schiffen zu beschleunigen */
     private int lx = 0;
 
     @Override

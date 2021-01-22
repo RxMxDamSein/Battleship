@@ -1,7 +1,6 @@
 package GUI;
 
 import logic.*;
-import logic.netCode.Server;
 import logic.save.SAFE_SOME;
 import sun.security.provider.ConfigFile;
 

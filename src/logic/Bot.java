@@ -1,21 +1,36 @@
 package logic;
 
-
 import logic.save.ResourceManager;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Abstrakte Klasse zur Implementierung von Bot Schwierigkeitsgraden
+ */
 public abstract class Bot implements Serializable {
+    /** Serialization Nummer */
     private static final long serialVersionUID = 1337L;
+    /** das Spielobjekt des Botes */
     public Spiel dasSpiel;
-    protected int x, y;
+    /** Spielfeldbreite */
+    protected int x;
+    /** Spielfeldhöhe */
+    protected int y;
+    /** Zufallsgenerator */
     public Random rdm;
+    /** Zeigt an ob zuletzt ein Schiff getroffen wurde, dass es nun zu versenken gilt */
     public boolean slayship = false; //true if you hit ship and not sunk
-    public int slayX, slayY;
+    /** Eine X Koordinate des zu versenkendem Schiffes */
+    public int slayX;
+    /** Eine Y Koordinate des zu versunkendem Schiffes*/
+    public int slayY;
 
+    /**
+     * Gibt eine Stelle zurück die zu dem angeschossenen Schiff gehören könnte
+     * @return int[2] [0] X Koordinate [1] Y Koordinate
+     */
     int[] getSlayShoot() {
 
         //System.out.println("SLAYSHIP!");
@@ -104,18 +119,14 @@ public abstract class Bot implements Serializable {
 
     /**
      * gibt zurück ob der Bot verloren hat!
-     * genau wie is Over Function von Spiel
-     *
-     * @return true Bot hat verloren false Bott lebt noch
+     * @return true Bot hat verloren, false Bott lebt noch
      */
     public boolean isFinOver() {
         return dasSpiel.isOver();
     }
 
     /**
-     * Bott Intialisierung des Spielfelds
-     * x und y werte müssen >0 sein!
-     *
+     * Bott Initialisierung
      * @param x Spielbreite
      * @param y Spielhöhe
      */
@@ -132,19 +143,16 @@ public abstract class Bot implements Serializable {
 
     /**
      * Funktion die Schiffe dem Bott hinzufügt
-     * Bitte Längen in absteigender Reihenfolge sonst geht Bot_schwer nicht!
-     *
      * @param s {5,4,3,2,1} legt beim Bott 5 Schiffe an mit den Längen(5,4,3,2,1)
-     * @return true wenn erfolgreich false wenn fehler
+     * @return true wenn erfolgreich, false im Fehlerfall
      */
     public abstract boolean shipSizesToAdd(int[] s);
 
     /**
      * schießt beim Bot ein Feld ab
-     *
-     * @param x
-     * @param y
-     * @return erfolg
+     * @param x X Koordinate
+     * @param y Y Koordinate
+     * @return -1 Misslungen, 0 Wasser, 1 Treffer, 4 versenkt
      */
     public int abschiesen(int x, int y) {
         int p_hit = dasSpiel.getFeld()[0][x][y];
@@ -161,15 +169,13 @@ public abstract class Bot implements Serializable {
 
     /**
      * berechnet die nächste Stelle an die der Bot schießt!
-     *
      * @return {x,y}
      */
     public abstract int[] getSchuss();
 
     /**
-     * Falls man das Spielobjekt des Bots gebrauchen kann #ToterCode
-     *
-     * @return Spiel
+     * gibt das Spielobjekt des Bots zurück
+     * @return Spielobjekt
      */
     public Spiel getDasSpiel() {
         return dasSpiel;
@@ -177,11 +183,10 @@ public abstract class Bot implements Serializable {
 
     /**
      * Hilfsfunktion zum zurücksetzten eines Spielbretts
-     * z.Bsp. falls man die Schiffe schlecht gesetzt hat und neu anfagen will
-     *
-     * @param f       feld
-     * @param spieler wessens feld soll gelöscht werden
-     * @return erfolg
+     * z.Bsp. falls man die Schiffe schlecht gesetzt hat und neu anfangen will
+     * @param f       Spielfeld
+     * @param spieler wessen Feld soll gelöscht werden
+     * @return true Erfolg, false Misslungen
      */
     public static boolean resetFeld(int[][][] f, int spieler) {
         if (spieler < 0 || spieler > 1)
@@ -199,9 +204,8 @@ public abstract class Bot implements Serializable {
     }
 
     /**
-     * Hilfsfunktion um aus der Schiffsliste die Laengen zu extrahieren
-     *
-     * @param s Arraylist<Schiff>
+     * Hilfsfunktion um aus der Schiffsliste die Längen der Schiffe zu extrahieren
+     * @param s Arraylist-Schiff
      * @return {1,2,3,4,5} // alles Schiffslängen in einem int array
      */
     public static int[] getShipSizes(ArrayList<Schiff> s) {
@@ -215,12 +219,11 @@ public abstract class Bot implements Serializable {
 
     /**
      * Setzt das angegebene Feld auf der Spielseite des Gegners vom Bot ausgesehen
-     * dient dazu, dass der Bot weiß was er getroffen hat und ob er wetwas versenkt hat!
-     *
+     * dient dazu, dass der Bot weiß was er getroffen hat und ob er etwas versenkt hat!
      * @param x        XKoordinate
      * @param y        YKoordinate
      * @param wert     dieser wert wird eingesetzt feld[1][x][y]=wert
-     * @param versenkt true das hier liegende Schiff wurde versenkt -> daneben muss Wasser sein für KI
+     * @param versenkt true das hier liegende Schiff wurde versenkt, d.h. daneben muss Wasser sein für KI
      */
     public void setSchussFeld(int x, int y, int wert, boolean versenkt) {
         int[][][] f = dasSpiel.getFeld();
@@ -244,6 +247,12 @@ public abstract class Bot implements Serializable {
         }
     }
 
+
+    /**
+     * Speichert das Botobjekt
+     * @param id Die ID anhand der das Spiel wieder geladen werden kann
+     * @return true Erfolg, false Misslungen
+     */
     public boolean saveGame(String id) {
         try {
             ResourceManager.save(this, id);
@@ -255,6 +264,11 @@ public abstract class Bot implements Serializable {
         return true;
     }
 
+    /**
+     * lädt ein Botobjekt
+     * @param id Die ID anhand der das Spiel wieder geladen werden kann
+     * @return Bot bei Erfolg, null falls Misslungen
+     */
     public static Bot load(String id) {
         try {
             return (Bot) ResourceManager.load(id);
@@ -267,7 +281,17 @@ public abstract class Bot implements Serializable {
         return null;
     }
 
-
+    /**
+     * Hilfsfunktoin um das größtmögliche Schiff zu platzieren
+     * @param s Schiffslängen der zu platzierenden Schiffe
+     * @param sa Array das anzeigt ob ein Schiff bereit platziert wurde
+     * @param dasSpiel Spielobjekt in das das Schiff hinzugefügt werden soll
+     * @param x Spielfeldbreite
+     * @param y Spielfeldhöhe
+     * @param h Horizontal oder vertikal
+     * @param j Ab welchen Schiff angefangen wird zu versuchen.
+     * @return true Erfolg, False Misslungen
+     */
     public static boolean addbiggestship(int[] s, boolean[] sa, Spiel dasSpiel, int x, int y, boolean h, int j) {
         int i;
         for (i = j; i >= 0; i--) {
@@ -284,6 +308,16 @@ public abstract class Bot implements Serializable {
         return false;
     }
 
+    /**
+     * Fügt Schiffe an zufällige Stellen hinzu.
+     * Ist dies nicht möglich, werden die Schiffe so effizient wie möglich platziert.
+     * @param s Die Schiffslängen zum hinzufügen
+     * @param dasSpiel das Spielobjekt zudem die Schiffe hinzugefügt werden.
+     * @param rdm Zufallsgenerator
+     * @param width Spielfeldbreite
+     * @param height Spielfeldhöhe
+     * @return true bei Erfolg
+     */
     public static boolean addShipsRDMly(int[] s, Spiel dasSpiel, Random rdm, int width, int height) {
         boolean v = dasSpiel.getVerbose();
         dasSpiel.setVerbose(false);
@@ -389,6 +423,14 @@ public abstract class Bot implements Serializable {
         return true;
     }
 
+    /**
+     * Gibt eine mögliche Schussposition zurück, diese ist zufällig
+     * @param dasSpiel das Spielobjekt auf dem geschossen wird
+     * @param rdm Zufallsgenerator
+     * @param width Spielfeldbreite
+     * @param height Spielfeldhöhe
+     * @return int[2] [0] X Koordinate, [1] Y Koordinate
+     */
     protected static int[] rdmSchuss(Spiel dasSpiel, Random rdm, int width, int height) {
         int zx = 0, zy = 0, count = 0;
         do {
@@ -401,6 +443,16 @@ public abstract class Bot implements Serializable {
         return new int[]{zx, zy};
     }
 
+
+    /**
+     * Setzt Wasser um ein zerstörtes Schiff
+     * @param s Spieler, linkes oder rechtes Spielfeld
+     * @param x X Koordinate des zerstörten Schiffes
+     * @param y Y Koordinate des zerstörten Schiffes
+     * @param f Spielfeld
+     * @param width Spielfeldbreite
+     * @param height Spielfeldhöhe
+     */
     public static void waterAround(int s, int x, int y, int[][][] f, int width, int height) {
         boolean up, down, left, right;
         up = down = left = right = false;
@@ -538,10 +590,24 @@ public abstract class Bot implements Serializable {
         }
     }
 
+    /**
+     * Setzt Wasser um ein zerstörtes Schiff
+     * @param x X Koordinate des zerstörten Schiffes
+     * @param y Y Koordinate des zerstörten Schiffes
+     * @param f Spielfeld
+     * @param width Spielfeldbreite
+     * @param height Spielfeldhöhe
+     */
     public static void waterAround(int x, int y, int[][][] f, int width, int height) {
         waterAround(1, x, y, f, width, height);
     }
 
+    /**
+     * Generiert mögliche Schiffslängen für die übergebene Spielfeldgröße
+     * @param x Spielfeldbreite
+     * @param y Spielfeldhöhe
+     * @return int[] mit Schiffslängen
+     */
     public static int[] calcships(int x, int y) {
         int res = x * y;
         //Change von Dennis von >= zu ==
@@ -574,12 +640,14 @@ public abstract class Bot implements Serializable {
         return ret;
     }
 
-    public static void main(String[] args) {
-        int[] t = calcships(7, 5);
-        for (int i = 0; i < t.length; i++)
-            System.out.println(t[i]);
-    }
 
+    /**
+     * Gibt dir die Schiffslänge eines zerstörten Schiffes zurück
+     * @param x eine X Koordinate des zerstörten Schiffes
+     * @param y eine Y Koordinate des zerstörten Schiffes
+     * @param s spieler, zur Bestimmung der Spielfeldseite
+     * @return Schiffslänge
+     */
     protected int shipLenDestroyed(int x, int y, int s) {
         int size = 0;
         boolean up, down, left, right;

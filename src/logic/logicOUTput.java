@@ -4,9 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Klasse um die Spiellogik zu testen oder nütlzliche Konsolenausgaben über die Spiellogik zu machen(Feld ausgeben)
+ */
 public class logicOUTput {
 
-
+    /**
+     * Testen des spielens gegen den RDM Bot in der Konsole
+     */
     public static void playagainstRDM_Bot() {
         try {
             BufferedReader inRead = new BufferedReader(new InputStreamReader(System.in));
@@ -96,7 +101,7 @@ public class logicOUTput {
     }
 
     /**
-     * You can play the game in Cosole both players are humans!
+     * 2Spieler Spiel in der Konsole
      */
     public static void console2SpielerSpiel() {
         try {
@@ -174,6 +179,9 @@ public class logicOUTput {
         }
     }
 
+    /**
+     * Testen des Spielens wenn die Gegnerseite unbekannt ist
+     */
     public static void remoteTestSpiel() {
         try {
             BufferedReader inRead = new BufferedReader(new InputStreamReader(System.in));
@@ -242,9 +250,9 @@ public class logicOUTput {
 
 
     /**
-     * gibt das Spielbrett aus
+     * gibt das Spielbrett in der Konsole aus
      *
-     * @param f ein aus der Klasse Spiel einzufügendes Feld -> getFeld()
+     * @param f das auszugebende Spielbrett
      */
     public static void printFeld(int[][][] f) {
         System.out.print("Spieler1: ");
@@ -291,14 +299,14 @@ public class logicOUTput {
     }
 
     /**
-     * gibt das Spielbrett aus
+     * gibt das Spielbrett in der Konsole aus
      *
-     * @param f    ein aus der Klasse Spiel einzufügendes Feld -> getFeld()
-     * @param hint true -> gibt Legende mit aus
+     * @param f das auszugebende Spielbrett
+     * @param hint true gibt zusätzlich noch eine Legende aus
      */
     public static void printFeld(int[][][] f, boolean hint) {
         printFeld(f);
         if (hint)
-            System.out.println("0 -> frei, 1 -> Schiff, 2 -> Treffer, 3 -> Wasser");
+            System.out.println("0 -> frei, 1 -> Schiff, 2 -> Treffer, 3 -> Wasser, 4 -> versenkt");
     }
 }

@@ -1,18 +1,19 @@
 package logic;
-
 import java.util.Arrays;
-import java.util.Collections;
 
+/**
+ * Dies ist die schwierige Bot Schwierigkeitsstufe
+ */
 public class Bot_schwer extends Bot {
-
+    /** Ein Array in dem sich die Schiffsgrößen der noch nicht versenkten Gegnerschiffe gemerkt werden */
     private int[] enemyShips;
+    /** Merkt sich wie lang das längste übrige Gegnerschiff ist */
     private int longestShip;
+    /** Merkt sich wie lang das kürzeste übrige Gegnerschiff ist */
     private int smallestShip;
 
     /**
-     * Bott Intialisierung des Spielfelds
-     * x und y werte müssen >0 sein!
-     *
+     * erstellt einen schweren Bot
      * @param x Spielbreite
      * @param y Spielhöhe
      */

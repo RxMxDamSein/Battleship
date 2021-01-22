@@ -745,7 +745,7 @@ public class Spiel implements Serializable {
     /**
      * speichert das Spiel ab um später wieder geladen zu werden.
      * @param id Die ID anhand der das Spiel wieder geladen werden kann.
-     * @return true erfolg, false Misslungen
+     * @return true Erfolg, false Misslungen
      */
     public boolean saveGame(String id) {
         try {

@@ -2,7 +2,6 @@ package GUI;
 
 import logic.Bot;
 import logic.Spiel;
-import logic.netCode.Server;
 import logic.save.SAFE_SOME;
 
 import java.io.BufferedReader;
