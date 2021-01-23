@@ -230,24 +230,8 @@ public class GameGridController implements Initializable, Serializable {
         ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.getDasSpiel().setVerbose(false);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.init();
     }
-    /*
-    public double minsizeberechner() {
-        Rectangle2D screen = Screen.getPrimary().getBounds();
-        //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
-        //return -((double)x-10)+50;
-        //return -(0.75* (double) x-7.5)+50;
-        //double zahl = java.lang.Math.exp(-(0.05*x-4.3))+5;
-        double zahl = (screen.getHeight()>screen.getWidth())?screen.getHeight():screen.getWidth();
-        zahl*= 0.7;
-        zahl = (zahl/2)/x;
-        //System.out.println("Wundervolle Zahl: "+zahl);
-        if (zahl > 200) zahl=200;
-        return zahl;
-    }
-     */
 
     //Grid und Labels initialisieren
-
     /**
      * initialisiert die beiden Spielfelder des Spiels
      */
@@ -268,16 +252,6 @@ public class GameGridController implements Initializable, Serializable {
                 labels[a][b].setMinSize(methoden.minsizeberechner(x), methoden.minsizeberechner(x));
                 //labels[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels[a][b] = methoden.textureWasser(labels[a][b], x);
-
-                //lustige bilder zu den Labels
-                /*
-                Image img = new Image("GUI/Textures/42.jpg");
-                ImageView view = new ImageView(img);
-                view.setFitHeight(100);
-                view.setPreserveRatio(true);
-                labels[a][b].setGraphic(view);
-                 */
-
                 //final int ca=a,cb=b;
                 int ca = a, cb = b;
                 labels[a][b].setOnMouseClicked(e -> labelclick(ca, cb));
@@ -292,12 +266,10 @@ public class GameGridController implements Initializable, Serializable {
                 labels2[a][b] = methoden.textureWasser(labels2[a][b], x);
                 labels2[a][b].setOnMouseClicked(e -> label2click(ca, cb));
 
-
                 GridPane.setConstraints(labels2[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
                 GameGrid2.getChildren().add(labels2[a][b]);
             }
         }
-
         // GameGrid 1 zu Stackpane 1 hinzufügen
         GameGrid.setAlignment(Pos.CENTER);
         GameGrid.setHgap(1);
@@ -444,7 +416,7 @@ public class GameGridController implements Initializable, Serializable {
         //sx == ex horizontal
         //sy == ey vertikal
         //sonst fail
-        if (sx == -1 || sy == -1 || ex == -1 || ey == -1) {
+        if (sx == -1 || sy == -1 || ex == -1 || ey == -1 || sx == ex && sy == ey) {
             System.err.println("Ungültiges Schiff");
             //labels[sx][sy].setStyle("-fx-background-color: blue");
             //labels[ex][ey].setStyle("-fx-background-color: blue");

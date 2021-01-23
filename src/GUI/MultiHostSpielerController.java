@@ -300,7 +300,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         //sx == ex horizontal
         //sy == ey vertikal
         //sonst fail
-        if (sx == -1 || sy == -1 || ex == -1 || ey == -1) {
+        if (sx == -1 || sy == -1 || ex == -1 || ey == -1 || sx == ex && sy == ey) {
             System.err.println("Ungültiges Schiff");
             //labels[sx][sy].setStyle("-fx-background-color: blue");
             //labels[ex][ey].setStyle("-fx-background-color: blue");

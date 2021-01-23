@@ -99,14 +99,17 @@ public class MultiClientSpielerController implements Initializable, Serializable
      * KLasse Cleint, welche die Verbindung mit Host uebernimmt
      */
     private Client Client;
-
+    private int count1=0;
     /**
      * Funktion um am linken Toplabel anzuzeigen, welche schiffe plaziert werden duerfen
      */
     public void shipLabel() {
         StringBuilder s = new StringBuilder();
-        s.append(Client.ships.length + " Schiffe mit groesse: ");
+        s.append(Client.ships.length - count1 + " Schiffe mit groesse: ");
         for (int i = 0; i < Client.ships.length; i++) {
+            if (Client.ships[i] == -1 ) {
+                continue;
+            }
             if (i != Client.ships.length - 1) {
                 s.append(" " + Client.ships[i]);
                 s.append(",");
@@ -116,7 +119,11 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }
         System.out.println(s.toString());
         GameTopLabel.setText(s.toString());
-        gameStartButton.setVisible(true);
+
+        if (count1 - Client.ships.length == 0) {
+            gameStartButton.setVisible(true);
+        }
+        count1++;
     }
 
     /**
@@ -316,7 +323,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         //sx == ex horizontal
         //sy == ey vertikal
         //sonst fail
-        if (sx == -1 || sy == -1 || ex == -1 || ey == -1) {
+        if (sx == -1 || sy == -1 || ex == -1 || ey == -1 || sx == ex && sy == ey) {
             System.err.println("Ungültiges Schiff");
             //labels[sx][sy].setStyle("-fx-background-color: blue");
             //labels[ex][ey].setStyle("-fx-background-color: blue");
@@ -346,6 +353,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
                     return;
                 } else {
                     Client.deleteShip(size);
+                    shipLabel();
                 }
                 for (int i = ey; i != sy - 1; i--) {
                     //System.out.println("PENIS 1");
@@ -369,6 +377,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
                     return;
                 } else {
                     Client.deleteShip(size);
+                    shipLabel();
                 }
                 for (int i = sy; i != ey - 1; i--) {
                     //System.out.println("PENIS 2");
@@ -399,6 +408,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
                     return;
                 } else {
                     Client.deleteShip(size);
+                    shipLabel();
                 }
                 for (int i = ex; i != sx - 1; i--) {
                     //System.out.println("i= " + i);
@@ -421,6 +431,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
                     return;
                 } else {
                     Client.deleteShip(size);
+                    shipLabel();
                 }
                 for (int i = sx; i != ex - 1; i--) {
                     //System.out.println("KAKA 2");
