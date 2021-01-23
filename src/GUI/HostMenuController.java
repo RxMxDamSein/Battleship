@@ -1,5 +1,7 @@
 package GUI;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,6 +58,7 @@ public class HostMenuController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        BotChoice.setVisible(false);
         methoden = new nuetzlicheMethoden();
         BotChoice.getItems().add("Einfach");
         BotChoice.getItems().add("Mittel");
@@ -64,6 +67,16 @@ public class HostMenuController implements Initializable {
         SpielartChoice.getItems().add("Spieler");
         SpielartChoice.getItems().add("Bot");
         SpielartChoice.setValue("Spieler");
+        SpielartChoice.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (newValue.intValue() == 1) {
+                    BotChoice.setVisible(true);
+                } else if (newValue.intValue() == 0) {
+                    BotChoice.setVisible(false);
+                }
+            }
+        });
     }
 
     /**
