@@ -18,13 +18,8 @@ public class Bot_schwer extends Bot {
 
     @Override
     public boolean shipSizesToAdd(int[] s) {
-        Arrays.sort(s);
-        enemyShips = new Integer[s.length];
-        for (int i = s.length - 1; i >= 0; i--)
-            enemyShips[enemyShips.length - i - 1] = s[i];
-        longestShip = s[s.length-1];
-        smallestShip= s[0];
-        System.out.println("longest "+longestShip+" smallest "+smallestShip);
+        initEnemyships(s);
+        //System.out.println("longest "+longestShip+" smallest "+smallestShip);
         return addShipsRDMly(s, dasSpiel, rdm, x, y);
     }
 

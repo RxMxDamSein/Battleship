@@ -4,6 +4,7 @@ import logic.save.ResourceManager;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -318,6 +319,15 @@ public abstract class Bot implements Serializable {
         if (i == j)
             return true;
         return false;
+    }
+
+    public void initEnemyships(int[] s){
+        Arrays.sort(s);
+        enemyShips = new Integer[s.length];
+        for (int i = s.length - 1; i >= 0; i--)
+            enemyShips[enemyShips.length - i - 1] = s[i];
+        longestShip = s[s.length-1];
+        smallestShip= s[0];
     }
 
     /**

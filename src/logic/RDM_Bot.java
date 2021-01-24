@@ -16,6 +16,7 @@ public class RDM_Bot extends Bot {
 
     @Override
     public boolean shipSizesToAdd(int[] s) {
+        initEnemyships(s);
         return addShipsRDMly(s, dasSpiel, rdm, x, y);
     }
 

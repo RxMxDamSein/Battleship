@@ -474,7 +474,7 @@ public class MultiHostBotController implements Initializable, Serializable {
             //Speichern
             String hash = "" + this.hashCode();
             new SAFE_SOME( new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot}, 4, hash, name,derBot.slayship,derBot.slayX,derBot.slayY,derBot.enemyShips,derBot.smallestShip,derBot.longestShip);
-            //Host.save(hash);
+            Host.save(hash);
             newStage.close();
         });
         comp.getChildren().add(DateiName);
