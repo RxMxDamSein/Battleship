@@ -190,6 +190,14 @@ public class MultiHostBotController implements Initializable, Serializable {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = SAFE.spiele[0];
         derBot.dasSpiel = GOETTLICHESSPIELDERVERNICHTUNGMITbot;
         derBot.dasSpiel.setSpielFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld());
+        if(SAFE.Slayship){
+            derBot.slayship=SAFE.Slayship;
+            derBot.slayX=SAFE.slayX;
+            derBot.slayY=SAFE.slayY;
+        }
+        derBot.enemyShips=SAFE.enemyShips;
+        derBot.smallestShip=SAFE.smallestShip;
+        derBot.longestShip=SAFE.longestShip;
         Gridinit();
         Host = new BotHost(Port, x, derBot, id);
         Host.init();
@@ -465,8 +473,8 @@ public class MultiHostBotController implements Initializable, Serializable {
             System.out.println("Name: " + name);
             //Speichern
             String hash = "" + this.hashCode();
-            new SAFE_SOME(null, new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot}, 4, hash, name);
-            Host.save(hash);
+            new SAFE_SOME( new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot}, 4, hash, name,derBot.slayship,derBot.slayX,derBot.slayY,derBot.enemyShips,derBot.smallestShip,derBot.longestShip);
+            //Host.save(hash);
             newStage.close();
         });
         comp.getChildren().add(DateiName);

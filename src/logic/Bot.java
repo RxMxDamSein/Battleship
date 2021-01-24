@@ -15,17 +15,23 @@ public abstract class Bot implements Serializable {
     /** das Spielobjekt des Botes */
     public Spiel dasSpiel;
     /** Spielfeldbreite */
-    protected int x;
+    protected Integer x;
     /** Spielfeldhöhe */
-    protected int y;
+    protected Integer y;
     /** Zufallsgenerator */
     public Random rdm;
     /** Zeigt an ob zuletzt ein Schiff getroffen wurde, dass es nun zu versenken gilt */
-    public boolean slayship = false; //true if you hit ship and not sunk
+    public Boolean slayship = false; //true if you hit ship and not sunk
     /** Eine X Koordinate des zu versenkendem Schiffes */
-    public int slayX;
+    public Integer slayX;
     /** Eine Y Koordinate des zu versunkendem Schiffes*/
-    public int slayY;
+    public Integer slayY;
+    /** Ein Array in dem sich die Schiffsgrößen der noch nicht versenkten Gegnerschiffe gemerkt werden */
+    public Integer[] enemyShips;
+    /** Merkt sich wie lang das längste übrige Gegnerschiff ist */
+    public Integer longestShip;
+    /** Merkt sich wie lang das kürzeste übrige Gegnerschiff ist */
+    public Integer smallestShip;
 
     /**
      * Gibt eine Stelle zurück die zu dem angeschossenen Schiff gehören könnte
@@ -131,6 +137,12 @@ public abstract class Bot implements Serializable {
      * @param y Spielhöhe
      */
     public Bot(int x, int y) {
+        slayY=-1;
+        slayX=-1;
+        slayship=false;
+        enemyShips=new Integer[0];
+        longestShip=-1;
+        smallestShip=-1;
         this.x = x;
         this.y = y;
         dasSpiel = new Spiel(x, y, true);

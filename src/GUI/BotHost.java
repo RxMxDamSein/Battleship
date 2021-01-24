@@ -375,7 +375,7 @@ public class BotHost {
      */
     private void sonderNachrichten(String nachricht) {
         if (nachricht.contains("save")) {
-            new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1]);
+            new SAFE_SOME( new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1],derBot.slayship,derBot.slayX,derBot.slayY,derBot.enemyShips,derBot.smallestShip,derBot.longestShip);
             sendSocket("done");
             CutConnection();
         } else if (nachricht.contains("next")) {

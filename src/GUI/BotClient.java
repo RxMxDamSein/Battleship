@@ -275,7 +275,7 @@ public class BotClient {
      * @param dname Speicher-Name
      */
     public void save(String hash, String dname) {
-        new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, hash, dname);
+        new SAFE_SOME( new Spiel[]{dasSpiel}, 4, hash, dname,derBot.slayship, derBot.slayX,derBot.slayY, derBot.enemyShips, derBot.smallestShip, derBot.longestShip);
         sendSocket("save " + hash);
         if (!receiveSocket().contains("done")) {
             System.err.println("Client hat nicht wahrscheinlich gespeichert");

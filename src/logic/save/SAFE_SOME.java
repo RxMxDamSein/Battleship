@@ -21,6 +21,18 @@ public class SAFE_SOME implements Serializable {
     public int game;
     /** Speicher ID */
     public String id;
+    /** Falls der Bot zuletzt ein Schiff gefunden hat */
+    public Boolean Slayship;
+    /** eine X Stelle des gefundenen Schiffes */
+    public int slayX;
+    /** eine Y Stelle des gefundenen Schiffes*/
+    public int slayY;
+    /** Ein Array in dem sich die Schiffsgrößen der noch nicht versenkten Gegnerschiffe gemerkt werden */
+    public Integer[] enemyShips;
+    /** Merkt sich wie lang das längste übrige Gegnerschiff ist */
+    public Integer longestShip;
+    /** Merkt sich wie lang das kürzeste übrige Gegnerschiff ist */
+    public Integer smallestShip;
 
     /**
      * Speichert ein SAFE_SOME Objekt
@@ -33,6 +45,27 @@ public class SAFE_SOME implements Serializable {
     public SAFE_SOME(Bot[] b, Spiel[] s, int g, String id, String DateiName) {
         this.id = id;
         STD_SAVE(b, s, g, DateiName);
+    }
+
+    public SAFE_SOME(Spiel[] spiels, int i, String s, boolean slayship, int slayX, int slayY, Integer[] enemyShips, Integer smallestShip, Integer longestShip) {
+        this.Slayship=slayship;
+        this.slayX=slayX;
+        this.slayY=slayY;
+        this.enemyShips=enemyShips;
+        this.smallestShip=smallestShip;
+        this.longestShip=longestShip;
+        STD_SAVE(null,spiels,i,s);
+    }
+
+    public SAFE_SOME(Spiel[] spiels, int i, String hash, String name, boolean slayship, int slayX, int slayY, Integer[] enemyShips, Integer smallestShip, Integer longestShip) {
+        this.Slayship=slayship;
+        this.slayX=slayX;
+        this.slayY=slayY;
+        this.id=hash;
+        this.enemyShips=enemyShips;
+        this.smallestShip=smallestShip;
+        this.longestShip=longestShip;
+        STD_SAVE(null,spiels,i,name);
     }
 
 

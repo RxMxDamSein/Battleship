@@ -5,12 +5,7 @@ import java.util.Arrays;
  * Dies ist die schwierige Bot Schwierigkeitsstufe
  */
 public class Bot_schwer extends Bot {
-    /** Ein Array in dem sich die Schiffsgrößen der noch nicht versenkten Gegnerschiffe gemerkt werden */
-    private int[] enemyShips;
-    /** Merkt sich wie lang das längste übrige Gegnerschiff ist */
-    private int longestShip;
-    /** Merkt sich wie lang das kürzeste übrige Gegnerschiff ist */
-    private int smallestShip;
+
 
     /**
      * erstellt einen schweren Bot
@@ -24,7 +19,7 @@ public class Bot_schwer extends Bot {
     @Override
     public boolean shipSizesToAdd(int[] s) {
         Arrays.sort(s);
-        enemyShips = new int[s.length];
+        enemyShips = new Integer[s.length];
         for (int i = s.length - 1; i >= 0; i--)
             enemyShips[enemyShips.length - i - 1] = s[i];
         longestShip = s[s.length-1];
