@@ -318,6 +318,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             //Schiff geht nach
             if (ey > sy) {
                 size = ey - sy + 1;
+                if (size > 5) {
+                    System.out.println("Zu großes Schiff!!");
+                    illegalesSchiff();
+                    return;
+                }
                 System.out.println("Size: " + size);
                 shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(sx, sy, false, size, 0);
                 System.out.println(shippaddo);
@@ -334,6 +339,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             }
             if (sy > ey) {
                 size = sy - ey + 1;
+                if (size > 5) {
+                    System.out.println("Zu großes Schiff!!");
+                    illegalesSchiff();
+                    return;
+                }
                 System.out.println("Size: " + size);
                 shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(ex, ey, false, size, 0);
                 System.out.println(shippaddo);
@@ -358,6 +368,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             System.out.println("Horizontal Schiff");
             if (ex > sx) {
                 size = ex - sx + 1;
+                if (size > 5) {
+                    System.out.println("Zu großes Schiff!!");
+                    illegalesSchiff();
+                    return;
+                }
                 System.out.println("Size: " + size);
                 shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(sx, sy, true, size, 0);
                 System.out.println(shippaddo);
@@ -374,6 +389,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             }
             if (ex < sx) {
                 size = sx - ex + 1;
+                if (size > 5) {
+                    System.out.println("Zu großes Schiff!!");
+                    illegalesSchiff();
+                    return;
+                }
                 System.out.println("Size: " + size);
                 shippaddo = GOETTLICHESSPIELDERVERNICHTUNGMITbot.addShip(ex, ey, true, size, 0);
                 System.out.println(shippaddo);

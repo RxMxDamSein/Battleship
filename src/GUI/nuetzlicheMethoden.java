@@ -33,22 +33,43 @@ import java.util.Scanner;
  * Klasse mit nuetzliche Methoden
  */
 public class nuetzlicheMethoden {
-    //TODO DOC
+    /**
+     * int Wert, welcher skin genutzt werden soll
+     */
     private int texture = 1;
+    /**
+     * Images fuer die Labels
+     */
     private Image textureWasser, textureSchiff, textureSchiffTreffer, textureWasserTreffer, textureversenkt, textureauswahlWasser;
+    /**
+     * Timeline
+     */
     private Timeline timeline;
-
+    /**
+     * Port fuer Client
+     */
     Integer Port = 420;
+    /**
+     * Feldgroesse vom Spielfeld
+     */
     Integer Feldgroesse = null;
+    /**
+     * int fuer Bot auswahl
+     */
     Integer bot = null;
+    /**
+     * Save-Game fuers Speichern und Laden
+     */
     SAFE_SOME SAFE = null;
+    /**
+     * Name des Save-Games
+     */
     String id = " ";
 
+    /**
+     * Standartkonstruktor
+     */
     public nuetzlicheMethoden() {
-        texture = EinstellungenController.skin;
-    }
-
-    public nuetzlicheMethoden(int x) {
         texture = EinstellungenController.skin;
         textureWasser = new Image("GUI/Textures/WundervollesWasser.png");
 
@@ -63,6 +84,31 @@ public class nuetzlicheMethoden {
         textureauswahlWasser = new Image("GUI/Textures/ausgeaehltesWasser.png");
     }
 
+    /**
+     * Konstruktor
+     * @param x Feldgroesse
+     */
+    public nuetzlicheMethoden(int x) {
+        Feldgroesse = x;
+        texture = EinstellungenController.skin;
+        textureWasser = new Image("GUI/Textures/WundervollesWasser.png");
+
+        textureSchiff = new Image("GUI/Textures/Schiff.png");
+
+        textureSchiffTreffer = new Image("GUI/Textures/trefferSchiff.png");
+
+        textureWasserTreffer = new Image("GUI/Textures/trefferWasser.png");
+
+        textureversenkt = new Image("GUI/Textures/versenkt.png");
+
+        textureauswahlWasser = new Image("GUI/Textures/ausgeaehltesWasser.png");
+    }
+
+    /**
+     * berechnetnet anhand der Monitorgroesse die groesse der Labels
+     * @param x Feldgroesse
+     * @return
+     */
     public double minsizeberechner(int x) {
         Rectangle2D screen = Screen.getPrimary().getBounds();
         //System.out.println("Höhe: "+screen.getHeight()+" Weite: "+screen.getWidth());
@@ -77,6 +123,12 @@ public class nuetzlicheMethoden {
         return zahl;
     }
 
+    /**
+     * Wasser texture fuer die Labels
+     * @param z Label
+     * @param x Feldgroesse
+     * @return Label
+     */
     public Label textureWasser(Label z, int x) {
         switch (texture) {
             case 0:
@@ -92,7 +144,12 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-
+    /**
+     * Schiff texture fuer die Labels
+     * @param z Label
+     * @param x Feldgroesse
+     * @return Label
+     */
     public Label textureSchiff(Label z, int x) {
         switch (texture) {
             case 0:
@@ -108,7 +165,12 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-
+    /**
+     * Schiff-treffer texture fuer die Labels
+     * @param z Label
+     * @param x Feldgroesse
+     * @return Label
+     */
     public Label textureSchiffTreffer(Label z, int x) {
         switch (texture) {
             case 0:
@@ -124,7 +186,12 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-
+    /**
+     * Wasser-treffer texture fuer die Labels
+     * @param z Label
+     * @param x Feldgroesse
+     * @return Label
+     */
     public Label textureWasserTreffer(Label z, int x) {
         switch (texture) {
             case 0:
@@ -140,7 +207,12 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-
+    /**
+     * verdenkt texture fuer die Labels
+     * @param z Label
+     * @param x Feldgroesse
+     * @return Label
+     */
     public Label textureversenkt(Label z, int x) {
         switch (texture) {
             case 0:
@@ -156,7 +228,12 @@ public class nuetzlicheMethoden {
         }
         return z;
     }
-
+    /**
+     * auswahl texture fuer die Labels
+     * @param z Label
+     * @param x Feldgroesse
+     * @return Label
+     */
     public Label textureauswahlWasser(Label z, int x) {
         switch (texture) {
             case 0:
@@ -174,6 +251,7 @@ public class nuetzlicheMethoden {
     }
 
     /**
+     * End Bildschirm, welcher anzeigt ob man gewonnen oder verloren hat
      * @param gewinner true wenn man gewonnen hat
      */
     public void GameEnd(boolean gewinner) {
@@ -219,9 +297,20 @@ public class nuetzlicheMethoden {
         newStage.show();
     }
 
+    /**
+     * true wenn der Client sich Connecten konnte
+     */
     private boolean success;
+    /**
+     * zaehl-Variable
+     */
     private int count = 0;
 
+    /**
+     * Wartebildschirm fuer den Client
+     * @param Client instanz der Klasse Client
+     * @param BotClient instanz der Klasse BotClient
+     */
     public void warteBildschirm(Client Client, BotClient BotClient) {
         Stage newStage = new Stage();
         VBox comp = new VBox();
@@ -293,6 +382,12 @@ public class nuetzlicheMethoden {
         timeline.play();
     }
 
+    /**
+     * wechselt zum MultiClientSpielerGrid, wenn man sich verbinden konnte
+     * @param Client instanz der Klasse Client
+     * @return
+     * @throws IOException
+     */
     private boolean setMultiClientSpielerGrid(Client Client) throws IOException {
         if (Client.ERROR || Client.status < 1) {
             if (Client.ERROR) System.err.println("Error or status < 1!");
@@ -310,6 +405,12 @@ public class nuetzlicheMethoden {
         return true;
     }
 
+    /**
+     * wechselt zum MultiClientBotGrid, wenn man sich verbinden konnte
+     * @param Client instanz der Klasse BotClient
+     * @return
+     * @throws IOException
+     */
     private boolean setMultiClientBotGrid(BotClient Client) throws IOException {
         if (Client.ERROR || Client.status < 1) {
             if (Client.ERROR) System.err.println("Error or status < 1!");
@@ -328,8 +429,14 @@ public class nuetzlicheMethoden {
     }
 
     //Integer Port,Integer Feldgroesse, SAFE_SOME SAFE, String id
+    /**
+     * neue Stage fuer den HostwarteBildschirm
+     */
     Stage newStage;
 
+    /**
+     * HostwarteBildschirm, welcher ueberprueft ob der Server erstellt werden konnte
+     */
     public void HostwarteBildschirm() {
         newStage = new Stage();
         Label label = new Label();
@@ -543,17 +650,20 @@ public class nuetzlicheMethoden {
     }
 
     //Integer Port,Integer Feldgroesse, SAFE_SOME SAFE, String id
-    int i = 1;
-    Timeline t;
+    //int i = 1;
+    //Timeline t;
 
+    /**
+     * wechselt auf MultiHostSpielerGrid, wenn der Server erstellt werden konnte
+     * @return
+     * @throws IOException
+     */
     private boolean setMultiHostSpielerGrid() throws IOException {
         if (SAFE == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
             controller.setVariables(Port, Feldgroesse);
-            //////////////////
-            //ToDo Besseres warten
             /*
             while (i%10000!=0){
                 i++;
@@ -566,7 +676,6 @@ public class nuetzlicheMethoden {
             ////////////////////
             /*
              t = new Timeline(new KeyFrame(new Duration(10000),event -> {
-                 System.out.println("PENIS "+i);
                 i++;
                 if (i%1000==0){
                     t.stop();
@@ -623,6 +732,11 @@ public class nuetzlicheMethoden {
     }
 
     //Integer Port,Integer Feldgroesse,Integer bot, SAFE_SOME SAFE, String id
+    /**
+     * wechselt auf MultiHostBotGrid, wenn der Server erstellt werden konnte
+     * @return
+     * @throws IOException
+     */
     private boolean setMultiHostBotGrid() throws IOException {
         if (SAFE == null) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostBotGrid.fxml"));
@@ -667,22 +781,46 @@ public class nuetzlicheMethoden {
         }
     }
 
+    /**
+     * setzt Host Variablen
+     * @param Port Port
+     * @param Feldgroesse Feldgroesse
+     */
     public void setHostVariablen(Integer Port, Integer Feldgroesse) {
         this.Port = Port;
         this.Feldgroesse = Feldgroesse;
     }
 
+    /**
+     * setzt Host Variablen
+     * @param Port Port
+     * @param SAFE Sava-Game
+     * @param id Save-Game-ID
+     */
     public void setHostVariablen(Integer Port, SAFE_SOME SAFE, String id) {
         this.Port = Port;
         this.SAFE = SAFE;
         this.id = id;
     }
 
+    /**
+     * setzt Host Variablen
+     * @param Port Port
+     * @param Feldgroesse Feldgroesse
+     * @param bot Bot-Schwierigkeit
+     */
     public void setHostVariablen(Integer Port, Integer Feldgroesse, Integer bot) {
         setHostVariablen(Port, Feldgroesse);
         this.bot = bot;
     }
 
+    /**
+     * setzt Host Variablen
+     * @param Port Port
+     * @param bot Bot-Schwierigkeit
+     * @param SAFE Sava-Game
+     * @param id Save-Game-ID
+     */
     public void setHostVariablen(Integer Port, Integer bot, SAFE_SOME SAFE, String id) {
         this.Port = Port;
         this.bot = bot;
@@ -690,7 +828,7 @@ public class nuetzlicheMethoden {
         this.id = id;
     }
 
-
+    /*
     public static void setStageCenter() {
         double width = MainMenuController.primaryStage.getWidth();
         double height = MainMenuController.primaryStage.getHeight();
@@ -700,10 +838,15 @@ public class nuetzlicheMethoden {
         MainMenuController.primaryStage.setY((bounds.getHeight() - height) / 2);
     }
 
+     */
+    /**
+     * Timeline fuer setAbschussLabelTimeline
+     */
     private Timeline abschussLabel;
 
     /**
-     * @param dasSpiel
+     * zeigt mithilfe der Toplabels an, welcher Spieler am zug ist
+     * @param dasSpiel das Spiel aus dem Logic Package
      * @param label1   linkes Label des Spielfelds
      * @param label2   rechtes Label des Spielfelds
      */
