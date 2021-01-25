@@ -136,7 +136,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
-                Client.CutConnection();
+                //Client.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {

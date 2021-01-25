@@ -131,7 +131,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
-                Host.CutConnection();
+                //Host.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {

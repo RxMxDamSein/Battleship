@@ -230,6 +230,22 @@ public abstract class Bot implements Serializable {
         return sizes;
     }
 
+    public static int[] getShipSizes(ArrayList<Schiff> s,int spieler) {
+        ArrayList<Integer> idx;
+        idx=new ArrayList<>();
+        for (int i = 0; i < s.size(); i++) {
+            if(s.get(i).spieler==spieler){
+                idx.add(i);
+            }
+        }
+        int sizes[]=new int[idx.size()];
+        for(int i=0;i<idx.size();i++){
+            sizes[i]=s.get(idx.get(i)).schifflaenge;
+        }
+        java.util.Arrays.sort(sizes);
+        return sizes;
+    }
+
     /**
      * Setzt das angegebene Feld auf der Spielseite des Gegners vom Bot ausgesehen
      * dient dazu, dass der Bot weiß was er getroffen hat und ob er etwas versenkt hat!

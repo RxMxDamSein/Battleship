@@ -230,6 +230,7 @@ public class Host {
         Thread t = new Thread(Runnable);
         t.start();
     }
+    private boolean closed=false;
     /**
      * Schliesst die Verbindung
      */
@@ -237,6 +238,16 @@ public class Host {
         ERROR = true;
         System.out.println("Closing Connection!");
         try {
+            try{
+                Thread.sleep(500);
+                out.flush();
+            }catch (IOException e){
+                System.err.println("out already closed");
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+            if(closed)
+                return;
             if(s!=null){
                 s.setSoTimeout(100);
                 s.shutdownInput();
@@ -251,7 +262,7 @@ public class Host {
                 out.close();
             }
             ss.close();
-
+            closed=true;
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
             e.printStackTrace();

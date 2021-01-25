@@ -137,7 +137,7 @@ public class BotHost {
                         CutConnection();
                         return;
                     }
-                    senships(Bot.calcships(dasSpiel.getSizeX(), dasSpiel.getSizeY()));
+                    senships(Bot.getShipSizes(derBot.dasSpiel.schiffe,0));//need fix
 
                 } else {
                     //LADEN
@@ -248,6 +248,8 @@ public class BotHost {
         t.start();
     }
 
+
+    private boolean closed=false;
     /**
      * Schliesst die Verbindung
      */
@@ -255,6 +257,17 @@ public class BotHost {
         ERROR = true;
         System.out.println("Closing Connection!");
         try {
+            try{
+                Thread.sleep(500);
+                out.flush();
+            }catch (IOException e){
+                System.err.println("out already closed");
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+            if(closed==true)
+                return;
+
             if(s!=null){
                 s.setSoTimeout(100);
                 s.shutdownInput();
@@ -269,7 +282,7 @@ public class BotHost {
                 out.close();
             }
             ss.close();
-
+            closed=true;
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
             e.printStackTrace();

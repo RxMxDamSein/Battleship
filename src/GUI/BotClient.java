@@ -243,6 +243,7 @@ public class BotClient {
         return nachricht;
     }
 
+    private boolean closed=false;
     /**
      * Trennt die Verbindung zum Host
      */
@@ -250,6 +251,16 @@ public class BotClient {
         ERROR = true;
         System.out.println("Closing Connection!");
         try {
+            try{
+                Thread.sleep(500);
+                out.flush();
+            }catch (IOException e){
+                System.err.println("out already closed");
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+            if(closed)
+                return;
             if(s!=null){
                 s.setSoTimeout(10);
                 s.shutdownInput();
@@ -262,7 +273,7 @@ public class BotClient {
             if(out!=null){
                 out.close();
             }
-
+            closed=true;
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
             //e.printStackTrace();

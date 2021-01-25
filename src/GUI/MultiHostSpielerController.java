@@ -112,7 +112,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
-                Host.CutConnection();
+                //Host.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {
@@ -456,7 +456,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         spielstatus = true;
         System.out.println("Spielstatus: " + spielstatus);
         //GameTopLabel1.setText("Du schießt jetzt hier:");
-        Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe));
+        Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe,0));
 
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
