@@ -274,7 +274,7 @@ public class Host {
      * Funktion zum schiessen des Host.
      */
     public void schuss(int x, int y) {
-        if (dasSpiel.getAbschussSpieler() != 1 || !dasSpiel.isStarted() || dasSpiel.isOver() || shooting) {
+        if (dasSpiel.getAbschussSpieler() != 1 || !dasSpiel.isStarted() || dasSpiel.isOver() || shooting|| dasSpiel.getFeld()[1][x][y]!=0) {
             System.err.println("NIX SCHUSS");
             return;
         }
