@@ -581,6 +581,7 @@ public class GameGridController implements Initializable, Serializable {
      */
     public void gameStart(ActionEvent event) {
         if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.isStarted()){
+            gameStartButton.setVisible(false);
             return;
         }
         spielstatus = true;
@@ -592,6 +593,10 @@ public class GameGridController implements Initializable, Serializable {
         }
         gameStartButton.setVisible(false);
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel();
+        if(bot==3){//man hat 1 chance gegen den Nightmarebot
+            GOETTLICHESSPIELDERVERNICHTUNGMITbot.setAbschussSpieler(1);
+            ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.setAbschussSpieler(0);
+        }
         GridUpdater();
         /*
         System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
