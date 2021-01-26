@@ -48,7 +48,7 @@ public class nuetzlicheMethoden {
     /**
      * Port fuer Client
      */
-    Integer Port = 420;
+    Integer Port = 50000;
     /**
      * Feldgroesse vom Spielfeld
      */

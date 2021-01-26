@@ -90,8 +90,10 @@ public class JoinMenuController implements Initializable {
         Integer p;
         try {
             p = Integer.parseInt(PortText.getText());
+            if(1024> p ||p >49151)
+                p=50000;
         } catch (NumberFormatException e) {
-            p = 420;
+            p = 50000;
         }
         String ip;
         try {
