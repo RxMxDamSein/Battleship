@@ -463,7 +463,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         comp.setStyle("-fx-background-color: DARKCYAN;");
         comp.setAlignment(Pos.CENTER);
         TextField DateiName = new TextField();
-        DateiName.setText("Dateiname:");
+        DateiName.setText("Dateiname");
         Button Save = new Button();
         Save.setPrefSize(100, 30);
         Save.setText("Save");

@@ -580,6 +580,9 @@ public class GameGridController implements Initializable, Serializable {
      * @param event
      */
     public void gameStart(ActionEvent event) {
+        if(GOETTLICHESSPIELDERVERNICHTUNGMITbot.isStarted()){
+            return;
+        }
         spielstatus = true;
         System.out.println("Spielstatus: " + spielstatus);
         GameTopLabel1.setText("Du schießt jetzt hier:");
@@ -655,7 +658,7 @@ public class GameGridController implements Initializable, Serializable {
         comp.setStyle("-fx-background-color: DARKCYAN;");
         comp.setAlignment(Pos.CENTER);
         TextField DateiName = new TextField();
-        DateiName.setText("Dateiname:");
+        DateiName.setText("Dateiname");
         Button Save = new Button();
         Save.setPrefSize(100, 30);
         Save.setText("Save");
