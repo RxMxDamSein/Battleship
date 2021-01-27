@@ -125,6 +125,8 @@ public class MultiClientBotController implements Initializable, Serializable {
      * int Variable um ein Upadete zu foren
      */
     private int forceUpdate=0;
+
+    private boolean timelinefin=false;
     /**
      * initialisiert und startet die updateTimeline
      */
@@ -134,6 +136,11 @@ public class MultiClientBotController implements Initializable, Serializable {
             return;
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+            if(timelinefin){
+                updateTimeline.stop();
+                System.out.println("STOP!");
+                return;
+            }
             if(forceUpdate%10==0)
                 GridUpdater();
             forceUpdate++;
@@ -145,7 +152,10 @@ public class MultiClientBotController implements Initializable, Serializable {
                 //System.out.println("update!");
 
             }
-            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
+            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()&& !timelinefin) {
+                if(!Client.closed)
+                    Client.CutConnection();
+                timelinefin=true;
                 //Client.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);

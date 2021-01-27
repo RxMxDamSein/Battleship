@@ -243,7 +243,7 @@ public class BotClient {
         return nachricht;
     }
 
-    private boolean closed=false;
+    public boolean closed=false;
     /**
      * Trennt die Verbindung zum Host
      */
@@ -258,6 +258,8 @@ public class BotClient {
                 System.err.println("out already closed");
             }catch (InterruptedException e){
                 e.printStackTrace();
+            }catch (NullPointerException e){
+                System.err.println("There was no connection established");
             }
             if(closed)
                 return;
