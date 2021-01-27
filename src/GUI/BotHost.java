@@ -249,7 +249,7 @@ public class BotHost {
     }
 
 
-    private boolean closed=false;
+    public boolean closed=false;
     /**
      * Schliesst die Verbindung
      */
@@ -264,6 +264,8 @@ public class BotHost {
                 System.err.println("out already closed");
             }catch (InterruptedException e){
                 e.printStackTrace();
+            }catch (NullPointerException e){
+                System.err.println("There was no connection established");
             }
             if(closed==true)
                 return;
