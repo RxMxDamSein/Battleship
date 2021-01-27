@@ -99,8 +99,10 @@ public class MultiHostSpielerController implements Initializable, Serializable {
     public Host Host;
     /**
      * updateTimeline zum aktualisieren der Spielfelder und time zum aufrufen von shiplabel()
+     * <br>
+     * startbutton und sendship Timeline fuer das veraendern des Startbutton
      */
-    private Timeline updateTimeline;
+    private Timeline updateTimeline,startbutton,sendship;
 
     /**
      * initialisiert updateTimeline
@@ -463,21 +465,37 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         }
     }
 
+    /**
+     * gibt an ob man die Schiffe schon gesendet hat
+     */
+    private boolean shipsend = false;
     //versetzt Spiel in Feuermodus
     /**
      * Startet das Spiel
      * @param event
      */
     public void gameStart(ActionEvent event) {
-        if (spielstatus|| !Host.Connected) {
+        if (spielstatus) {
             System.err.println("Spiel bereits im gange!!");
+            return;
+        }
+        if (!Host.Connected) {
+            System.err.println("Client nicht connected!!");
+            return;
+        }
+
+        if (!shipsend) {
+            Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe, 0));
+            shipsend =  true;
+            gameStartButton.setText("warte auf Ready..");
+            return;
+        }
+        if (!Host.Spielstartet) {
+            System.out.println("Bitte warten!");
             return;
         }
         spielstatus = true;
         System.out.println("Spielstatus: " + spielstatus);
-        //GameTopLabel1.setText("Du schießt jetzt hier:");
-        Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe,0));
-
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.starteSpiel(1);
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         //System.out.println("Spieler: "+spieler);
@@ -516,13 +534,30 @@ public class MultiHostSpielerController implements Initializable, Serializable {
     }
 
     /**
-     * initialize Funktionvon JavaFX
+     * initialize Funktionvon JavaFX und veraendert den Text des Startbutton
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        gameStartButton.setText("warte auf Client..");
+        sendship = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Host.Connected) {
+                gameStartButton.setText("Schiffe senden");
+                sendship.stop();
+            }
+        }));
+        sendship.setCycleCount(Animation.INDEFINITE);
+        sendship.play();
+        startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Host != null && Host.Spielstartet) {
+                gameStartButton.setPrefSize(41,25);
+                gameStartButton.setText("Start");
+                startbutton.stop();
+            }
+        }));
+        startbutton.setCycleCount(Animation.INDEFINITE);
+        startbutton.play();
     }
 
 

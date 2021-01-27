@@ -47,6 +47,9 @@
                             </VBox.margin>
                         </HBox>
                     </children>
+               <padding>
+                  <Insets left="2.0" />
+               </padding>
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="603.0" prefWidth="574.0">
                     <children>
@@ -71,6 +74,9 @@
                             </VBox.margin>
                         </HBox>
                     </children>
+               <padding>
+                  <Insets right="2.0" />
+               </padding>
                 </VBox>
             </children>
         </HBox>

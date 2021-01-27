@@ -38,7 +38,7 @@ public class Host {
     /**
      * Variable die angibt ob das Spiel gestartet ist
      */
-    private boolean Spielstartet = false;
+    public boolean Spielstartet = false;
     /**
      * true wenn es einen Verbindungsfehler gibt
      */
