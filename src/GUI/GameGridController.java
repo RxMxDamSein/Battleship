@@ -642,9 +642,7 @@ public class GameGridController implements Initializable, Serializable {
     }
 
 
-    public void printfeld(ActionEvent event) {
-        logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(), true);
-    }
+
 
     /**
      * Methode zum speicheren des Spiels

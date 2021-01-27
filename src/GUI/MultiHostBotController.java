@@ -119,7 +119,7 @@ public class MultiHostBotController implements Initializable, Serializable {
     /**
      * updateTimeline um das Spiel zu aktualissieren
      */
-    private Timeline updateTimeline;
+    private Timeline updateTimeline,startbutton;
 
 
     private boolean timelinefin=false;
@@ -156,6 +156,18 @@ public class MultiHostBotController implements Initializable, Serializable {
         updateTimeline.setCycleCount(Animation.INDEFINITE);
         updateTimeline.setDelay(Duration.millis((sleeptime>400)?sleeptime/8:50));
         updateTimeline.play();
+        /*
+        startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Host.Spielstartet) {
+                System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+                gameStartButton.setVisible(true);
+                startbutton.stop();
+            }
+        }));
+        startbutton.setCycleCount(Animation.INDEFINITE);
+        startbutton.play();
+
+         */
     }
 
     //Konstruktor normal
@@ -374,6 +386,10 @@ public class MultiHostBotController implements Initializable, Serializable {
             System.err.println("Spiel bereits im gange!!");
             return;
         }
+        if (!Host.Spielstartet) {
+            System.out.println("Bitte warten!");
+            return;
+        }
         spielstatus = true;
         System.out.println("Spielstatus: " + spielstatus);
         //GameTopLabel1.setText("Du schießt jetzt hier:");
@@ -394,8 +410,9 @@ public class MultiHostBotController implements Initializable, Serializable {
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-
-        Host.CutConnection();
+        if (Host != null) {
+            Host.CutConnection();
+        }
 
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);
@@ -411,6 +428,22 @@ public class MultiHostBotController implements Initializable, Serializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        gameStartButton.setText("warte auf Ready..");
+        //gameStartButton.setVisible(false);
+        startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Host != null && Host.Spielstartet) {
+                //System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+                //gameStartButton.setVisible(true);
+                //gameStartButton.prefHeight(25);
+                //gameStartButton.prefWidth(41);
+                gameStartButton.setPrefSize(41,25);
+                gameStartButton.setText("Start");
+                startbutton.stop();
+            }
+        }));
+        startbutton.setCycleCount(Animation.INDEFINITE);
+        startbutton.play();
+
         BotSpeedSlider.setMin(1);
         BotSpeedSlider.setValue(100);
         BotSpeedSlider.setOnMouseReleased(event -> {
@@ -449,10 +482,6 @@ public class MultiHostBotController implements Initializable, Serializable {
         t.start();
     }
 
-
-    public void printfeld(ActionEvent event) {
-        logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(), true);
-    }
 
     /**
      * Speichert das Spiel

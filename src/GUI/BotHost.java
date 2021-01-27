@@ -138,7 +138,6 @@ public class BotHost {
                         return;
                     }
                     senships(Bot.getShipSizes(derBot.dasSpiel.schiffe,0));//need fix
-
                 } else {
                     //LADEN
                     sendSocket("load " + id);
@@ -241,7 +240,7 @@ public class BotHost {
             if (!z.contains("ready")) {
                 CutConnection();
             }
-            //Spielstartet = true;
+            Spielstartet = true;
             //schuss();
         };
         Thread t = new Thread(Runnable);
@@ -249,7 +248,13 @@ public class BotHost {
     }
 
 
+    /**
+     * Boolean, welche angibt ob der Server geschlossen wurde
+     */
     public boolean closed=false;
+
+
+
     /**
      * Schliesst die Verbindung
      */

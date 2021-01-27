@@ -27,18 +27,21 @@
                                     <children>
                                         <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#BacktoMenu" text="Back" />
                                     </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
                                 </VBox>
                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                     <children>
                                         <Button mnemonicParsing="false" onAction="#Speichern" text="Speichern" />
                                     </children>
                                 </VBox>
-                                <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0">
+                                <VBox alignment="TOP_RIGHT" prefHeight="31.0" prefWidth="157.0">
                                     <opaqueInsets>
                                         <Insets />
                                     </opaqueInsets>
                                     <children>
-                                        <Button fx:id="gameStartButton" mnemonicParsing="false" onAction="#gameStart" text="Start" />
+                                        <Button fx:id="gameStartButton" mnemonicParsing="false" onAction="#gameStart" prefHeight="25.0" prefWidth="151.0" text="Start" />
                                     </children>
                                 </VBox>
                             </children>
@@ -47,6 +50,9 @@
                             </VBox.margin>
                         </HBox>
                     </children>
+               <HBox.margin>
+                  <Insets left="2.0" />
+               </HBox.margin>
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="603.0" prefWidth="574.0">
                     <children>
@@ -71,6 +77,9 @@
                             </VBox.margin>
                         </HBox>
                     </children>
+               <HBox.margin>
+                  <Insets right="2.0" />
+               </HBox.margin>
                 </VBox>
             </children>
         </HBox>
