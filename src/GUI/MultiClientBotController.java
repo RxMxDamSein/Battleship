@@ -588,9 +588,7 @@ public class MultiClientBotController implements Initializable, Serializable {
     }
 
 
-    public void printfeld(ActionEvent event) {
-        logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(), true);
-    }
+
     /**
      * Speichert das Spiel
      * @param event

@@ -503,8 +503,9 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-
-        Host.CutConnection();
+        if (Host != null) {
+            Host.CutConnection();
+        }
 
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
         Scene s = new Scene(root);
@@ -525,9 +526,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
     }
 
 
-    public void printfeld(ActionEvent event) {
-        logic.logicOUTput.printFeld(GOETTLICHESSPIELDERVERNICHTUNGMITbot.getFeld(), true);
-    }
+
 
     /**
      * Speichert das Spiel
