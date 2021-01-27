@@ -128,10 +128,15 @@ public class MultiClientSpielerController implements Initializable, Serializable
         count1++;
     }
 
+
+    private int forceUpdate=1;
     /**
      * initialisiert updateTimeline
      */
     private void initupdateTimeline() {
+        if(forceUpdate%10==0)
+            GridUpdater();
+        forceUpdate++;
         if (updateTimeline != null) {
             System.err.println("Timeline existiert bereits!!!");
             return;
@@ -177,6 +182,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }
         time = new Timeline(new KeyFrame(new Duration(100), event -> {
             if (Client.status == 2) {
+                if(updateTimeline==null){
+                    initupdateTimeline();
+                }
                 shipLabel();
                 time.stop();
             }
@@ -311,6 +319,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
     private void label2click(int a, int b) {
         System.out.println("Grid 2 pressed in x: " + a + " y: " + b);
         Client.schuss(a, b);
+        GridUpdater();
     }
 
     /**

@@ -12,6 +12,19 @@ import java.util.Random;
  * Die Klasse Spiel beinhaltet das Spielbrett und fängt einige falsche Eingaben ab.
  */
 public class Spiel implements Serializable {
+    /** Zeigt an ob zuletzt ein Schiff getroffen wurde, dass es nun zu versenken gilt */
+    public Boolean slayship = false; //true if you hit ship and not sunk
+    /** Eine X Koordinate des zu versenkendem Schiffes */
+    public Integer slayX=-1;
+    /** Eine Y Koordinate des zu versunkendem Schiffes*/
+    public Integer slayY=-1;
+
+    /** Ein Array in dem sich die Schiffsgrößen der noch nicht versenkten Gegnerschiffe gemerkt werden */
+    public Integer[] enemyShips=null;
+    /** Merkt sich wie lang das längste übrige Gegnerschiff ist */
+    public Integer longestShip=1;
+    /** Merkt sich wie lang das kürzeste übrige Gegnerschiff ist */
+    public Integer smallestShip=1;
     /** Serialization Nummer */
     private static final long serialVersionUID = 1337L;
     /** x=Breite des Spielfelds */
@@ -19,6 +32,29 @@ public class Spiel implements Serializable {
     /** y=Höhe des Spielfelds */
     private int y = 20;
     // 0 frei, 1 Schiff, 2 Treffer, 3 Wasser, 4 versenkt
+    public void calcEnemyShips(){
+        enemyShips=new Integer[schiffe.size()-enemyS];
+        int z=0;
+        longestShip=Integer.MIN_VALUE;
+        smallestShip=Integer.MAX_VALUE;
+        for(int i=enemyS;i<schiffe.size();i++){
+            if(schiffe.get(i).schifflebt){
+                int len=schiffe.get(i).schifflaenge;
+                enemyShips[z]=len;
+                if(longestShip<len)
+                    longestShip=len;
+                if(smallestShip>len)
+                    smallestShip=len;
+            }else{
+                enemyShips[z]=-1;
+            }
+            z++;
+        }
+        if(smallestShip==Integer.MAX_VALUE)
+            smallestShip=1;
+        if(longestShip==Integer.MIN_VALUE)
+            longestShip=1;
+    }
     /**
      * Spielfeld für beide Spieler feld[0][x][y] Spieler 0/1 feld[1][x][y] Spieler 1/2.
      * Wert=0 leeres und unbeschossenes Feld,
@@ -374,6 +410,7 @@ public class Spiel implements Serializable {
             versenkt = p_versenkt;
             //kill ships in schiffe for player 1
             if (versenkt) {
+                slayship=false;
                 if (!killEnemyShipfromPos(x, y) && verbose) {//ToDo some error with this!
                     System.err.println("ship could not sink!!!");
                 }
@@ -434,6 +471,9 @@ public class Spiel implements Serializable {
                 //find ship and update its getroffen Attribute
                 if (!remote || (remote && spieler == 0)) {
                     versenkt = false;
+                    slayship=true;
+                    slayX=x;
+                    slayY=y;
                     Schiff s = findSchiffFromPos(x, y, spieler);
                     if (!Schiff.setGetroffenWposAship(x, y, s)) {
                         if (verbose)
@@ -445,6 +485,7 @@ public class Spiel implements Serializable {
                             Bot.waterAround(1, x, y, feld, this.x, this.y);
                         }
                         versenkt = true;
+                        slayship=false;
                     }
                 }
                 break;

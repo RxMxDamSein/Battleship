@@ -167,7 +167,9 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         Host.init();
         GridUpdater();
         initupdateTimeline();
-
+        if(Host.dasSpiel.isStarted()){
+            spielstatus=true;
+        }
     }
 
     /**
@@ -594,7 +596,8 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             System.out.println("Name: " + name);
             //Speichern
             String hash = "" + this.hashCode();
-            new SAFE_SOME(null, new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot}, 4, hash, name);
+            GOETTLICHESSPIELDERVERNICHTUNGMITbot.calcEnemyShips();
+            new SAFE_SOME( new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot}, 4, hash, name,GOETTLICHESSPIELDERVERNICHTUNGMITbot.slayship, GOETTLICHESSPIELDERVERNICHTUNGMITbot.slayX,GOETTLICHESSPIELDERVERNICHTUNGMITbot.slayY, GOETTLICHESSPIELDERVERNICHTUNGMITbot.enemyShips, GOETTLICHESSPIELDERVERNICHTUNGMITbot.smallestShip, GOETTLICHESSPIELDERVERNICHTUNGMITbot.longestShip);
             Host.save(hash);
             newStage.close();
         });

@@ -224,7 +224,9 @@ public class MultiHostBotController implements Initializable, Serializable {
         Host.init();
         GridUpdater();
         initupdateTimeline();
-
+        if(derBot.dasSpiel.isStarted()){
+            spielstatus=true;
+        }
     }
 
     /**
@@ -511,7 +513,9 @@ public class MultiHostBotController implements Initializable, Serializable {
             System.out.println("Name: " + name);
             //Speichern
             String hash = "" + this.hashCode();
-            new SAFE_SOME( new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot}, 4, hash, name,derBot.slayship,derBot.slayX,derBot.slayY,derBot.enemyShips,derBot.smallestShip,derBot.longestShip);
+            Spiel s=GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+            s.calcEnemyShips();
+            new SAFE_SOME( new Spiel[]{s}, 4, hash, name,s.slayship,s.slayX,s.slayY,s.enemyShips,s.smallestShip,s.longestShip);
             Host.save(hash);
             newStage.close();
         });

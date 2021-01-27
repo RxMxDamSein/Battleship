@@ -1,6 +1,7 @@
 package GUI;
 
 import logic.Bot;
+import logic.Bot_schwer;
 import logic.Spiel;
 import logic.save.SAFE_SOME;
 
@@ -395,7 +396,13 @@ public class BotHost {
      */
     private void sonderNachrichten(String nachricht) {
         if (nachricht.contains("save")) {
-            new SAFE_SOME( new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1],derBot.slayship,derBot.slayX,derBot.slayY,derBot.enemyShips,derBot.smallestShip,derBot.longestShip);
+            if(derBot instanceof Bot_schwer){
+                new SAFE_SOME( new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1],derBot.slayship,derBot.slayX,derBot.slayY,derBot.enemyShips,derBot.smallestShip,derBot.longestShip);
+            }else{
+                dasSpiel.calcEnemyShips();
+                new SAFE_SOME( new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1],dasSpiel.slayship,dasSpiel.slayX,dasSpiel.slayY,dasSpiel.enemyShips,dasSpiel.smallestShip,dasSpiel.longestShip);
+            }
+
             sendSocket("done");
             CutConnection();
         } else if (nachricht.contains("next")) {

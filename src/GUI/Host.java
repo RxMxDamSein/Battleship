@@ -66,7 +66,7 @@ public class Host {
     /**
      * Spiel aus dem Logic-package
      */
-    private Spiel dasSpiel;
+    public Spiel dasSpiel;
 
     /**
      * Nromaler Konstrukter von Host
@@ -351,7 +351,8 @@ public class Host {
      */
     private void sonderNachrichten(String nachricht) {
         if (nachricht.contains("save")) {
-            new SAFE_SOME(null, new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1]);
+            dasSpiel.calcEnemyShips();
+            new SAFE_SOME( new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1],dasSpiel.slayship, dasSpiel.slayX,dasSpiel.slayY, dasSpiel.enemyShips, dasSpiel.smallestShip, dasSpiel.longestShip);
             sendSocket("done");
             CutConnection();
         } else if (nachricht.contains("next")) {
