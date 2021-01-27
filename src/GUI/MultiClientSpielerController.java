@@ -94,7 +94,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
     /**
      * updateTimeline zum aktualisieren der Spielfelder und time zum aufrufen von shiplabel()
      */
-    private Timeline updateTimeline,time;
+    private Timeline updateTimeline,time,sendship;
     /**
      * KLasse Cleint, welche die Verbindung mit Host uebernimmt
      */
@@ -121,7 +121,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
         GameTopLabel.setText(s.toString());
 
         if (count1 - Client.ships.length == 0) {
-            gameStartButton.setVisible(true);
+            //gameStartButton.setVisible(true);
+            gameStartButton.setPrefSize(41,25);
+            gameStartButton.setText("Start");
         }
         count1++;
     }
@@ -157,7 +159,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
      * @param Client Client aus dem JoinMenu
      */
     public void setVariables(Client Client) {
-        gameStartButton.setVisible(false);
+        //gameStartButton.setVisible(false);
         GameTopLabel.setAlignment(Pos.CENTER);
         methoden = new nuetzlicheMethoden(Client.dasSpiel.getSizeX());
         x = Client.dasSpiel.getSizeX();
@@ -505,6 +507,10 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Spiel bereits im gange!!");
             return;
         }
+        if (Client.status != 2 ) {
+            System.err.println("Schiffgroessen nicht erhalten!!");
+            return;
+        }
         if (!Client.senships()) {
             System.err.println("Es wurden nicht alle Schiffe hinzugefügt!");
             return;
@@ -548,7 +554,15 @@ public class MultiClientSpielerController implements Initializable, Serializable
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        gameStartButton.setText("warte auf Host Schiffe..");
+        sendship = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Client.status == 2) {
+                gameStartButton.setText("Schiffe platzieren");
+                sendship.stop();
+            }
+        }));
+        sendship.setCycleCount(Animation.INDEFINITE);
+        sendship.play();
     }
 
     /**
