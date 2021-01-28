@@ -127,12 +127,7 @@ public class MultiClientBotController implements Initializable, Serializable {
     private BotClient Client;
 
 
-    /**
-     * int Variable um ein Upadete zu foren
-     */
-    private int forceUpdate=0;
 
-    private boolean timelinefin=false;
     /**
      * initialisiert und startet die updateTimeline
      */
@@ -142,27 +137,10 @@ public class MultiClientBotController implements Initializable, Serializable {
             return;
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
-            if(timelinefin){
-                updateTimeline.stop();
-                System.out.println("STOP!");
-                return;
-            }
-            if(forceUpdate%10==0)
-                GridUpdater();
-            forceUpdate++;
-            if (Client.change) {
-                GridUpdater();
-                Client.change = false;
-
-                //GridUpdater();
-                //System.out.println("update!");
-
-            }
-            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()&& !timelinefin) {
+            GridUpdater();
+            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
                 if(!Client.closed)
                     Client.CutConnection();
-                timelinefin=true;
-                //Client.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {
@@ -173,9 +151,8 @@ public class MultiClientBotController implements Initializable, Serializable {
                 return;
             }
         }));
-        updateTimeline.setCycleCount(Animation.INDEFINITE);
-        updateTimeline.setDelay(Duration.millis((sleeptime>200)?sleeptime/4:50));
-        updateTimeline.play();
+        updateTimeline.setCycleCount(1);
+        updateTimeline.setDelay(Duration.millis(50));
     }
 
     /**
@@ -195,6 +172,7 @@ public class MultiClientBotController implements Initializable, Serializable {
         //Client.init(); wurde davor schon erledigt
         GridUpdater();
         initupdateTimeline();
+        Client.setUpdateTimeline(updateTimeline);
         spielstatus = true;
         methoden.connectionlost(null,Client);
     }
@@ -539,6 +517,8 @@ public class MultiClientBotController implements Initializable, Serializable {
             GameTopLabel.setText("Du schießt");
         }
         initupdateTimeline();
+        Client.setUpdateTimeline(updateTimeline);
+        GridUpdater();
     }
     /**
      * Button um zuruck zum MehrspielerMenu zu kommen.

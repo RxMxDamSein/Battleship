@@ -119,8 +119,10 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             return;
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+            GridUpdater();
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
-                //Host.CutConnection();
+                if(!Host.closed)
+                    Host.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {
@@ -128,13 +130,10 @@ public class MultiHostSpielerController implements Initializable, Serializable {
                 }
                 GridUpdater();
                 updateTimeline.stop();
-            } else if (Host.change) {
-                Host.change = false;
-                GridUpdater();
             }
         }));
-        updateTimeline.setCycleCount(Animation.INDEFINITE);
-        updateTimeline.play();
+        updateTimeline.setCycleCount(1);
+        updateTimeline.setDelay(Duration.millis(50));
     }
 
     /**
@@ -194,7 +193,8 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         Host.init();
         GridUpdater();
         initupdateTimeline();
-        if(Host.dasSpiel.isStarted()) {
+        Host.setUpdateTimeline(updateTimeline);
+        if(Host.dasSpiel.isStarted()){
             spielstatus=true;
         }
         gameStartButton.setText("warte auf Client..");
@@ -566,6 +566,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
          */
         gameStartButton.setVisible(false);
         initupdateTimeline();
+        Host.setUpdateTimeline(updateTimeline);
     }
     /**
      * Button um zuruck zum MehrspielerMenu zu kommen.

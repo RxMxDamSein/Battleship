@@ -128,7 +128,7 @@ public class MultiHostBotController implements Initializable, Serializable {
     private Timeline updateTimeline,startbutton;
 
 
-    private boolean timelinefin=false;
+
     /**
      * initialisiert und startet die updateTimeline
      */
@@ -138,15 +138,10 @@ public class MultiHostBotController implements Initializable, Serializable {
             return;
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
-            if(timelinefin){
-                updateTimeline.stop();
-                System.out.println("STOP!");
-                return;
-            }
-            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()&& !timelinefin) {
+            GridUpdater();
+            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
                 if(!Host.closed)
                     Host.CutConnection();
-                timelinefin=true;
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {
@@ -154,25 +149,10 @@ public class MultiHostBotController implements Initializable, Serializable {
                 }
                 GridUpdater();
                 updateTimeline.stop();
-            } else if (Host.change) {
-                Host.change = false;
-                GridUpdater();
             }
         }));
-        updateTimeline.setCycleCount(Animation.INDEFINITE);
-        updateTimeline.setDelay(Duration.millis((sleeptime>400)?sleeptime/8:50));
-        updateTimeline.play();
-        /*
-        startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
-            if (Host.Spielstartet) {
-                gameStartButton.setVisible(true);
-                startbutton.stop();
-            }
-        }));
-        startbutton.setCycleCount(Animation.INDEFINITE);
-        startbutton.play();
-
-         */
+        updateTimeline.setCycleCount(1);
+        updateTimeline.setDelay(Duration.millis(50));
     }
 
     //Konstruktor normal
@@ -195,6 +175,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         Host.init();
         GridUpdater();
         initupdateTimeline();
+        Host.setUpdateTimeline(updateTimeline);
     }
 
     //Konstruktor laden
@@ -230,6 +211,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         Host.init();
         GridUpdater();
         initupdateTimeline();
+        Host.setUpdateTimeline(updateTimeline);
         if(derBot.dasSpiel.isStarted()){
             spielstatus=true;
         }
@@ -408,6 +390,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         gameStartButton.setVisible(false);
         methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot, GameTopLabel, GameTopLabel1);
         initupdateTimeline();
+        Host.setUpdateTimeline(updateTimeline);
     }
     /**
      * Button um zuruck zum MehrspielerMenu zu kommen.

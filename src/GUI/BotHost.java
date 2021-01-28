@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.animation.Timeline;
 import logic.Bot;
 import logic.Bot_schwer;
 import logic.Spiel;
@@ -52,10 +53,6 @@ public class BotHost {
      */
     public boolean Connected = false, load = false;
     /**
-     * change Variable, welche true wird wenn das Spielfeld aktualiesiert werden soll.
-     */
-    public volatile boolean change = false;
-    /**
      * true wenn man den Server erstellen konnte
      */
     public boolean Hosted;
@@ -77,7 +74,7 @@ public class BotHost {
      * pause, true wenn der Bot pausieren soll.
      */
     public boolean pause = false;
-
+    private Timeline updateT;
     /**
      * Normaler Konstrukter von BotHost
      * @param p Port
@@ -105,6 +102,10 @@ public class BotHost {
         this.dasSpiel = derBot.getDasSpiel();
         this.derBot = derBot;
         this.id = id;
+    }
+
+    public void setUpdateTimeline(Timeline t){
+        updateT=t;
     }
 
     /**
@@ -262,39 +263,43 @@ public class BotHost {
     public void CutConnection() {
         ERROR = true;
         System.out.println("Closing Connection!");
-        try {
-            try{
-                Thread.sleep(500);
-                out.flush();
-            }catch (IOException e){
-                System.err.println("out already closed");
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }catch (NullPointerException e){
-                System.err.println("There was no connection established");
-            }
-            if(closed==true)
-                return;
+        Runnable runnable=()->{
+            try {
+                try{
+                    Thread.sleep(500);
+                    out.flush();
+                }catch (IOException e){
+                    System.err.println("out already closed");
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }catch (NullPointerException e){
+                    System.err.println("There was no connection established");
+                }
+                if(closed==true)
+                    return;
 
-            if(s!=null){
-                s.setSoTimeout(100);
-                s.shutdownInput();
-                s.shutdownOutput();
-                s.close();
+                if(s!=null){
+                    s.setSoTimeout(100);
+                    s.shutdownInput();
+                    s.shutdownOutput();
+                    s.close();
+                }
+                ss.setSoTimeout(100);
+                if(in!=null){
+                    in.close();
+                }
+                if(out!=null){
+                    out.close();
+                }
+                ss.close();
+                closed=true;
+            } catch (IOException e) {
+                System.err.println("Can not close Socket!!");
+                e.printStackTrace();
             }
-            ss.setSoTimeout(100);
-            if(in!=null){
-                in.close();
-            }
-            if(out!=null){
-                out.close();
-            }
-            ss.close();
-            closed=true;
-        } catch (IOException e) {
-            System.err.println("Can not close Socket!!");
-            e.printStackTrace();
-        }
+        };
+       Thread t=new Thread(runnable);
+       t.start();
     }
     /**
      * Funktion zum schiessen des Host.
@@ -316,17 +321,17 @@ public class BotHost {
             if (z.contains("1")) {
                 dasSpiel.shoot(xy[0], xy[1], 1, 1, false);
                 derBot.setSchussFeld(xy[0], xy[1], 2, false);
-                changeTrue();
+                update();
                 schuss();
             } else if (z.contains("2")) {
                 dasSpiel.shoot(xy[0], xy[1], 1, 1, true);
                 derBot.setSchussFeld(xy[0], xy[1], 2, true);
-                changeTrue();
+                update();
                 schuss();
             } else if (z.contains("0")) {
                 dasSpiel.shoot(xy[0], xy[1], 1, 0, false);
                 derBot.setSchussFeld(xy[0], xy[1], 3, false);
-                changeTrue();
+                update();
                 sendSocket("next");
                 nachricht = receiveSocket();
                 if (nachricht.contains("shot")) {
@@ -336,7 +341,7 @@ public class BotHost {
             } else {
                 CutConnection();
             }
-            changeTrue();
+            update();
         };
         Thread t = new Thread(runnable);
         t.start();
@@ -350,7 +355,7 @@ public class BotHost {
         int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
         dasSpiel.shoot(x, y, 0, 0, false);
         //derBot.setSchussFeld(x,y,);
-        changeTrue();
+        update();
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:
@@ -382,12 +387,14 @@ public class BotHost {
     /**
      * aendert change auf true
      */
-    private void changeTrue(){
-        change=true;
+    private void update(){
         try {
+            updateT.play();
             Thread.sleep(MultiHostBotController.sleeptime);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }catch (NullPointerException e){
+            System.err.println("updateTimeline is missing");
         }
     }
     /**
