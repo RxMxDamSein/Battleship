@@ -1,13 +1,11 @@
 package GUI;
 
+import javafx.animation.Timeline;
 import logic.*;
 import logic.save.SAFE_SOME;
-import sun.security.provider.ConfigFile;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
  * Klasse fuer den Multiplayer-Bot-Client
@@ -33,10 +31,7 @@ public class BotClient {
      * pause, true wenn der Bot pausieren soll.
      */
     public boolean ERROR = false, loaded = false, pause = false;
-    /**
-     * change Variable, welche true wird wenn das Spielfeld aktualiesiert werden soll.
-     */
-    public volatile boolean change = false;
+
     /**
      * Spiel aus dem Logic-package
      */
@@ -62,6 +57,8 @@ public class BotClient {
     // 0 = keine verbindung
     // 1 = Verbindung und Spielfeld
     // 2 = Schiffsgrößen erhalten
+
+    private Timeline updateT;
 
     /**
      * Konstruktor fuer die BotClient-Klasse, welche sich  mit dem Host verbindet
@@ -166,6 +163,10 @@ public class BotClient {
 
     }
 
+    public void setUpdateTimeline(Timeline t){
+        updateT=t;
+    }
+
     /**
      * Funktion zum der Nachrichten an den Host
      * @param antwort Die Nachricht fuer den Host
@@ -214,9 +215,8 @@ public class BotClient {
     /**
      * aendert change auf true
      */
-    private void changeTrue(){
-        change=true;
-        //System.out.println("CHANGE!");
+    private void update(){
+        updateT.play();
         try {
             Thread.sleep(MultiClientBotController.sleeptime);
         } catch (InterruptedException e) {
@@ -321,12 +321,12 @@ public class BotClient {
             if (z.contains("1")) {
                 dasSpiel.shoot(x, y, 1, 1, false);
                 derBot.setSchussFeld(x, y, 2, false);
-                changeTrue();
+                update();
                 schuss();
             } else if (z.contains("2")) {
                 dasSpiel.shoot(x, y, 1, 1, true);
                 derBot.setSchussFeld(x, y, 2, true);
-                changeTrue();
+                update();
 
                 //
                 if (dasSpiel.isOver()) {
@@ -337,7 +337,7 @@ public class BotClient {
             } else if (z.contains("0")) {
                 dasSpiel.shoot(x, y, 1, 0, false);
                 derBot.setSchussFeld(x, y, 3, false);
-                changeTrue();
+                update();
                 sendSocket("next");
                 String nachricht = receiveSocket();
                 if (nachricht.contains("shot")) {
@@ -347,7 +347,7 @@ public class BotClient {
             } else {
                 CutConnection();
             }
-            changeTrue();
+            update();
         };
         Thread t = new Thread(runnable);
         t.start();
@@ -361,7 +361,7 @@ public class BotClient {
         int x = Integer.parseInt(nachricht.split(" ")[1]) - 1;
         int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
         dasSpiel.shoot(x, y, 0, 0, false);
-        changeTrue();
+        update();
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:

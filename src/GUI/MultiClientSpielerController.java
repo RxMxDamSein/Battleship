@@ -133,7 +133,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
      * initialisiert updateTimeline
      */
     private void initupdateTimeline() {
-
         if (updateTimeline != null) {
             System.err.println("Timeline existiert bereits!!!");
             return;
@@ -148,6 +147,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
                 }
                 GridUpdater();
                 updateTimeline.stop();
+                return;
             }
         }));
         updateTimeline.setCycleCount(1);
