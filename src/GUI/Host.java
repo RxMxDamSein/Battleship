@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.animation.Timeline;
 import logic.Spiel;
 import logic.save.SAFE_SOME;
 
@@ -48,7 +49,7 @@ public class Host {
      * <br>
      * load gibt an ob ein geladenes Spiel genutzt wird
      */
-    public boolean Connected = false, change = false, load = false;
+    public boolean Connected = false, load = false;
     /**
      * true wenn gerade geschossen wird oder geschossen wurde
      */
@@ -67,6 +68,7 @@ public class Host {
      * Spiel aus dem Logic-package
      */
     public Spiel dasSpiel;
+    private Timeline updateT;
 
     /**
      * Nromaler Konstrukter von Host
@@ -164,6 +166,10 @@ public class Host {
 
 
     }
+
+    public void setUpdateTimeline(Timeline t){
+        updateT=t;
+    }
     /**
      * Funktion zum der Nachrichten an den Host
      * @param antwort Die Nachricht fuer den Host
@@ -230,7 +236,7 @@ public class Host {
         Thread t = new Thread(Runnable);
         t.start();
     }
-    private boolean closed=false;
+    public boolean closed=false;
     /**
      * Schliesst die Verbindung
      */
@@ -294,7 +300,7 @@ public class Host {
                 dasSpiel.shoot(x, y, 1, 1, true);
             } else if (z.contains("0")) {
                 dasSpiel.shoot(x, y, 1, 0, false);
-                change = true;
+                updateT.play();
                 sendSocket("next");
                 nachricht = receiveSocket();
                 if (nachricht.contains("shot")) {
@@ -305,7 +311,7 @@ public class Host {
                 CutConnection();
             }
             shooting = false;
-            change = true;
+            updateT.play();
         };
         Thread t = new Thread(runnable);
         t.start();
@@ -318,7 +324,7 @@ public class Host {
         int x = Integer.parseInt(nachricht.split(" ")[1]) - 1;
         int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
         dasSpiel.shoot(x, y, 0, 0, false);
-        change = true;
+        updateT.play();
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:

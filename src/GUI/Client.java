@@ -314,7 +314,7 @@ public class Client {
         }
         sendSocket(antwort);
         String z = receiveSocket();
-        if (z.contains("shot")) {
+        if (z!=null && z.contains("shot")) {
             Servershot(z);
             return;
         }

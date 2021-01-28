@@ -122,7 +122,7 @@ public class MultiHostBotController implements Initializable, Serializable {
     private Timeline updateTimeline,startbutton;
 
 
-    private boolean timelinefin=false;
+
     /**
      * initialisiert und startet die updateTimeline
      */
@@ -133,10 +133,9 @@ public class MultiHostBotController implements Initializable, Serializable {
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
             GridUpdater();
-            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()&& !timelinefin) {
+            if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
                 if(!Host.closed)
                     Host.CutConnection();
-                timelinefin=true;
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {
