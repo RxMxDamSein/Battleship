@@ -934,6 +934,7 @@ public class nuetzlicheMethoden {
         newStage.setX(MainMenuController.primaryStage.getX());
         newStage.setY(MainMenuController.primaryStage.getY());
         newStage.show();
+        connectionlost.stop();
     }
 
     public void connectionlost(Client Client,BotClient BClient) {
@@ -941,13 +942,11 @@ public class nuetzlicheMethoden {
             if (Client == null) {
                 if (BClient.ERROR) {
                     connectionfeedback();
-                    connectionlost.stop();
                     return;
                 }
             } else {
                 if (Client.ERROR) {
                     connectionfeedback();
-                    connectionlost.stop();
                     return;
                 }
             }
@@ -959,7 +958,7 @@ public class nuetzlicheMethoden {
     /**
      * Timeline fuer connectionfeedback
      */
-    private Timeline connectionlost;
+    public Timeline connectionlost;
 
 }
 

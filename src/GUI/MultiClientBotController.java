@@ -529,7 +529,7 @@ public class MultiClientBotController implements Initializable, Serializable {
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-
+        methoden.connectionlost.stop();
         Client.CutConnection();
 
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));

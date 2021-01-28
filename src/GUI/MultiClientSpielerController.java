@@ -566,6 +566,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }
         if(time!=null)
             time.stop();
+        methoden.connectionlost.stop();
 
         Client.CutConnection();
 
