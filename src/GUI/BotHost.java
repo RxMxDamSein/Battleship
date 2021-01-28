@@ -263,39 +263,43 @@ public class BotHost {
     public void CutConnection() {
         ERROR = true;
         System.out.println("Closing Connection!");
-        try {
-            try{
-                Thread.sleep(500);
-                out.flush();
-            }catch (IOException e){
-                System.err.println("out already closed");
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }catch (NullPointerException e){
-                System.err.println("There was no connection established");
-            }
-            if(closed==true)
-                return;
+        Runnable runnable=()->{
+            try {
+                try{
+                    Thread.sleep(500);
+                    out.flush();
+                }catch (IOException e){
+                    System.err.println("out already closed");
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }catch (NullPointerException e){
+                    System.err.println("There was no connection established");
+                }
+                if(closed==true)
+                    return;
 
-            if(s!=null){
-                s.setSoTimeout(100);
-                s.shutdownInput();
-                s.shutdownOutput();
-                s.close();
+                if(s!=null){
+                    s.setSoTimeout(100);
+                    s.shutdownInput();
+                    s.shutdownOutput();
+                    s.close();
+                }
+                ss.setSoTimeout(100);
+                if(in!=null){
+                    in.close();
+                }
+                if(out!=null){
+                    out.close();
+                }
+                ss.close();
+                closed=true;
+            } catch (IOException e) {
+                System.err.println("Can not close Socket!!");
+                e.printStackTrace();
             }
-            ss.setSoTimeout(100);
-            if(in!=null){
-                in.close();
-            }
-            if(out!=null){
-                out.close();
-            }
-            ss.close();
-            closed=true;
-        } catch (IOException e) {
-            System.err.println("Can not close Socket!!");
-            e.printStackTrace();
-        }
+        };
+       Thread t=new Thread(runnable);
+       t.start();
     }
     /**
      * Funktion zum schiessen des Host.
