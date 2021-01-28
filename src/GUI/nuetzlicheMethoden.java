@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -27,6 +28,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Time;
 import java.util.Scanner;
 
 /**
@@ -535,6 +537,7 @@ public class nuetzlicheMethoden {
         comp.getChildren().add(BackMenu);
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
+
         newStage.show();
         ////
 
@@ -851,7 +854,7 @@ public class nuetzlicheMethoden {
      * @param label2   rechtes Label des Spielfelds
      */
     public void setAbschussLabelTimeline(Spiel dasSpiel, Label label1, Label label2) {
-        abschussLabel = new Timeline(new KeyFrame(new Duration(100), event -> {
+        abschussLabel = new Timeline(new KeyFrame(new Duration(50), event -> {
             if (dasSpiel.isOver()) {
                 abschussLabel.stop();
             }
@@ -867,4 +870,91 @@ public class nuetzlicheMethoden {
         abschussLabel.setCycleCount(Animation.INDEFINITE);
         abschussLabel.play();
     }
+
+    /**
+     * Timeline timespeicherbutton fuer initspeichern
+     */
+    private Timeline timespeicherbutton;
+
+    /**
+     * Zeigt den Speicher-Button an, wenn das Spiel gestartet wurde
+     * @param dasSpiel ein Spiel aus dem Logic Package
+     * @param speicherbutton der Speicher-Button
+     */
+    public void initspeichern(Spiel dasSpiel,Button speicherbutton) {
+        timespeicherbutton = new Timeline(new KeyFrame(Duration.millis(50),event -> {
+            if (dasSpiel != null && dasSpiel.isStarted()) {
+                speicherbutton.setVisible(true);
+                timespeicherbutton.stop();
+            }
+        }));
+        timespeicherbutton.setCycleCount(Animation.INDEFINITE);
+        timespeicherbutton.play();
+    }
+
+    public void connectionfeedback() {
+        System.out.println("speicherfeedback");
+        Stage newStage = new Stage();
+        VBox comp = new VBox();
+        comp.setPadding(new Insets(10, 10, 10, 10));
+        comp.setSpacing(5);
+        comp.setStyle("-fx-background-color: DARKCYAN;");
+        comp.setAlignment(Pos.CENTER);
+        Button back = new Button("back to Menu");
+        //back.setPrefSize(100, 30);
+        back.setOnAction(event1 -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+                Scene s = new Scene(root);
+                MainMenuController.primaryStage.setScene(s);
+                MainMenuController.primaryStage.setTitle("MainMenu");
+                MainMenuController.primaryStage.show();
+                newStage.close();
+            } catch (IOException e) {
+                System.err.println("FXML Fehler!!");
+                return;
+            }
+        });
+        Label label = new Label("Verbindung wurde getrennt!");
+        label.setFont(new Font("System",14));
+        comp.getChildren().add(label);
+        comp.getChildren().add(back);
+        Scene stageScene = new Scene(comp, 300, 150);
+        newStage.setScene(stageScene);
+        //newStage.setAlwaysOnTop(true);
+        //double x = MainMenuController.primaryStage.getX();//-(newStage.getWidth()/2);//+((MainMenuController.primaryStage.getWidth()/2)-newStage.getWidth()/2);
+        //double y = MainMenuController.primaryStage.getY();//+(newStage.getHeight()/2);//+((MainMenuController.primaryStage.getHeight()/2)-newStage.getHeight()/2);
+        newStage.setX(MainMenuController.primaryStage.getX());
+        newStage.setY(MainMenuController.primaryStage.getY());
+        newStage.show();
+    }
+
+    public void connectionlost(Client Client,BotClient BClient) {
+        connectionlost = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Client == null) {
+                if (BClient.ERROR) {
+                    System.out.println("SSSSSSSSSSSSSSSSSS");
+                    connectionfeedback();
+                    connectionlost.stop();
+                    return;
+                }
+            } else {
+                if (Client.ERROR) {
+                    System.out.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+                    connectionfeedback();
+                    connectionlost.stop();
+                    return;
+                }
+            }
+        }));
+        connectionlost.setCycleCount(Animation.INDEFINITE);
+        connectionlost.play();
+
+    }
+    /**
+     * Timeline fuer connectionfeedback
+     */
+    private Timeline connectionlost;
+
 }
+

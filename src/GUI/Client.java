@@ -233,7 +233,7 @@ public class Client {
         new SAFE_SOME( new Spiel[]{dasSpiel}, 4, hash,dname,dasSpiel.slayship, dasSpiel.slayX,dasSpiel.slayY, dasSpiel.enemyShips, dasSpiel.smallestShip, dasSpiel.longestShip);
         sendSocket("save " + hash);
         if (!receiveSocket().contains("done")) {
-            System.err.println("Client hat nicht wahrscheinlich gespeichert");
+            System.err.println("Client hat wahrscheinlich nicht gespeichert");
             CutConnection();
             return;
         }

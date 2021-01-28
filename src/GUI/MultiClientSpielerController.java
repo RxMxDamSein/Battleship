@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.*;
@@ -22,6 +23,7 @@ import logic.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.sql.Time;
 import java.util.ResourceBundle;
 
 import java.util.concurrent.TimeUnit;
@@ -55,6 +57,11 @@ public class MultiClientSpielerController implements Initializable, Serializable
      */
     @FXML
     private Button gameStartButton;
+    /**
+     * Button zum Speichern
+     */
+    @FXML
+    private Button speicherbutton;
     /**
      * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
      */
@@ -170,6 +177,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         x = Client.dasSpiel.getSizeX();
         //bot = b;
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = Client.dasSpiel;
+        methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
         Gridinit();
         //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
@@ -178,6 +186,8 @@ public class MultiClientSpielerController implements Initializable, Serializable
             GridUpdater();
             initupdateTimeline();
             spielstatus = true;
+            gameStartButton.setVisible(false);
+            methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot,GameTopLabel,GameTopLabel1);
             return;
         }
         time = new Timeline(new KeyFrame(new Duration(100), event -> {
@@ -191,6 +201,21 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }));
         time.setCycleCount(Animation.INDEFINITE);
         time.play();
+
+        gameStartButton.setText("warte auf Host Schiffe..");
+        sendship = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Client.status == 2) {
+                gameStartButton.setText("Schiffe platzieren");
+                sendship.stop();
+            }
+        }));
+        sendship.setCycleCount(Animation.INDEFINITE);
+        sendship.play();
+
+
+        methoden.connectionlost(Client,null);
+
+
     }
 
     /**
@@ -563,6 +588,8 @@ public class MultiClientSpielerController implements Initializable, Serializable
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        speicherbutton.setVisible(false);
+        /*
         gameStartButton.setText("warte auf Host Schiffe..");
         sendship = new Timeline(new KeyFrame(Duration.millis(100),event -> {
             if (Client.status == 2) {
@@ -572,6 +599,8 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }));
         sendship.setCycleCount(Animation.INDEFINITE);
         sendship.play();
+
+         */
     }
 
     /**
@@ -609,6 +638,9 @@ public class MultiClientSpielerController implements Initializable, Serializable
             Client.save(hash, name);
             newStage.close();
         });
+        Label label = new Label("Dateiname:");
+        label.setFont(new Font("System",14));
+        comp.getChildren().add(label);
         comp.getChildren().add(DateiName);
         comp.getChildren().add(Save);
         Scene stageScene = new Scene(comp, 300, 150);

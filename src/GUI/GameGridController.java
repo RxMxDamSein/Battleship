@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import logic.*;
 
@@ -53,6 +54,11 @@ public class GameGridController implements Initializable, Serializable {
      */
     @FXML
     private Button gameStartButton;
+    /**
+     * Button zum Speichern
+     */
+    @FXML
+    private Button speicherbutton;
     /**
      * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
      */
@@ -107,6 +113,7 @@ public class GameGridController implements Initializable, Serializable {
         bot = b;
         Gridinit();
         Spielinit();
+        methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
     }
 
     /**
@@ -128,6 +135,7 @@ public class GameGridController implements Initializable, Serializable {
          */
         x = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getSizeX();
         methoden = new nuetzlicheMethoden(x);
+        methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
         //GOETTLICHESSPIELDERVERNICHTUNGMITbot = s;
         //ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = b;
 
@@ -639,6 +647,7 @@ public class GameGridController implements Initializable, Serializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //nuetzlicheMethoden.setStageCenter();
+        speicherbutton.setVisible(false);
     }
 
 
@@ -650,7 +659,6 @@ public class GameGridController implements Initializable, Serializable {
      * @throws IOException
      */
     public void Speichern(ActionEvent event) throws IOException {
-
         //SaveData data = new SaveData();
         //ResourceManager.save(this, "1.save");
         // SAVE POP UP Fenster
@@ -678,6 +686,9 @@ public class GameGridController implements Initializable, Serializable {
              */
             newStage.close();
         });
+        Label label = new Label("Dateiname:");
+        label.setFont(new Font("System",14));
+        comp.getChildren().add(label);
         comp.getChildren().add(DateiName);
         comp.getChildren().add(Save);
         Scene stageScene = new Scene(comp, 300, 150);

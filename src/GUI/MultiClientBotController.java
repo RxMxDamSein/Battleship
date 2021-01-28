@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.*;
@@ -63,6 +64,11 @@ public class MultiClientBotController implements Initializable, Serializable {
      */
     @FXML
     private Button gameStartButton;
+    /**
+     * Button zum Speichern
+     */
+    @FXML
+    private Button speicherbutton;
     /**
      * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
      * <br>
@@ -182,6 +188,7 @@ public class MultiClientBotController implements Initializable, Serializable {
         x = Client.dasSpiel.getSizeX();
         //bot = b;
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = Client.dasSpiel;
+        methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
         Gridinit();
         //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
@@ -189,6 +196,7 @@ public class MultiClientBotController implements Initializable, Serializable {
         GridUpdater();
         initupdateTimeline();
         spielstatus = true;
+        methoden.connectionlost(null,Client);
     }
 
     /**
@@ -558,6 +566,7 @@ public class MultiClientBotController implements Initializable, Serializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        speicherbutton.setVisible(false);
         gameStartButton.setVisible(false);
         BotSpeedSlider.setMin(1);
         BotSpeedSlider.setValue(100);
@@ -633,6 +642,9 @@ public class MultiClientBotController implements Initializable, Serializable {
             Client.save(hash, name);
             newStage.close();
         });
+        Label label = new Label("Dateiname:");
+        label.setFont(new Font("System",14));
+        comp.getChildren().add(label);
         comp.getChildren().add(DateiName);
         comp.getChildren().add(Save);
         Scene stageScene = new Scene(comp, 300, 150);

@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.*;
@@ -57,6 +58,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
      */
     @FXML
     private Button gameStartButton;
+    /**
+     * Button zum Speichern
+     */
+    @FXML
+    private Button speicherbutton;
     /**
      * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
      */
@@ -137,15 +143,35 @@ public class MultiHostSpielerController implements Initializable, Serializable {
      * @param FeldGroesse
      */
     public void setVariables(Integer Port, Integer FeldGroesse) {
+        speicherbutton.setVisible(false);
+        gameStartButton.setText("warte auf Client..");
+        sendship = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Host.Connected) {
+                gameStartButton.setText("Schiffe senden");
+                sendship.stop();
+            }
+        }));
+        sendship.setCycleCount(Animation.INDEFINITE);
+        sendship.play();
+        startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Host != null && Host.Spielstartet) {
+                gameStartButton.setPrefSize(41,25);
+                gameStartButton.setText("Start");
+                startbutton.stop();
+            }
+        }));
+        startbutton.setCycleCount(Animation.INDEFINITE);
+        startbutton.play();
+
         methoden = new nuetzlicheMethoden(FeldGroesse);
+
         x = FeldGroesse;
         //bot = b;
         Gridinit();
         Spielinit();
         Host = new Host(Port, FeldGroesse, GOETTLICHESSPIELDERVERNICHTUNGMITbot);
         Host.init();
-
-
+        methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
     }
 
     /**
@@ -161,15 +187,42 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         x = SAFE.spiele[0].getSizeX();
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = SAFE.spiele[0];
         methoden = new nuetzlicheMethoden(x);
+        methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot,GameTopLabel,GameTopLabel1);
         //bot = b;
         Gridinit();
         Host = new Host(Port, x, GOETTLICHESSPIELDERVERNICHTUNGMITbot, id);
         Host.init();
         GridUpdater();
         initupdateTimeline();
-        if(Host.dasSpiel.isStarted()){
+        if(Host.dasSpiel.isStarted()) {
             spielstatus=true;
         }
+        gameStartButton.setText("warte auf Client..");
+        sendship = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Host.Connected) {
+                if (!GOETTLICHESSPIELDERVERNICHTUNGMITbot.isStarted()) {
+                    gameStartButton.setPrefSize(41,25);
+                    gameStartButton.setText("Start");
+                } else {
+                    gameStartButton.setVisible(false);
+                }
+                sendship.stop();
+            }
+        }));
+        sendship.setCycleCount(Animation.INDEFINITE);
+        sendship.play();
+        /*
+        startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
+            if (Host != null && Host.Spielstartet) {
+                gameStartButton.setPrefSize(41,25);
+                gameStartButton.setText("Start");
+                startbutton.stop();
+            }
+        }));
+        startbutton.setCycleCount(Animation.INDEFINITE);
+        startbutton.play();
+
+         */
     }
 
     /**
@@ -542,6 +595,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        /*
         gameStartButton.setText("warte auf Client..");
         sendship = new Timeline(new KeyFrame(Duration.millis(100),event -> {
             if (Host.Connected) {
@@ -560,6 +614,8 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         }));
         startbutton.setCycleCount(Animation.INDEFINITE);
         startbutton.play();
+
+         */
     }
 
 
@@ -601,6 +657,9 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             Host.save(hash);
             newStage.close();
         });
+        Label label = new Label("Dateiname:");
+        label.setFont(new Font("System",14));
+        comp.getChildren().add(label);
         comp.getChildren().add(DateiName);
         comp.getChildren().add(Save);
         Scene stageScene = new Scene(comp, 300, 150);

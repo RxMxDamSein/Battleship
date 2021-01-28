@@ -20,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -63,6 +64,11 @@ public class BOTgegenBOTGridController implements Initializable {
      */
     @FXML
     Button gameStartButton;
+    /**
+     * Button zum Speichern
+     */
+    @FXML
+    private Button speicherbutton;
     private boolean spielstatus = false;
     /**
      * rechtes Spielfeld
@@ -126,6 +132,7 @@ public class BOTgegenBOTGridController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        speicherbutton.setVisible(false);
         //Duration duration = new Duration();
         BotSpeedSlider.setMin(1);
         BotSpeedSlider.setValue(100);
@@ -183,7 +190,7 @@ public class BOTgegenBOTGridController implements Initializable {
         Spielinit();
         Gridinit();
         GridUpdater();
-
+        methoden.initspeichern(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel,speicherbutton);
     }
 
     /**
@@ -198,6 +205,7 @@ public class BOTgegenBOTGridController implements Initializable {
         feld = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
         Gridinit();
         GridUpdater();
+        methoden.initspeichern(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel,speicherbutton);
     }
 
     /**
@@ -522,6 +530,9 @@ public class BOTgegenBOTGridController implements Initializable {
             newStage.close();
             oneSecondsWonder.play();
         });
+        Label label = new Label("Dateiname:");
+        label.setFont(new Font("System",14));
+        comp.getChildren().add(label);
         comp.getChildren().add(DateiName);
         comp.getChildren().add(Save);
         Scene stageScene = new Scene(comp, 300, 150);
