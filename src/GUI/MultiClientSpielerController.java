@@ -174,6 +174,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         Gridinit();
         //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
+        methoden.connectionlost(Client,null);
         //Client.init(); wurde davor schon erledigt
         if (Client.loaded) {
             GridUpdater();
@@ -182,6 +183,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
             spielstatus = true;
             gameStartButton.setVisible(false);
             methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot,GameTopLabel,GameTopLabel1);
+
             return;
         }
         time = new Timeline(new KeyFrame(new Duration(100), event -> {
@@ -205,11 +207,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }));
         sendship.setCycleCount(Animation.INDEFINITE);
         sendship.play();
-
-
-        methoden.connectionlost(Client,null);
-
-
     }
 
     /**
@@ -610,6 +607,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Du kannst nur speichern, wenn du dran bist!");
             return;
         }
+        methoden.connectionlost.stop();
 
         //SaveData data = new SaveData();
         //ResourceManager.save(this, "1.save");

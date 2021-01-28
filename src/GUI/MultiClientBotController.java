@@ -613,6 +613,7 @@ public class MultiClientBotController implements Initializable, Serializable {
         Save.setPrefSize(100, 30);
         Save.setText("Save");
         Save.setOnAction(event1 -> {
+            methoden.connectionlost.stop();
             String name = String.valueOf(DateiName.getText());
             name = name + "-M";
             System.out.println("Name: " + name);

@@ -741,7 +741,7 @@ public class nuetzlicheMethoden {
     }
 
     public void connectionfeedback() {
-        System.out.println("speicherfeedback");
+        System.out.println("Verbindung wurde getrennt!");
         Stage newStage = new Stage();
         VBox comp = new VBox();
         comp.setPadding(new Insets(10, 10, 10, 10));
@@ -775,18 +775,20 @@ public class nuetzlicheMethoden {
         newStage.setX(MainMenuController.primaryStage.getX());
         newStage.setY(MainMenuController.primaryStage.getY());
         newStage.show();
-        connectionlost.stop();
     }
 
     public void connectionlost(Client Client,BotClient BClient) {
         connectionlost = new Timeline(new KeyFrame(Duration.millis(100),event -> {
             if (Client == null) {
                 if (BClient.ERROR) {
+                    connectionlost.stop();
                     connectionfeedback();
                     return;
                 }
-            } else {
+            }
+            if (BClient == null) {
                 if (Client.ERROR) {
+                    connectionlost.stop();
                     connectionfeedback();
                     return;
                 }
