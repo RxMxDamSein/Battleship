@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.animation.Timeline;
 import logic.Bot;
 import logic.Spiel;
 import logic.save.SAFE_SOME;
@@ -32,11 +33,9 @@ public class Client {
     /**
      * ERROR, true wenn ein Verbindungsfehler oder aehnliches auftritt.
      * <br>
-     * change Variable, welche true wird wenn das Spielfeld aktualiesiert werden soll.
-     * <br>
      * loaded, true wenn des Spiel geladen werden soll.
      */
-    public boolean ERROR = false, change = false, loaded = false;
+    public boolean ERROR = false, loaded = false;
     /**
      * Spiel aus dem Logic-package
      */
@@ -58,6 +57,7 @@ public class Client {
     // 0 = keine verbindung
     // 1 = Verbindung und Spielfeldgröße gegeben
     // 2 = Schiffsgrößen erhalten
+    private Timeline updateT;
 
     /**
      * Konstruktor fuer die Client-Klasse, welche sich  mit dem Host verbindet
@@ -127,6 +127,10 @@ public class Client {
 
 
     }
+
+    public void setUpdateTimeline(Timeline t){
+        updateT=t;
+    }
     /**
      * Funktion zum der Nachrichten an den Host
      * @param antwort Die Nachricht fuer den Host
@@ -192,36 +196,40 @@ public class Client {
     public void CutConnection() {
         ERROR = true;
         System.out.println("Closing Connection!");
-        try {
-            try{
-                Thread.sleep(500);
-                out.flush();
-            }catch (IOException e){
-                System.err.println("out already closed");
-            }catch (InterruptedException e){
+        Runnable runnable=() ->{
+            try {
+                try{
+                    Thread.sleep(500);
+                    out.flush();
+                }catch (IOException e){
+                    System.err.println("out already closed");
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }catch (NullPointerException e){
+                    System.err.println("There was no connection established");
+                }
+                if(closed)
+                    return;
+                if(s!=null){
+                    s.setSoTimeout(10);
+                    s.shutdownInput();
+                    s.shutdownOutput();
+                    s.close();
+                }
+                if(in!=null){
+                    in.close();
+                }
+                if(out!=null){
+                    out.close();
+                }
+                closed=true;
+            } catch (IOException e) {
+                System.err.println("Can not close Socket!!");
                 e.printStackTrace();
-            }catch (NullPointerException e){
-                System.err.println("There was no connection established");
             }
-            if(closed)
-                return;
-            if(s!=null){
-                s.setSoTimeout(10);
-                s.shutdownInput();
-                s.shutdownOutput();
-                s.close();
-            }
-            if(in!=null){
-                in.close();
-            }
-            if(out!=null){
-                out.close();
-            }
-            closed=true;
-        } catch (IOException e) {
-            System.err.println("Can not close Socket!!");
-            e.printStackTrace();
-        }
+        };
+        Thread t= new Thread(runnable);
+        t.start();
     }
     /**
      * Speichert das Spiel
@@ -261,7 +269,7 @@ public class Client {
                 dasSpiel.shoot(x, y, 1, 1, true);
             } else if (z.contains("0")) {
                 dasSpiel.shoot(x, y, 1, 0, false);
-                change = true;
+                updateT.play();
                 sendSocket("next");
                 String nachricht = receiveSocket();
                 if (nachricht.contains("shot")) {
@@ -272,7 +280,7 @@ public class Client {
                 CutConnection();
             }
             shooting = false;
-            change = true;
+            updateT.play();
         };
         Thread t = new Thread(runnable);
         t.start();
@@ -285,7 +293,7 @@ public class Client {
         int x = Integer.parseInt(nachricht.split(" ")[1]) - 1;
         int y = Integer.parseInt(nachricht.split(" ")[2]) - 1;
         dasSpiel.shoot(x, y, 0, 0, false);
-        change = true;
+        updateT.play();
         String antwort = "answer ";
         switch (dasSpiel.getFeld()[0][x][y]) {
             case 2:

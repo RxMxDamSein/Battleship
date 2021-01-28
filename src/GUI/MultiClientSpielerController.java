@@ -129,21 +129,18 @@ public class MultiClientSpielerController implements Initializable, Serializable
     }
 
 
-    private int forceUpdate=1;
     /**
      * initialisiert updateTimeline
      */
     private void initupdateTimeline() {
-        if(forceUpdate%10==0)
-            GridUpdater();
-        forceUpdate++;
+
         if (updateTimeline != null) {
             System.err.println("Timeline existiert bereits!!!");
             return;
         }
         updateTimeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+            GridUpdater();
             if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver()) {
-                //Client.CutConnection();
                 if (GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler() == 0) {
                     methoden.GameEnd(false);
                 } else {
@@ -151,13 +148,10 @@ public class MultiClientSpielerController implements Initializable, Serializable
                 }
                 GridUpdater();
                 updateTimeline.stop();
-            } else if (Client.change) {
-                Client.change = false;
-                GridUpdater();
             }
         }));
-        updateTimeline.setCycleCount(Animation.INDEFINITE);
-        updateTimeline.play();
+        updateTimeline.setCycleCount(1);
+        updateTimeline.setDelay(Duration.millis(50));
     }
     /**
      * initialisiert das Spiel
@@ -177,6 +171,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         if (Client.loaded) {
             GridUpdater();
             initupdateTimeline();
+            Client.setUpdateTimeline(updateTimeline);
             spielstatus = true;
             return;
         }
@@ -184,6 +179,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
             if (Client.status == 2) {
                 if(updateTimeline==null){
                     initupdateTimeline();
+                    Client.setUpdateTimeline(updateTimeline);
                 }
                 shipLabel();
                 time.stop();
@@ -319,7 +315,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
     private void label2click(int a, int b) {
         System.out.println("Grid 2 pressed in x: " + a + " y: " + b);
         Client.schuss(a, b);
-        GridUpdater();
+        //GridUpdater();
     }
 
     /**
@@ -533,6 +529,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         System.out.println("AbschussSpieler: " + spieler);
         GridUpdater();
         initupdateTimeline();
+        Client.setUpdateTimeline(updateTimeline);
     }
     /**
      * Button um zuruck zum MehrspielerMenu zu kommen.
@@ -544,7 +541,8 @@ public class MultiClientSpielerController implements Initializable, Serializable
             updateTimeline.stop();
             System.out.println("timeline should be stopped!");
         }
-        time.stop();
+        if(time!=null)
+            time.stop();
 
         Client.CutConnection();
 
