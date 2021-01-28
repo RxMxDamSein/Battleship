@@ -81,8 +81,13 @@ public class BotClient {
                 String z = receiveSocket();
                 if (z!=null && z.contains("load")) {
                     loaded = true;
-                    SAFE_SOME safe_some = SAFE_SOME.load(z.split(" ")[1]);
-                    dasSpiel = safe_some.spiele[0];
+                    try{
+                        SAFE_SOME safe_some = SAFE_SOME.load(z.split(" ")[1]);
+                        dasSpiel = safe_some.spiele[0];
+                    }catch (NullPointerException e){
+                        CutConnection();
+                        return;
+                    }
                     int x = dasSpiel.getSizeX();
                     int y = dasSpiel.getSizeY();
                     switch (bot) {

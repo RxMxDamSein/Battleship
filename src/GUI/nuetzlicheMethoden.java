@@ -436,12 +436,69 @@ public class nuetzlicheMethoden {
      */
     Stage newStage;
 
+
+    private boolean makeServer(Label label){
+        String message="ERROR Try again?";
+        boolean success=false;
+        try {
+            if (bot == null) {
+                if (SAFE == null) {
+                    //Port, Feldgroesse, null, null
+                    if (!setMultiHostSpielerGrid()) {
+                        label.setText(message);
+                        label.setStyle("-fx-background-color: #df0052");
+                        return false;
+                    }
+                    if(newStage.isShowing())
+                        newStage.close();
+                    success=true;
+                } else {
+                    //Port, null, SAFE, id
+                    if (!setMultiHostSpielerGrid()) {
+                        label.setText(message);
+                        label.setStyle("-fx-background-color: #df0052");
+                        return false;
+                    }
+                    if(newStage.isShowing())
+                        newStage.close();
+                    success=true;
+                }
+            } else {
+                if (SAFE == null) {
+                    //Port,Feldgroesse,bot,null,null
+                    if (!setMultiHostBotGrid()) {
+                        label.setText(message);
+                        label.setStyle("-fx-background-color: #df0052");
+                        return false;
+                    }
+                    if(newStage.isShowing())
+                        newStage.close();
+                    success=true;
+                } else {
+                    //Port,null,bot,SAFE,id
+                    if (!setMultiHostBotGrid()) {
+                        label.setText(message);
+                        label.setStyle("-fx-background-color: #df0052");
+                        return false;
+                    }
+                    if(newStage.isShowing())
+                        newStage.close();
+                    success=true;
+                }
+            }
+        } catch (IOException e/*| InterruptedException e*/) {
+            System.out.println("HostWarteBildschirmFehler");
+            e.printStackTrace();
+        }
+        return success;
+    }
     /**
      * HostwarteBildschirm, welcher ueberprueft ob der Server erstellt werden konnte
      */
     public void HostwarteBildschirm() {
         newStage = new Stage();
         Label label = new Label();
+
         VBox comp = new VBox();
         comp.setPadding(new Insets(10, 10, 10, 10));
         comp.setSpacing(5);
@@ -449,6 +506,8 @@ public class nuetzlicheMethoden {
         comp.setAlignment(Pos.CENTER);
 
         label.setText("Sever wird erstellt...");
+        if(makeServer(label))
+            return;
         label.setAlignment(Pos.CENTER);
         //label.setFont(new Font("Ink Free",14));
         label.setFont(new Font("System", 14));
@@ -462,75 +521,9 @@ public class nuetzlicheMethoden {
         });
         Button start = new Button("Start");
         start.setOnAction(event3 -> {
-            try {
-                if (bot == null) {
-                    if (SAFE == null) {
-                        //Port, Feldgroesse, null, null
-                        if (!setMultiHostSpielerGrid()) {
-                            label.setText("Sever fehler");
-                            label.setStyle("-fx-background-color: #df0052");
-                            /*
-                            timeline = new Timeline(new KeyFrame(new Duration(10000),event -> {
-                                label.setText(label.getText()+".");
-                            }));
-                            timeline.setCycleCount(5);
-                            timeline.play();
-
-                             */
-                            Integer i = 1;
-                            while (i % 1000990990 != 0) {
-                                i++;
-                                //System.out.println("PENIS "+i);
-                            }
-                            i = 1;
-
-                            while (i % 1000990990 != 0) {
-                                i++;
-                                //System.out.println("PENIS "+i);
-                            }
-                            i = 1;
-                            //newStage.close();
-                            System.out.println("Penis");
-                            return;
-                        }
-                        newStage.close();
-                    } else {
-                        //Port, null, SAFE, id
-                        if (!setMultiHostSpielerGrid()) {
-                            label.setText("Sever fehler");
-                            label.setStyle("-fx-background-color: #df0052");
-                            Thread.sleep(60);
-                            newStage.close();
-                        }
-                        newStage.close();
-                    }
-                } else {
-                    if (SAFE == null) {
-                        //Port,Feldgroesse,bot,null,null
-                        if (!setMultiHostBotGrid()) {
-                            label.setText("Sever fehler");
-                            label.setStyle("-fx-background-color: #df0052");
-                            Thread.sleep(60);
-
-                            newStage.close();
-                        }
-                        newStage.close();
-                    } else {
-                        //Port,null,bot,SAFE,id
-                        if (!setMultiHostBotGrid()) {
-                            label.setText("Sever fehler");
-                            label.setStyle("-fx-background-color: #df0052");
-                            Thread.sleep(60);
-                            newStage.close();
-                        }
-                        newStage.close();
-                    }
-                }
-            } catch (IOException | InterruptedException e) {
-                System.out.println("HostWarteBildschirmFehler");
-                e.printStackTrace();
-            }
-
+            label.setText("Sever wird erstellt...");
+            label.setStyle("-fx-background-color: DARKCYAN;");
+            makeServer(label);
         });
         comp.getChildren().add(label);
         comp.getChildren().add(start);
@@ -539,117 +532,6 @@ public class nuetzlicheMethoden {
         newStage.setScene(stageScene);
 
         newStage.show();
-        ////
-
-        /*
-        try{
-            if (bot == null) {
-                if (SAFE == null) {
-                    //Port, Feldgroesse, null, null
-                    if (!setMultiHostSpielerGrid()) {
-                        label.setText("Sever fehler");
-                        label.setStyle("-fx-background-color: #df0052");
-                        timeline = new Timeline(new KeyFrame(new Duration(10000),event -> {
-                            label.setText(label.getText()+".");
-                        }));
-                        timeline.setCycleCount(5);
-                        timeline.play();
-                        newStage.close();
-                    }
-                    newStage.close();
-                } else {
-                    //Port, null, SAFE, id
-                    if (!setMultiHostSpielerGrid()) {
-                        label.setText("Sever fehler");
-                        label.setStyle("-fx-background-color: #df0052");
-                        Thread.sleep(60);
-                        newStage.close();
-                    }
-                    newStage.close();
-                }
-            }else {
-                if (SAFE == null) {
-                    //Port,Feldgroesse,bot,null,null
-                    if (!setMultiHostBotGrid()) {
-                        label.setText("Sever fehler");
-                        label.setStyle("-fx-background-color: #df0052");
-                        Thread.sleep(60);
-                        newStage.close();
-                    }
-                    newStage.close();
-                } else {
-                    //Port,null,bot,SAFE,id
-                    if (!setMultiHostBotGrid()) {
-                        label.setText("Sever fehler");
-                        label.setStyle("-fx-background-color: #df0052");
-                        Thread.sleep(60);
-                        newStage.close();
-                    }
-                    newStage.close();
-                }
-            }
-        }catch (IOException | InterruptedException e){
-            System.out.println("HostWarteBildschirmFehler");
-            e.printStackTrace();
-        }
-
-         */
-
-
-        ///////////////////////
-/*
-        timeline = new Timeline(new KeyFrame(new Duration(50),event->{
-            count++;
-            if (!success){
-                if (count%70==0){
-                    timeline.stop();
-                    newStage.close();
-                }
-                return;
-            }
-            try {
-                if (SAFE == null){
-                    //nicht laden
-                    if (HostBotController == null) {
-                        if () {
-                            if (count%20==0) {
-                                label.setText(label.getText() + ".");
-                            }
-
-                        } else {
-                            timeline.stop();
-                            newStage.close();
-                        }
-                    } else {
-                        if (!setMultiClientBotGrid(BotClient)) {
-                            if (count%20==0) {
-                                label.setText(label.getText() + ".");
-                            }
-                        } else {
-                            timeline.stop();
-                            newStage.close();
-                        }
-                    }
-                }else {
-                    //laden
-
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (Client != null && Client.ERROR || BotClient != null && BotClient.ERROR) {
-                label.setText("Konnte keine Verbindung herstellen!!");
-                label.setStyle("-fx-background-color: #df0052");
-                success=false;
-                count=0;
-            }
-        }));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        success=true;
-        timeline.play();
-
- */
     }
 
     //Integer Port,Integer Feldgroesse, SAFE_SOME SAFE, String id
@@ -667,66 +549,25 @@ public class nuetzlicheMethoden {
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
             controller.setVariables(Port, Feldgroesse);
-            /*
-            while (i%10000!=0){
-                i++;
-                //System.out.println("PENIS "+i);
-            }
-            i=1;
 
-             */
-
-            ////////////////////
-            /*
-             t = new Timeline(new KeyFrame(new Duration(10000),event -> {
-                i++;
-                if (i%1000==0){
-                    t.stop();
-                }
-            }));
-            t.setCycleCount(Animation.INDEFINITE);
-            t.play();
-
-             */
-            /*
-            try {
-                Thread.sleep(1000);
-            }catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-             */
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (!controller.Host.Hosted) {
-                try {
-                    Thread.sleep(800);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (controller.Host.ERROR || !controller.Host.Hosted) {
-                    return false;
-                }
-            }
             Scene s = new Scene(r);
+            if (controller.Host.ERROR || !controller.Host.Hosted) {
+                return false;
+            }
             MainMenuController.primaryStage.setScene(s);
             MainMenuController.primaryStage.setTitle("Host Spieler");
-            MainMenuController.primaryStage.show();
+            //MainMenuController.primaryStage.show();
             return true;
         } else {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
             Parent r = loader.load();
             MultiHostSpielerController controller = loader.getController();
             controller.setVariables(Port, SAFE, id);
-            while (!controller.Host.Hosted) {
-                if (controller.Host.ERROR) {
-                    return false;
-                }
-            }
+
             Scene s = new Scene(r);
+            if (controller.Host.ERROR || !controller.Host.Hosted) {
+                return false;
+            }
             MainMenuController.primaryStage.setScene(s);
             MainMenuController.primaryStage.setTitle("Host Spieler");
             MainMenuController.primaryStage.show();

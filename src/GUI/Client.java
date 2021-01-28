@@ -10,6 +10,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.NoSuchFileException;
+
 /**
  * Klasse fuer den Multiplayer-Spieler-Client
  */
@@ -76,8 +78,14 @@ public class Client {
                 String z = receiveSocket();
                 if (z.contains("load")) {
                     loaded = true;
-                    SAFE_SOME safe_some = SAFE_SOME.load(z.split(" ")[1]);
-                    dasSpiel = safe_some.spiele[0];
+                    try{
+                        SAFE_SOME safe_some = SAFE_SOME.load(z.split(" ")[1]);
+                        dasSpiel = safe_some.spiele[0];
+                    }catch (NullPointerException e){
+                        CutConnection();
+                        return;
+                    }
+
                     status = 2;
                     System.out.println("status " + status + " error " + ERROR);
                     sendSocket("done");
