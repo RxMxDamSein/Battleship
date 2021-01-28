@@ -884,8 +884,15 @@ public class nuetzlicheMethoden {
     public void initspeichern(Spiel dasSpiel,Button speicherbutton) {
         timespeicherbutton = new Timeline(new KeyFrame(Duration.millis(50),event -> {
             if (dasSpiel != null && dasSpiel.isStarted()) {
-                speicherbutton.setVisible(true);
-                timespeicherbutton.stop();
+                if (dasSpiel.isOver()) {
+                    timespeicherbutton.stop();
+                    return;
+                }
+                if (dasSpiel.getAbschussSpieler() == 1) {
+                    speicherbutton.setVisible(true);
+                } else {
+                    speicherbutton.setVisible(false);
+                }
             }
         }));
         timespeicherbutton.setCycleCount(Animation.INDEFINITE);
@@ -933,14 +940,12 @@ public class nuetzlicheMethoden {
         connectionlost = new Timeline(new KeyFrame(Duration.millis(100),event -> {
             if (Client == null) {
                 if (BClient.ERROR) {
-                    System.out.println("SSSSSSSSSSSSSSSSSS");
                     connectionfeedback();
                     connectionlost.stop();
                     return;
                 }
             } else {
                 if (Client.ERROR) {
-                    System.out.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
                     connectionfeedback();
                     connectionlost.stop();
                     return;
