@@ -216,11 +216,14 @@ public class BotClient {
      * aendert change auf true
      */
     private void update(){
-        updateT.play();
+
         try {
+            updateT.play();
             Thread.sleep(MultiClientBotController.sleeptime);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }catch (NullPointerException e){
+            System.err.println("updateTimeline is missing");
         }
     }
 
