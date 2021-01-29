@@ -418,7 +418,7 @@ public class BotClient {
     }
 
     /**
-     * Moegliche vom Host
+     * Moegliche Sondernachrichten vom Host
      * @param nachricht Sondernachricht vom Host
      */
     private void sonderNachrichten(String nachricht) {
@@ -435,8 +435,8 @@ public class BotClient {
     }
 
     /**
-     * Funktion um die Schiffgroessen vom Host zu setzen und um das Spiel zu starten.
-     * @return returnt ob man die Schiff stzen konnte oder nicht.
+     * Funktion um die Schiffgroessen vom Host zu setzen
+     * @return returnt ob man die Schiff setzen konnte oder nicht.
      */
     public boolean senships() {
         Runnable runnable = () -> {
@@ -469,6 +469,9 @@ public class BotClient {
         return true;
     }
 
+    /**
+     * macht den Speicherbutton Visble wenn man speichern darf
+     */
     private void erlaubeSpeichern(){
         Timeline timeline=new Timeline(new KeyFrame(new Duration(100),event -> {
             multiClientBotController.speicherbutton.setVisible(true);

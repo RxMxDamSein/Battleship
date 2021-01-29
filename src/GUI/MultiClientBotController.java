@@ -179,10 +179,6 @@ public class MultiClientBotController implements Initializable, Serializable {
     }
 
     /**
-     * einfache Zaehlvariable
-     */
-    private int ccount=0;
-    /**
      * Aktuallisiert die beiden Grids des Spiels.
      */
     public void GridUpdater() {
@@ -251,26 +247,13 @@ public class MultiClientBotController implements Initializable, Serializable {
         GameGrid2 = new GridPane();
         labels2 = new Label[x][x];
         for (int a = x - 1; a >= 0; a--) {
-            //System.out.println("for 2");
             for (int b = x - 1; b >= 0; b--) {
-
                 //Game Labels (1)
                 labels[a][b] = new Label();
                 //labels[a][b].setMinSize(50,50);
                 labels[a][b].setMinSize(methoden.minsizeberechner(x), methoden.minsizeberechner(x));
                 //labels[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels[a][b] = methoden.textureWasser(labels[a][b], x);
-
-                //lustige bilder zu den Labels
-                /*
-                Image img = new Image("GUI/Textures/42.jpg");
-                ImageView view = new ImageView(img);
-                view.setFitHeight(100);
-                view.setPreserveRatio(true);
-                labels[a][b].setGraphic(view);
-                 */
-
-                //final int ca=a,cb=b;
                 int ca = a, cb = b;
                 labels[a][b].setOnMouseClicked(e -> labelclick(ca, cb));
                 GridPane.setConstraints(labels[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
@@ -283,7 +266,6 @@ public class MultiClientBotController implements Initializable, Serializable {
                 //labels2[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels2[a][b] = methoden.textureWasser(labels2[a][b], x);
                 labels2[a][b].setOnMouseClicked(e -> label2click(ca, cb));
-
 
                 GridPane.setConstraints(labels2[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
                 GameGrid2.getChildren().add(labels2[a][b]);
@@ -405,8 +387,6 @@ public class MultiClientBotController implements Initializable, Serializable {
                     Client.deleteShip(size);
                 }
                 for (int i = ex; i != sx - 1; i--) {
-                    //System.out.println("i= " + i);
-                    //System.out.println("KAKA 1");
                     //labels[i][sy].setStyle("-fx-background-color: grey");
                     labels[i][sy] = methoden.textureSchiff(labels[i][sy], x);
                 }
@@ -427,8 +407,6 @@ public class MultiClientBotController implements Initializable, Serializable {
                     Client.deleteShip(size);
                 }
                 for (int i = sx; i != ex - 1; i--) {
-                    //System.out.println("KAKA 2");
-                    //System.out.println("i= "+i);
                     //labels[i][sy].setStyle("-fx-background-color: grey");
                     labels[i][sy] = methoden.textureSchiff(labels[i][sy], x);
                 }
@@ -608,8 +586,6 @@ public class MultiClientBotController implements Initializable, Serializable {
             return;
         }
         Client.pause = true;
-        //SaveData data = new SaveData();
-        //ResourceManager.save(this, "1.save");
         // SAVE POP UP Fenster
         Stage newStage = new Stage();
         VBox comp = new VBox();

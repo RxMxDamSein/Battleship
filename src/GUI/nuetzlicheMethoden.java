@@ -749,6 +749,9 @@ public class nuetzlicheMethoden {
         timespeicherbutton.play();
     }
 
+    /**
+     * zeigt ein Fenster an, welches angibt das die Verbindung getrennt worden ist
+     */
     public void connectionfeedback() {
         Timeline t=new Timeline(new KeyFrame(new Duration(1000),event -> {
             Stage newStage = new Stage();

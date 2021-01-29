@@ -34,7 +34,7 @@ public class EinzelspielerController implements Initializable {
 
     }
     /**
-     * Button um zuruck zum MainMenu zu kommen
+     * Button um zuruük zum MainMenu zu kommen
      * @param event
      * @throws IOException
      */

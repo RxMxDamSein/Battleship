@@ -275,7 +275,7 @@ public class BotHost {
 
 
     /**
-     * Schliesst die Verbindung
+     * trennt die Verbindung zum Client
      */
     public void CutConnection() {
         ERROR = true;

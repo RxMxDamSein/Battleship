@@ -69,7 +69,6 @@ public class BOTgegenBOTGridController implements Initializable {
      */
     @FXML
     private Button speicherbutton;
-    private boolean spielstatus = false;
     /**
      * rechtes Spielfeld
      */
@@ -93,7 +92,7 @@ public class BOTgegenBOTGridController implements Initializable {
      * <br>
      * bot2 schwierigkeit des 2.Bots
      */
-    private Integer x, bot1, bot2, count = 0;
+    private Integer x, bot1, bot2;
     /**
      * Timeline zum schießen der beiden Bots
      */
@@ -194,7 +193,7 @@ public class BOTgegenBOTGridController implements Initializable {
     }
 
     /**
-     * Funktion um ein Spiel zu intitialisiern mit einem save-game
+     * Funktion um ein Spiel zu laden mit einem save-game
      * @param SAFE Ein gespeichertes Spiel
      */
     public void gameloader(SAFE_SOME SAFE){
@@ -213,7 +212,6 @@ public class BOTgegenBOTGridController implements Initializable {
      */
     public void GridUpdater() {
         int feld1[][][] = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
-        //for (int s=0;s<2;s++){
         for (int a = x - 1; a >= 0; a--) {
             for (int b = x - 1; b >= 0; b--) {
                 switch (feld1[0][a][b]) {
@@ -236,28 +234,9 @@ public class BOTgegenBOTGridController implements Initializable {
                         labels2[a][b] = methoden.textureversenkt(labels2[a][b], x);
                         break;
                 }
-                /*
-                switch (feld1[1][a][b]) {
-                    default:
-                        break;
-                    case 1:
-                        labels[a][b].setStyle("-fx-background-color: black");
-                        break;
-                    case 2:
-                        labels[a][b].setStyle("-fx-background-color: red");
-                        break;
-                    case 3:
-                        labels[a][b].setStyle("-fx-background-color: blue");
-                        break;
-                    case 4:
-                        labels[a][b].setStyle("-fx-background-color: black");
-                        break;
-                }
 
-                 */
             }
         }
-        //}
 
         int feld2[][][] = WUNDERVOLLERGEGNERBOT.dasSpiel.getFeld();
         //for (int s=0;s<2;s++){
@@ -282,25 +261,6 @@ public class BOTgegenBOTGridController implements Initializable {
                         labels[a][b] = methoden.textureversenkt(labels[a][b],x);
                         break;
                 }
-                /*
-                switch (feld2[1][a][b]) {
-                    default:
-                        break;
-                    case 1:
-                        labels2[a][b].setStyle("-fx-background-color: black");
-                        break;
-                    case 2:
-                        labels2[a][b].setStyle("-fx-background-color: red");
-                        break;
-                    case 3:
-                        labels2[a][b].setStyle("-fx-background-color: blue");
-                        break;
-                    case 4:
-                        labels2[a][b].setStyle("-fx-background-color: black");
-                        break;
-                }
-
-                 */
             }
         }
         //}
@@ -378,51 +338,19 @@ public class BOTgegenBOTGridController implements Initializable {
                 labels[a][b] = new Label();
                 labels[a][b].setMinSize(methoden.minsizeberechner(x), methoden.minsizeberechner(x));
                 //labels[a][b].setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
-
                 //labels[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels[a][b] = methoden.textureWasser(labels[a][b], x);
-
-                //lustige bilder zu den Labels
-                /*
-                Image img = new Image("GUI/Textures/WundervollesWasser.png");
-                ImageView view = new ImageView(img);
-                view.setFitHeight(methoden.minsizeberechner(x));
-                view.setPreserveRatio(true);
-                labels[a][b].setGraphic(view);
-
-                 */
-
-                //Wasser texture setzen
-                //labels[a][b] = methoden.textureWasser(labels[a][b],x);
-
-
                 GridPane.setConstraints(labels[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
                 GameGrid.getChildren().add(labels[a][b]);
-
                 //Game Labels (2)
                 labels2[a][b] = new Label();
                 //labels2[a][b].setMinSize(50,50);
                 labels2[a][b].setMinSize(methoden.minsizeberechner(x), methoden.minsizeberechner(x));
-
-                //labels2[a][b].setStyle("-fx-background-color: #03fcf4");
-
-                //Wundervolles Image
-                /*
-                Image img2 = new Image("GUI/Textures/42.jpg");
-                ImageView view2 = new ImageView(img2);
-                view2.setFitHeight(minsizeberechner());
-                view2.setPreserveRatio(true);
-                labels2[a][b].setGraphic(view2);
-
-                 */
                 labels2[a][b] = methoden.textureWasser(labels2[a][b], x);
-
-
                 GridPane.setConstraints(labels2[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
                 GameGrid2.getChildren().add(labels2[a][b]);
             }
         }
-
         // GameGrid 1 zu Stackpane 1 hinzufügen
         GameGrid.setAlignment(Pos.CENTER);
         GameGrid.setHgap(1);
@@ -560,7 +488,4 @@ public class BOTgegenBOTGridController implements Initializable {
         window.show();
     }
 
-    public void printfeld(ActionEvent event) {
-        logic.logicOUTput.printFeld(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld(), true);
-    }
 }

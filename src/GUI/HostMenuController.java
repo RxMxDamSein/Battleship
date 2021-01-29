@@ -198,17 +198,7 @@ public class HostMenuController implements Initializable {
         if (ausw.equals("Spieler")) {
             methoden.setHostVariablen(p, g);
             methoden.HostwarteBildschirm();
-            /*
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("MultiHostSpielerGrid.fxml"));
-            Parent r = loader.load();
-            MultiHostSpielerController controller = loader.getController();
-            controller.setVariables(p,g);
-            Scene s = new Scene(r);
-            MainMenuController.primaryStage.setScene(s);
-            MainMenuController.primaryStage.setTitle("Host Spieler");
-            MainMenuController.primaryStage.show();
 
-             */
         } else if (ausw.equals("Bot")) {
             methoden.setHostVariablen(p, g, bot);
             methoden.HostwarteBildschirm();

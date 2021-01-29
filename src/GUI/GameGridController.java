@@ -126,25 +126,11 @@ public class GameGridController implements Initializable, Serializable {
     public void gameloader(SAFE_SOME SAFE) {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = SAFE.spiele[0];
         ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = SAFE.bots[0];
-        /*
-        SaveGame save = (SaveGame) SaveGame.load(id);
-        Spiel s = save.g;
-        Bot b = save.b;
-
-         */
-        /*
-        Bot b =(Bot) Bot.load(id+"-B");
-        Spiel s = Spiel.load(id+"-S");
-         */
         x = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getSizeX();
         methoden = new nuetzlicheMethoden(x);
         methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
-        //GOETTLICHESSPIELDERVERNICHTUNGMITbot = s;
-        //ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST = b;
-
         Gridinit();
         GridUpdater();
-
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         if (spieler != -1) {
             spielstatus = true;
@@ -213,7 +199,7 @@ public class GameGridController implements Initializable, Serializable {
 
     }
 
-    //Initialisiert das Spiel und den Bot
+
 
     /**
      * Startet das Spiel und legt fest welcher Bot verwendet wird.
@@ -609,14 +595,6 @@ public class GameGridController implements Initializable, Serializable {
             ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.setAbschussSpieler(0);
         }
         GridUpdater();
-        /*
-        System.out.println("GAMEOVER: "+GOETTLICHESSPIELDERVERNICHTUNGMITbot.isOver());
-        int[] penis = Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe);
-        System.out.println("Schiff anzahl: "+penis.length);
-        for (int i = 0;i != penis.length;i++) {
-        System.out.println("Schiff "+i+" größe: "+penis[i]);
-        }
-         */
         int spieler = GOETTLICHESSPIELDERVERNICHTUNGMITbot.getAbschussSpieler();
         //System.out.println("Spieler: "+spieler);
         System.out.println("Spieler: " + spieler);
@@ -683,11 +661,6 @@ public class GameGridController implements Initializable, Serializable {
             System.out.println("Name: " + name);
             String hash = "" + this.hashCode();
             new SAFE_SOME(new Bot[]{ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST},new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot},2,hash,name);
-            //new SaveGame(GOETTLICHESSPIELDERVERNICHTUNGMITbot, ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST, name);
-            /*
-            GOETTLICHESSPIELDERVERNICHTUNGMITbot.saveGame(name+"-S");
-            ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.saveGame(name+"-B");
-             */
             newStage.close();
         });
         Label label = new Label("Dateiname:");

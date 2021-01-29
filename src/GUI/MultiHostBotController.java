@@ -316,17 +316,6 @@ public class MultiHostBotController implements Initializable, Serializable {
                 labels[a][b].setMinSize(methoden.minsizeberechner(x), methoden.minsizeberechner(x));
                 //labels[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels[a][b] = methoden.textureWasser(labels[a][b], x);
-
-                //lustige bilder zu den Labels
-                /*
-                Image img = new Image("GUI/Textures/42.jpg");
-                ImageView view = new ImageView(img);
-                view.setFitHeight(100);
-                view.setPreserveRatio(true);
-                labels[a][b].setGraphic(view);
-                 */
-
-                //final int ca=a,cb=b;
                 int ca = a, cb = b;
                 labels[a][b].setOnMouseClicked(e -> labelclick(ca, cb));
                 GridPane.setConstraints(labels[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
@@ -431,7 +420,6 @@ public class MultiHostBotController implements Initializable, Serializable {
         //gameStartButton.setVisible(false);
         startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
             if (Host != null && Host.Spielstartet) {
-                //System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
                 //gameStartButton.setVisible(true);
                 //gameStartButton.prefHeight(25);
                 //gameStartButton.prefWidth(41);

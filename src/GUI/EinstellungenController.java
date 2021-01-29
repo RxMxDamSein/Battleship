@@ -53,7 +53,7 @@ public class EinstellungenController implements Initializable {
     }
 
     /**
-     * Button um zuruck zum MainMenu zu kommen.
+     * Button um zurück zum MainMenu zu kommen.
      * @param event
      * @throws IOException
      */

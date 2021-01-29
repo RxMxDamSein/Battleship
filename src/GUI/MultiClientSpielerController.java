@@ -285,17 +285,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
                 labels[a][b].setMinSize(methoden.minsizeberechner(x), methoden.minsizeberechner(x));
                 //labels[a][b].setStyle("-fx-background-color: #03fcf4");
                 labels[a][b] = methoden.textureWasser(labels[a][b], x);
-
-                //lustige bilder zu den Labels
-                /*
-                Image img = new Image("GUI/Textures/42.jpg");
-                ImageView view = new ImageView(img);
-                view.setFitHeight(100);
-                view.setPreserveRatio(true);
-                labels[a][b].setGraphic(view);
-                 */
-
-                //final int ca=a,cb=b;
                 int ca = a, cb = b;
                 labels[a][b].setOnMouseClicked(e -> labelclick(ca, cb));
                 GridPane.setConstraints(labels[a][b], a, b, 1, 1, HPos.CENTER, VPos.CENTER);
@@ -385,7 +374,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
                     shipLabel();
                 }
                 for (int i = ey; i != sy - 1; i--) {
-                    //System.out.println("PENIS 1");
                     //System.out.println("i= " + i);
                     labels[sx][i] = methoden.textureSchiff(labels[sx][i], x);
                     //labels[sx][i].setStyle("-fx-background-color: grey");
@@ -409,7 +397,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
                     shipLabel();
                 }
                 for (int i = sy; i != ey - 1; i--) {
-                    //System.out.println("PENIS 2");
                     //System.out.println("i= "+i);
                     //labels[sx][i].setStyle("-fx-background-color: grey");
                     labels[sx][i] = methoden.textureSchiff(labels[sx][i], x);
@@ -441,7 +428,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
                 }
                 for (int i = ex; i != sx - 1; i--) {
                     //System.out.println("i= " + i);
-                    //System.out.println("KAKA 1");
                     //labels[i][sy].setStyle("-fx-background-color: grey");
                     labels[i][sy] = methoden.textureSchiff(labels[i][sy], x);
                 }
@@ -463,7 +449,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
                     shipLabel();
                 }
                 for (int i = sx; i != ex - 1; i--) {
-                    //System.out.println("KAKA 2");
                     //System.out.println("i= "+i);
                     //labels[i][sy].setStyle("-fx-background-color: grey");
                     labels[i][sy] = methoden.textureSchiff(labels[i][sy], x);

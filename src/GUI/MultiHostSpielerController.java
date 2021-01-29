@@ -217,18 +217,6 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         sendship.play();
         Host.setNuetzlicheMethoden(methoden,speicherbutton);
 
-        /*
-        startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
-            if (Host != null && Host.Spielstartet) {
-                gameStartButton.setPrefSize(41,25);
-                gameStartButton.setText("Start");
-                startbutton.stop();
-            }
-        }));
-        startbutton.setCycleCount(Animation.INDEFINITE);
-        startbutton.play();
-
-         */
     }
 
     /**
@@ -394,7 +382,6 @@ public class MultiHostSpielerController implements Initializable, Serializable {
                     return;
                 }
                 for (int i = ey; i != sy - 1; i--) {
-                    //System.out.println("PENIS 1");
                     //System.out.println("i= " + i);
                     labels[sx][i] = methoden.textureSchiff(labels[sx][i], x);
                     //labels[sx][i].setStyle("-fx-background-color: grey");
@@ -415,7 +402,6 @@ public class MultiHostSpielerController implements Initializable, Serializable {
                     return;
                 }
                 for (int i = sy; i != ey - 1; i--) {
-                    //System.out.println("PENIS 2");
                     //System.out.println("i= "+i);
                     //labels[sx][i].setStyle("-fx-background-color: grey");
                     labels[sx][i] = methoden.textureSchiff(labels[sx][i], x);
@@ -445,7 +431,6 @@ public class MultiHostSpielerController implements Initializable, Serializable {
                 }
                 for (int i = ex; i != sx - 1; i--) {
                     //System.out.println("i= " + i);
-                    //System.out.println("KAKA 1");
                     //labels[i][sy].setStyle("-fx-background-color: grey");
                     labels[i][sy] = methoden.textureSchiff(labels[i][sy], x);
                 }
@@ -465,7 +450,6 @@ public class MultiHostSpielerController implements Initializable, Serializable {
                     return;
                 }
                 for (int i = sx; i != ex - 1; i--) {
-                    //System.out.println("KAKA 2");
                     //System.out.println("i= "+i);
                     //labels[i][sy].setStyle("-fx-background-color: grey");
                     labels[i][sy] = methoden.textureSchiff(labels[i][sy], x);
@@ -530,6 +514,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
      * gibt an ob man die Schiffe schon gesendet hat
      */
     private boolean shipsend = false;
+
     //versetzt Spiel in Feuermodus
     /**
      * Startet das Spiel
@@ -562,18 +547,11 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         //System.out.println("Spieler: "+spieler);
         System.out.println("Spieler: " + spieler);
         methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot, GameTopLabel, GameTopLabel1);
-        /*
-        GameTopLabel.setText("Spieler: "+spieler);
-        if (spieler == 0) {
-            GameTopLabel.setText("Bot schießt");
-            //Clinet Schießt
-            GameTopLabel.setText("Du schießt");
-        }
-         */
         gameStartButton.setVisible(false);
         initupdateTimeline();
         Host.setUpdateTimeline(updateTimeline);
     }
+
     /**
      * Button um zuruck zum MehrspielerMenu zu kommen.
      * @param event
