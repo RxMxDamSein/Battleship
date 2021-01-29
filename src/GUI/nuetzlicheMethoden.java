@@ -259,6 +259,7 @@ public class nuetzlicheMethoden {
     public void GameEnd(boolean gewinner) {
 
         Stage newStage = new Stage();
+        newStage.setResizable(false);
         VBox comp = new VBox();
         comp.setPadding(new Insets(10, 10, 10, 10));
         comp.setSpacing(5);
@@ -315,6 +316,7 @@ public class nuetzlicheMethoden {
      */
     public void warteBildschirm(Client Client, BotClient BotClient) {
         Stage newStage = new Stage();
+        newStage.setResizable(false);
         VBox comp = new VBox();
         comp.setPadding(new Insets(10, 10, 10, 10));
         comp.setSpacing(5);
@@ -497,6 +499,7 @@ public class nuetzlicheMethoden {
      */
     public void HostwarteBildschirm() {
         newStage = new Stage();
+        newStage.setResizable(false);
         Label label = new Label();
 
         VBox comp = new VBox();
@@ -744,6 +747,7 @@ public class nuetzlicheMethoden {
         System.out.println("Verbindung wurde getrennt!");
         Timeline t=new Timeline(new KeyFrame(new Duration(1000),event -> {
             Stage newStage = new Stage();
+            newStage.setResizable(false);
             VBox comp = new VBox();
             comp.setPadding(new Insets(10, 10, 10, 10));
             comp.setSpacing(5);

@@ -176,6 +176,7 @@ public class BotHost {
 
             } catch (SocketException e) {
                 System.out.println("Socket closed");
+                e.printStackTrace();
             } catch (IOException e){
                 System.err.println("Can not create Socket!");
                 ERROR = true;
