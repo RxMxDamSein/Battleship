@@ -24,7 +24,7 @@ public class Bot_nightmare extends Bot implements Serializable {
         return Bot.addShipsRDMly(s, this.dasSpiel, this.rdm, this.x, this.y);
     }
 
-    /** er merkt sich wo er zuletzt hingeschossen hat um die Suche nach Schiffen zu beschleunigen */
+    /** er merkt sich wo er zuletzt hingeschossen hat, um die Suche nach Schiffen zu beschleunigen */
     private int lx = 0;
 
     @Override

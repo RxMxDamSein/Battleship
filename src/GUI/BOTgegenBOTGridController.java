@@ -437,17 +437,11 @@ public class BOTgegenBOTGridController implements Initializable {
     }
 
     /**
-     * Funktion welche das Spiel startet
+     * Funktion welche das Spiel startet. Wird ausgeführt wenn der Button Start gedrückt wird.
      * @param event
      */
     public void gameStart(ActionEvent event) {
         gameStartButton.setVisible(false);
-        /*
-        if (!load) {
-            WUNDERVOLLERGEGNERBOT.dasSpiel.setAbschussSpieler((ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler() == 1) ? 0 : 1);
-        }
-
-         */
         WUNDERVOLLERGEGNERBOT.dasSpiel.setAbschussSpieler((ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler() == 1) ? 0 : 1);
         initoneSecondsWonder();
     }

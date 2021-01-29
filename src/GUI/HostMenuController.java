@@ -52,7 +52,7 @@ public class HostMenuController implements Initializable {
     private nuetzlicheMethoden methoden;
 
     /**
-     * initialize Funktion von JavaFX, welche die CHoiceBoxen initiealisiert
+     * initialize Funktion von JavaFX, welche die ChoiceBoxen initialisiert
      * @param location
      * @param resources
      */
@@ -80,9 +80,9 @@ public class HostMenuController implements Initializable {
     }
 
     /**
-     * Button um zuruck zum MainMenu zu kommen
+     * Button um zurück zum MainMenu zu kommen
      * @param event
-     * @throws IOException
+     * @throws IOException falls die FXML Datei nicht geladen werden kann
      */
     public void backbutton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));

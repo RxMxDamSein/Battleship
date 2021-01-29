@@ -18,7 +18,6 @@ public class Spiel implements Serializable {
     public Integer slayX=-1;
     /** Eine Y Koordinate des zu versunkendem Schiffes*/
     public Integer slayY=-1;
-
     /** Ein Array in dem sich die Schiffsgrößen der noch nicht versenkten Gegnerschiffe gemerkt werden */
     public Integer[] enemyShips=null;
     /** Merkt sich wie lang das längste übrige Gegnerschiff ist */
@@ -31,7 +30,10 @@ public class Spiel implements Serializable {
     private int x = 20;
     /** y=Höhe des Spielfelds */
     private int y = 20;
-    // 0 frei, 1 Schiff, 2 Treffer, 3 Wasser, 4 versenkt
+
+    /**
+     * setzt enemyShips, longestShip und smallestShip
+     */
     public void calcEnemyShips(){
         enemyShips=new Integer[schiffe.size()-enemyS];
         int z=0;

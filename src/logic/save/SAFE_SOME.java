@@ -47,6 +47,18 @@ public class SAFE_SOME implements Serializable {
         STD_SAVE(b, s, g, DateiName);
     }
 
+    /**
+     * Speichert ein SAFE_SOME Objekt
+     * @param spiels Spiele
+     * @param i Spieltyp
+     * @param s Dateiname/ID
+     * @param slayship slayship boolean, ob gerade ein Schiff gefunden worden ist.
+     * @param slayX X Position des gefundenen Schiffs
+     * @param slayY Y Position des gefundenen Schiffs
+     * @param enemyShips Array mit den verbleibenden Gegnerschiffen
+     * @param smallestShip kleinstes übriges Gegnerschiff
+     * @param longestShip größtes übriges Gegnerschiff
+     */
     public SAFE_SOME(Spiel[] spiels, int i, String s, boolean slayship, int slayX, int slayY, Integer[] enemyShips, Integer smallestShip, Integer longestShip) {
         this.Slayship=slayship;
         this.slayX=slayX;
@@ -57,6 +69,19 @@ public class SAFE_SOME implements Serializable {
         STD_SAVE(null,spiels,i,s);
     }
 
+    /**
+     * Speichert ein SAFE_SOME Objekt
+     * @param spiels Spiele
+     * @param i Spieltyp
+     * @param hash ID
+     * @param name Dateiname
+     * @param slayship slayship boolean, ob gerade ein Schiff gefunden worden ist.
+     * @param slayX X Position des gefundenen Schiffs
+     * @param slayY Y Position des gefundenen Schiffs
+     * @param enemyShips Array mit den verbleibenden Gegnerschiffen
+     * @param smallestShip kleinstes übriges Gegnerschiff
+     * @param longestShip größtes übriges Gegnerschiff
+     */
     public SAFE_SOME(Spiel[] spiels, int i, String hash, String name, boolean slayship, int slayX, int slayY, Integer[] enemyShips, Integer smallestShip, Integer longestShip) {
         this.Slayship=slayship;
         this.slayX=slayX;
@@ -101,7 +126,7 @@ public class SAFE_SOME implements Serializable {
 
     /**
      * @param id Dateiname sozusagen
-     * @return SAFRE_SOME-Objekt bei Erfolg, sonst null
+     * @return SAFE_SOME-Objekt bei Erfolg, sonst null
      */
     public static SAFE_SOME load(String id) {
         try {

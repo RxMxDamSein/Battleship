@@ -230,6 +230,12 @@ public abstract class Bot implements Serializable {
         return sizes;
     }
 
+    /**
+     * Hibt die Schiffsgrößen des angegebenen Spielers zutück in einem int Array
+     * @param s Schiffsarray
+     * @param spieler der Spieler dem die Schiffe gehören
+     * @return int[] mit den Schiffslängen
+     */
     public static int[] getShipSizes(ArrayList<Schiff> s,int spieler) {
         ArrayList<Integer> idx;
         idx=new ArrayList<>();
@@ -311,7 +317,7 @@ public abstract class Bot implements Serializable {
     }
 
     /**
-     * Hilfsfunktoin um das größtmögliche Schiff zu platzieren
+     * Hilfsfunktion um das größtmögliche Schiff zu platzieren
      * @param s Schiffslängen der zu platzierenden Schiffe
      * @param sa Array das anzeigt ob ein Schiff bereit platziert wurde
      * @param dasSpiel Spielobjekt in das das Schiff hinzugefügt werden soll
@@ -337,6 +343,10 @@ public abstract class Bot implements Serializable {
         return false;
     }
 
+    /**
+     * kreiert enemyShips Array aus Schiffslängen
+     * @param s SChiffslängenarray
+     */
     public void initEnemyships(int[] s){
         Arrays.sort(s);
         enemyShips = new Integer[s.length];

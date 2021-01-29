@@ -283,10 +283,10 @@ public class Host {
             e.printStackTrace();
         }
     }
-
-
     /**
-     * Funktion zum schiessen des Host.
+     * Übermittelt den Schuss zum Klienten
+     * @param x X Koordinate
+     * @param y Y Koordinate
      */
     public void schuss(int x, int y) {
         if (dasSpiel.getAbschussSpieler() != 1 || !dasSpiel.isStarted() || dasSpiel.isOver() || shooting|| dasSpiel.getFeld()[1][x][y]!=0) {
