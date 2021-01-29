@@ -266,14 +266,18 @@ public class Host {
                 s.shutdownOutput();
                 s.close();
             }
-            ss.setSoTimeout(100);
+            if(ss!=null){
+                ss.setSoTimeout(100);
+                ss.close();
+            }
+
             if(in!=null){
                 in.close();
             }
             if(out!=null){
                 out.close();
             }
-            ss.close();
+
             closed=true;
             if(!dasSpiel.isOver()&& !closeOnPurpose && nuetzlicheMethoden!=null){
                 nuetzlicheMethoden.connectionfeedback();
