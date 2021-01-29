@@ -1,6 +1,7 @@
 package GUI;
 
 import javafx.animation.Timeline;
+import javafx.scene.control.Button;
 import logic.Spiel;
 import logic.save.SAFE_SOME;
 
@@ -70,6 +71,7 @@ public class Host {
     public Spiel dasSpiel;
     private Timeline updateT;
     private nuetzlicheMethoden nuetzlicheMethoden;
+    private Button speicherbutton;
 
     /**
      * Nromaler Konstrukter von Host
@@ -143,6 +145,7 @@ public class Host {
                     }
                     shooting = false;
                     Spielstartet = true;
+                    nuetzlicheMethoden.initspeichern(dasSpiel,speicherbutton);
                     if (dasSpiel.getAbschussSpieler() == 0) {
                         sendSocket("next");
                         nachricht = receiveSocket();
@@ -171,8 +174,9 @@ public class Host {
     public void setUpdateTimeline(Timeline t){
         updateT=t;
     }
-    public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
+    public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden,Button speicherbutton){
         this.nuetzlicheMethoden=nuetzlicheMethoden;
+        this.speicherbutton=speicherbutton;
     }
     /**
      * Funktion zum der Nachrichten an den Host

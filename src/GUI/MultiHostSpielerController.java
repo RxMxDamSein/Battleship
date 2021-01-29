@@ -173,7 +173,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         Host = new Host(Port, FeldGroesse, GOETTLICHESSPIELDERVERNICHTUNGMITbot);
         Host.init();
         methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
-        Host.setNuetzlicheMethoden(methoden);
+        Host.setNuetzlicheMethoden(methoden,speicherbutton);
     }
 
     /**
@@ -183,6 +183,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
      * @param id Save-ID
      */
     public void setVariables(Integer Port, SAFE_SOME SAFE, String id) {
+        speicherbutton.setVisible(false);
         if (SAFE.id != null) {
             id = SAFE.id;
         }
@@ -214,7 +215,8 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         }));
         sendship.setCycleCount(Animation.INDEFINITE);
         sendship.play();
-        Host.setNuetzlicheMethoden(methoden);
+        Host.setNuetzlicheMethoden(methoden,speicherbutton);
+
         /*
         startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
             if (Host != null && Host.Spielstartet) {

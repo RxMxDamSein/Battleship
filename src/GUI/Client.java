@@ -90,7 +90,7 @@ public class Client {
                     }
                     sendSocket("ready");
                     z = receiveSocket();
-                    if (z.contains("shot"))
+                    if (z!=null&&z.contains("shot"))
                         Servershot(z);
                     else
                         sonderNachrichten(z);
