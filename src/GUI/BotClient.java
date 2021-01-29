@@ -1,6 +1,8 @@
 package GUI;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.util.Duration;
 import logic.*;
 import logic.save.SAFE_SOME;
 
@@ -60,6 +62,7 @@ public class BotClient {
 
     private Timeline updateT;
     private nuetzlicheMethoden nuetzlicheMethoden;
+    private MultiClientBotController multiClientBotController;
 
     /**
      * Konstruktor fuer die BotClient-Klasse, welche sich  mit dem Host verbindet
@@ -114,6 +117,7 @@ public class BotClient {
                     }
                     sendSocket("ready");
                     z = receiveSocket();
+                    erlaubeSpeichern();
                     if (z!=null && z.contains("shot"))
                         Servershot(z);
                     else
@@ -174,6 +178,9 @@ public class BotClient {
     }
     public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
         this.nuetzlicheMethoden=nuetzlicheMethoden;
+    }
+    public void setMultiClientBotController(MultiClientBotController multiClientBotController){
+        this.multiClientBotController=multiClientBotController;
     }
 
     /**
@@ -447,7 +454,9 @@ public class BotClient {
             }
             dasSpiel.starteSpiel(0);
             sendSocket("ready");
+
             String z = receiveSocket();
+            erlaubeSpeichern();
             if (z!=null && z.contains("shot")) {
                 Servershot(z);
             } else {
@@ -458,5 +467,13 @@ public class BotClient {
         Thread t=new Thread(runnable);
         t.start();
         return true;
+    }
+
+    private void erlaubeSpeichern(){
+        Timeline timeline=new Timeline(new KeyFrame(new Duration(100),event -> {
+            multiClientBotController.speicherbutton.setVisible(true);
+        }));
+        timeline.setCycleCount(1);
+        timeline.play();
     }
 }

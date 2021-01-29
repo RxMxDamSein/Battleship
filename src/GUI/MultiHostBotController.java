@@ -69,7 +69,7 @@ public class MultiHostBotController implements Initializable, Serializable {
      * Button zum Speichern
      */
     @FXML
-    private Button speicherbutton;
+    public Button speicherbutton;
     /**
      * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
      * <br>
@@ -169,7 +169,6 @@ public class MultiHostBotController implements Initializable, Serializable {
         this.bot = bot;
         Gridinit();
         Spielinit();
-        methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
         derBot.shipSizesToAdd(Bot.calcships(x, x));
         Host = new BotHost(Port, FeldGroesse, derBot);
         Host.init();
@@ -177,6 +176,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         initupdateTimeline();
         Host.setUpdateTimeline(updateTimeline);
         Host.setNuetzlicheMethoden(methoden);
+        Host.setMultiHostBotController(this);
     }
 
     //Konstruktor laden
@@ -217,6 +217,7 @@ public class MultiHostBotController implements Initializable, Serializable {
             spielstatus=true;
         }
         Host.setNuetzlicheMethoden(methoden);
+        Host.setMultiHostBotController(this);
     }
 
     /**
@@ -390,6 +391,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         Host.schuss();
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.setAbschussSpieler(1);
         gameStartButton.setVisible(false);
+        Host.speichernErlauben();
         methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot, GameTopLabel, GameTopLabel1);
         initupdateTimeline();
         Host.setUpdateTimeline(updateTimeline);
@@ -422,6 +424,7 @@ public class MultiHostBotController implements Initializable, Serializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         speicherbutton.setVisible(false);
+
         gameStartButton.setText("warte auf Ready..");
         //gameStartButton.setVisible(false);
         startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
@@ -483,41 +486,63 @@ public class MultiHostBotController implements Initializable, Serializable {
      * @throws IOException
      */
     public void Speichern(ActionEvent event) throws IOException {
-        Host.pause = true;
+        if(!Host.dasSpiel.isStarted()){
+            System.err.println("Das Spiel hat doch noch gar nicht angefangen, nichts zu speichern!");
+            return;
+        }
+        Runnable runnable=()->{
+            Host.pause = true;
+            speicherbutton.setVisible(false);
+            while (Host.dasSpiel.getAbschussSpieler() == 0){
+                try {
+                    System.out.println(Host.dasSpiel.getAbschussSpieler());
+                    Thread.sleep(500);
 
-        //SaveData data = new SaveData();
-        //ResourceManager.save(this, "1.save");
-        // SAVE POP UP Fenster
-        Stage newStage = new Stage();
-        VBox comp = new VBox();
-        comp.setPadding(new Insets(10, 10, 10, 10));
-        comp.setSpacing(5);
-        comp.setStyle("-fx-background-color: DARKCYAN;");
-        comp.setAlignment(Pos.CENTER);
-        TextField DateiName = new TextField();
-        DateiName.setText("Dateiname");
-        Button Save = new Button();
-        Save.setPrefSize(100, 30);
-        Save.setText("Save");
-        Save.setOnAction(event1 -> {
-            String name = String.valueOf(DateiName.getText());
-            name = name + "-M";
-            System.out.println("Name: " + name);
-            //Speichern
-            String hash = "" + this.hashCode();
-            Spiel s=GOETTLICHESSPIELDERVERNICHTUNGMITbot;
-            s.calcEnemyShips();
-            new SAFE_SOME( new Spiel[]{s}, 4, hash, name,s.slayship,s.slayX,s.slayY,s.enemyShips,s.smallestShip,s.longestShip);
-            Host.save(hash);
-            newStage.close();
-        });
-        Label label = new Label("Dateiname:");
-        label.setFont(new Font("System",14));
-        comp.getChildren().add(label);
-        comp.getChildren().add(DateiName);
-        comp.getChildren().add(Save);
-        Scene stageScene = new Scene(comp, 300, 150);
-        newStage.setScene(stageScene);
-        newStage.show();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            //SaveData data = new SaveData();
+            //ResourceManager.save(this, "1.save");
+            // SAVE POP UP Fenster
+            Timeline timeline=new Timeline(new KeyFrame(new Duration(100),event1 -> {
+                Stage newStage = new Stage();
+                VBox comp = new VBox();
+                comp.setPadding(new Insets(10, 10, 10, 10));
+                comp.setSpacing(5);
+                comp.setStyle("-fx-background-color: DARKCYAN;");
+                comp.setAlignment(Pos.CENTER);
+                TextField DateiName = new TextField();
+                DateiName.setText("Dateiname");
+                Button Save = new Button();
+                Save.setPrefSize(100, 30);
+                Save.setText("Save");
+                Save.setOnAction(event2 -> {
+                    String name = String.valueOf(DateiName.getText());
+                    name = name + "-M";
+                    System.out.println("Name: " + name);
+                    //Speichern
+                    String hash = "" + this.hashCode();
+                    Spiel s=GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+                    s.calcEnemyShips();
+                    new SAFE_SOME( new Spiel[]{s}, 4, hash, name,s.slayship,s.slayX,s.slayY,s.enemyShips,s.smallestShip,s.longestShip);
+                    Host.save(hash);
+                    newStage.close();
+                });
+                Label label = new Label("Dateiname:");
+                label.setFont(new Font("System",14));
+                comp.getChildren().add(label);
+                comp.getChildren().add(DateiName);
+                comp.getChildren().add(Save);
+                Scene stageScene = new Scene(comp, 300, 150);
+                newStage.setScene(stageScene);
+                newStage.show();
+            }));
+            timeline.setCycleCount(1);
+            timeline.play();
+        };
+        Thread t=new Thread(runnable);
+        t.start();
+
     }
 }

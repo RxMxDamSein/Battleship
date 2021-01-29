@@ -68,7 +68,7 @@ public class MultiClientBotController implements Initializable, Serializable {
      * Button zum Speichern
      */
     @FXML
-    private Button speicherbutton;
+    public Button speicherbutton;
     /**
      * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
      * <br>
@@ -165,13 +165,13 @@ public class MultiClientBotController implements Initializable, Serializable {
         x = Client.dasSpiel.getSizeX();
         //bot = b;
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = Client.dasSpiel;
-        methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
         Gridinit();
         this.Client = Client;
         Client.setNuetzlicheMethoden(methoden);
         GridUpdater();
         initupdateTimeline();
         Client.setUpdateTimeline(updateTimeline);
+        Client.setMultiClientBotController(this);
         spielstatus = true;
     }
 
@@ -591,42 +591,58 @@ public class MultiClientBotController implements Initializable, Serializable {
      * @param event
      */
     public void Speichern(ActionEvent event) throws IOException {
-        if (Client.dasSpiel.getAbschussSpieler() == 0) {
-            System.err.println("Du kannst nur speichern, wenn du dran bist!");
+        if(!Client.dasSpiel.isStarted()){
+            System.err.println("Das Spiel hat doch noch gar nicht angefangen, nichts zu speichern!");
             return;
         }
-        Client.pause = true;
-        //SaveData data = new SaveData();
-        //ResourceManager.save(this, "1.save");
-        // SAVE POP UP Fenster
-        Stage newStage = new Stage();
-        VBox comp = new VBox();
-        comp.setPadding(new Insets(10, 10, 10, 10));
-        comp.setSpacing(5);
-        comp.setStyle("-fx-background-color: DARKCYAN;");
-        comp.setAlignment(Pos.CENTER);
-        TextField DateiName = new TextField();
-        DateiName.setText("Dateiname");
-        Button Save = new Button();
-        Save.setPrefSize(100, 30);
-        Save.setText("Save");
-        Save.setOnAction(event1 -> {
-            String name = String.valueOf(DateiName.getText());
-            name = name + "-M";
-            System.out.println("Name: " + name);
-            //Speichern
-            String hash = "" + this.hashCode();
+        Runnable runnable=()->{
+            Client.pause = true;
+            speicherbutton.setVisible(false);
+            while (Client.dasSpiel.getAbschussSpieler() == 0){
+                try {
+                    //System.out.println(Client.dasSpiel.getAbschussSpieler());
+                    Thread.sleep(500);
 
-            Client.save(hash, name);
-            newStage.close();
-        });
-        Label label = new Label("Dateiname:");
-        label.setFont(new Font("System",14));
-        comp.getChildren().add(label);
-        comp.getChildren().add(DateiName);
-        comp.getChildren().add(Save);
-        Scene stageScene = new Scene(comp, 300, 150);
-        newStage.setScene(stageScene);
-        newStage.show();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Timeline t=new Timeline(new KeyFrame(new Duration(100),event2 -> {
+                Stage newStage = new Stage();
+                VBox comp = new VBox();
+                comp.setPadding(new Insets(10, 10, 10, 10));
+                comp.setSpacing(5);
+                comp.setStyle("-fx-background-color: DARKCYAN;");
+                comp.setAlignment(Pos.CENTER);
+                TextField DateiName = new TextField();
+                DateiName.setText("Dateiname");
+                Button Save = new Button();
+                Save.setPrefSize(100, 30);
+                Save.setText("Save");
+                Save.setOnAction(event1 -> {
+                    String name = String.valueOf(DateiName.getText());
+                    name = name + "-M";
+                    System.out.println("Name: " + name);
+                    //Speichern
+                    String hash = "" + this.hashCode();
+
+                    Client.save(hash, name);
+                    newStage.close();
+                });
+                Label label = new Label("Dateiname:");
+                label.setFont(new Font("System",14));
+                comp.getChildren().add(label);
+                comp.getChildren().add(DateiName);
+                comp.getChildren().add(Save);
+                Scene stageScene = new Scene(comp, 300, 150);
+                newStage.setScene(stageScene);
+                newStage.show();
+            }));
+            t.setCycleCount(1);
+            t.play();
+
+        };
+        Thread t=new Thread(runnable);
+        t.start();
     }
 }
