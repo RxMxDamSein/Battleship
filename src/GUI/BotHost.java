@@ -1,6 +1,8 @@
 package GUI;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.util.Duration;
 import logic.Bot;
 import logic.Bot_schwer;
 import logic.Spiel;
@@ -65,7 +67,7 @@ public class BotHost {
     /**
      * Spiel aus dem Logic-package
      */
-    private Spiel dasSpiel;
+    public Spiel dasSpiel;
     /**
      * Bot aus dem Logic-package
      */
@@ -75,6 +77,7 @@ public class BotHost {
      */
     public boolean pause = false;
     private Timeline updateT;
+    private nuetzlicheMethoden nuetzlicheMethoden;
     /**
      * Normaler Konstrukter von BotHost
      * @param p Port
@@ -106,6 +109,9 @@ public class BotHost {
 
     public void setUpdateTimeline(Timeline t){
         updateT=t;
+    }
+    public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
+        this.nuetzlicheMethoden=nuetzlicheMethoden;
     }
 
     /**
@@ -139,7 +145,7 @@ public class BotHost {
                         CutConnection();
                         return;
                     }
-                    senships(Bot.getShipSizes(derBot.dasSpiel.schiffe,0));//need fix
+                    senships(Bot.getShipSizes(derBot.dasSpiel.schiffe,0));
                 } else {
                     //LADEN
                     sendSocket("load " + id);
@@ -155,6 +161,7 @@ public class BotHost {
                         return;
                     }
                     Spielstartet = true;
+                    speichernErlauben();
                     if (dasSpiel.getAbschussSpieler() == 0) {
                         sendSocket("next");
                         nachricht = receiveSocket();
@@ -169,6 +176,7 @@ public class BotHost {
 
             } catch (SocketException e) {
                 System.out.println("Socket closed");
+                e.printStackTrace();
             } catch (IOException e){
                 System.err.println("Can not create Socket!");
                 ERROR = true;
@@ -243,10 +251,19 @@ public class BotHost {
                 CutConnection();
             }
             Spielstartet = true;
+
             //schuss();
         };
         Thread t = new Thread(Runnable);
         t.start();
+    }
+
+    public void speichernErlauben(){
+        Timeline timeline=new Timeline(new KeyFrame(new Duration(100), event -> {
+            multiHostBotController.speicherbutton.setVisible(true);
+        }));
+        timeline.setCycleCount(1);
+        timeline.play();
     }
 
 
@@ -293,6 +310,9 @@ public class BotHost {
                 }
                 ss.close();
                 closed=true;
+                if(!dasSpiel.isOver() && !closeOnPurpose && nuetzlicheMethoden!=null){
+                    nuetzlicheMethoden.connectionfeedback();
+                }
             } catch (IOException e) {
                 System.err.println("Can not close Socket!!");
                 e.printStackTrace();
@@ -421,6 +441,8 @@ public class BotHost {
 
     }
 
+
+    public boolean closeOnPurpose;
     /**
      * Speichert das Spiel
      * @param hash Speicher-ID
@@ -432,6 +454,12 @@ public class BotHost {
             CutConnection();
             return;
         }
+        closeOnPurpose=true;
         CutConnection();
+    }
+
+    private MultiHostBotController multiHostBotController;
+    public void setMultiHostBotController(MultiHostBotController multiHostBotController) {
+        this.multiHostBotController=multiHostBotController;
     }
 }

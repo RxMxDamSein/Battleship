@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logic.*;
 import logic.save.SAFE_SOME;
@@ -69,7 +71,7 @@ public class MultiClientBotController implements Initializable, Serializable {
      * Button zum Speichern
      */
     @FXML
-    private Button speicherbutton;
+    public Button speicherbutton;
     /**
      * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
      * <br>
@@ -166,16 +168,14 @@ public class MultiClientBotController implements Initializable, Serializable {
         x = Client.dasSpiel.getSizeX();
         //bot = b;
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = Client.dasSpiel;
-        methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
         Gridinit();
-        //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
-        //Client.init(); wurde davor schon erledigt
+        Client.setNuetzlicheMethoden(methoden);
         GridUpdater();
         initupdateTimeline();
         Client.setUpdateTimeline(updateTimeline);
+        Client.setMultiClientBotController(this);
         spielstatus = true;
-        methoden.connectionlost(null,Client);
     }
 
     /**
@@ -530,7 +530,7 @@ public class MultiClientBotController implements Initializable, Serializable {
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-        methoden.connectionlost.stop();
+        Client.closeOnPurpose=true;
         Client.CutConnection();
 
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
@@ -559,6 +559,14 @@ public class MultiClientBotController implements Initializable, Serializable {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 //System.out.println("observable: "+observable+" oldValue: "+oldValue+" newValue: "+newValue);
                 changeSlider();
+            }
+        });
+        MainMenuController.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                if(Client!=null){
+                    Client.CutConnection();
+                }
             }
         });
     }
@@ -594,8 +602,8 @@ public class MultiClientBotController implements Initializable, Serializable {
      * @param event
      */
     public void Speichern(ActionEvent event) throws IOException {
-        if (Client.dasSpiel.getAbschussSpieler() == 0) {
-            System.err.println("Du kannst nur speichern, wenn du dran bist!");
+        if(!Client.dasSpiel.isStarted()){
+            System.err.println("Das Spiel hat doch noch gar nicht angefangen, nichts zu speichern!");
             return;
         }
         Client.pause = true;
@@ -642,5 +650,54 @@ public class MultiClientBotController implements Initializable, Serializable {
             Client.save(hash, hash+"-M");
             newStage.close();
         });
+        Runnable runnable=()->{
+            Client.pause = true;
+            speicherbutton.setVisible(false);
+            while (Client.dasSpiel.getAbschussSpieler() == 0){
+                try {
+                    //System.out.println(Client.dasSpiel.getAbschussSpieler());
+                    Thread.sleep(500);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Timeline t=new Timeline(new KeyFrame(new Duration(100),event2 -> {
+                Stage newStage2 = new Stage();
+                VBox comp2 = new VBox();
+                comp2.setPadding(new Insets(10, 10, 10, 10));
+                comp2.setSpacing(5);
+                comp2.setStyle("-fx-background-color: DARKCYAN;");
+                comp2.setAlignment(Pos.CENTER);
+                TextField DateiName2 = new TextField();
+                DateiName2.setText("Dateiname");
+                Button Save2 = new Button();
+                Save2.setPrefSize(100, 30);
+                Save2.setText("Save");
+                Save2.setOnAction(event1 -> {
+                    String name = String.valueOf(DateiName2.getText());
+                    name = name + "-M";
+                    System.out.println("Name: " + name);
+                    //Speichern
+                    String hash = "" + this.hashCode();
+
+                    Client.save(hash, name);
+                    newStage2.close();
+                });
+                Label label2 = new Label("Dateiname:");
+                label2.setFont(new Font("System",14));
+                comp2.getChildren().add(label2);
+                comp2.getChildren().add(DateiName2);
+                comp2.getChildren().add(Save2);
+                Scene stageScene2 = new Scene(comp2, 300, 150);
+                newStage2.setScene(stageScene2);
+                newStage2.show();
+            }));
+            t.setCycleCount(1);
+            t.play();
+
+        };
+        Thread t=new Thread(runnable);
+        t.start();
     }
 }

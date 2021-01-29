@@ -1,14 +1,13 @@
 package GUI;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.util.Duration;
 import logic.*;
 import logic.save.SAFE_SOME;
-import sun.security.provider.ConfigFile;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
  * Klasse fuer den Multiplayer-Bot-Client
@@ -62,6 +61,8 @@ public class BotClient {
     // 2 = Schiffsgrößen erhalten
 
     private Timeline updateT;
+    private nuetzlicheMethoden nuetzlicheMethoden;
+    private MultiClientBotController multiClientBotController;
 
     /**
      * Konstruktor fuer die BotClient-Klasse, welche sich  mit dem Host verbindet
@@ -116,6 +117,7 @@ public class BotClient {
                     }
                     sendSocket("ready");
                     z = receiveSocket();
+                    erlaubeSpeichern();
                     if (z!=null && z.contains("shot"))
                         Servershot(z);
                     else
@@ -173,6 +175,12 @@ public class BotClient {
 
     public void setUpdateTimeline(Timeline t){
         updateT=t;
+    }
+    public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
+        this.nuetzlicheMethoden=nuetzlicheMethoden;
+    }
+    public void setMultiClientBotController(MultiClientBotController multiClientBotController){
+        this.multiClientBotController=multiClientBotController;
     }
 
     /**
@@ -288,6 +296,9 @@ public class BotClient {
                     out.close();
                 }
                 closed=true;
+                if(!dasSpiel.isOver()&& !closeOnPurpose && nuetzlicheMethoden!=null){
+                    nuetzlicheMethoden.connectionfeedback();
+                }
             } catch (IOException e) {
                 System.err.println("Can not close Socket!!");
                 //e.printStackTrace();
@@ -297,6 +308,7 @@ public class BotClient {
         t.start();
     }
 
+    public boolean closeOnPurpose =false;
     /**
      * Speichert das Spiel
      * @param hash Speicher-Id
@@ -310,6 +322,7 @@ public class BotClient {
             CutConnection();
             return;
         }
+        closeOnPurpose =true;
         CutConnection();
     }
 
@@ -441,7 +454,9 @@ public class BotClient {
             }
             dasSpiel.starteSpiel(0);
             sendSocket("ready");
+
             String z = receiveSocket();
+            erlaubeSpeichern();
             if (z!=null && z.contains("shot")) {
                 Servershot(z);
             } else {
@@ -452,5 +467,13 @@ public class BotClient {
         Thread t=new Thread(runnable);
         t.start();
         return true;
+    }
+
+    private void erlaubeSpeichern(){
+        Timeline timeline=new Timeline(new KeyFrame(new Duration(100),event -> {
+            multiClientBotController.speicherbutton.setVisible(true);
+        }));
+        timeline.setCycleCount(1);
+        timeline.play();
     }
 }

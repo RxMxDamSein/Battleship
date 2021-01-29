@@ -4,6 +4,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logic.*;
 
@@ -174,7 +176,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         Gridinit();
         //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
-        methoden.connectionlost(Client,null);
+        Client.setNuetzlicheMethoden(methoden);
         //Client.init(); wurde davor schon erledigt
         if (Client.loaded) {
             GridUpdater();
@@ -563,8 +565,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }
         if(time!=null)
             time.stop();
-        methoden.connectionlost.stop();
-
+        Client.closeOnPurpose=true;
         Client.CutConnection();
 
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
@@ -583,18 +584,14 @@ public class MultiClientSpielerController implements Initializable, Serializable
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         speicherbutton.setVisible(false);
-        /*
-        gameStartButton.setText("warte auf Host Schiffe..");
-        sendship = new Timeline(new KeyFrame(Duration.millis(100),event -> {
-            if (Client.status == 2) {
-                gameStartButton.setText("Schiffe platzieren");
-                sendship.stop();
+        MainMenuController.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                if(Client!=null){
+                    Client.CutConnection();
+                }
             }
-        }));
-        sendship.setCycleCount(Animation.INDEFINITE);
-        sendship.play();
-
-         */
+        });
     }
 
     /**
@@ -607,7 +604,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Du kannst nur speichern, wenn du dran bist!");
             return;
         }
-        methoden.connectionlost.stop();
 
         //SaveData data = new SaveData();
         //ResourceManager.save(this, "1.save");

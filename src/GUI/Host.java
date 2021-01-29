@@ -69,6 +69,7 @@ public class Host {
      */
     public Spiel dasSpiel;
     private Timeline updateT;
+    private nuetzlicheMethoden nuetzlicheMethoden;
 
     /**
      * Nromaler Konstrukter von Host
@@ -169,6 +170,9 @@ public class Host {
 
     public void setUpdateTimeline(Timeline t){
         updateT=t;
+    }
+    public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
+        this.nuetzlicheMethoden=nuetzlicheMethoden;
     }
     /**
      * Funktion zum der Nachrichten an den Host
@@ -271,6 +275,9 @@ public class Host {
             }
             ss.close();
             closed=true;
+            if(!dasSpiel.isOver()&& !closeOnPurpose && nuetzlicheMethoden!=null){
+                nuetzlicheMethoden.connectionfeedback();
+            }
         } catch (IOException e) {
             System.err.println("Can not close Socket!!");
             e.printStackTrace();
@@ -368,6 +375,8 @@ public class Host {
         }
 
     }
+
+    public boolean closeOnPurpose =false;
     /**
      * Speichert das Spiel
      * @param hash Speicher-ID
@@ -379,6 +388,8 @@ public class Host {
             CutConnection();
             return;
         }
+        closeOnPurpose =true;
         CutConnection();
+
     }
 }

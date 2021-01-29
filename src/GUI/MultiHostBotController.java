@@ -71,7 +71,7 @@ public class MultiHostBotController implements Initializable, Serializable {
      * Button zum Speichern
      */
     @FXML
-    private Button speicherbutton;
+    public Button speicherbutton;
     /**
      * bool Wert für den Status des Spiels (gestartet odern nicht gestartet)
      * <br>
@@ -171,13 +171,14 @@ public class MultiHostBotController implements Initializable, Serializable {
         this.bot = bot;
         Gridinit();
         Spielinit();
-        methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
         derBot.shipSizesToAdd(Bot.calcships(x, x));
         Host = new BotHost(Port, FeldGroesse, derBot);
         Host.init();
         GridUpdater();
         initupdateTimeline();
         Host.setUpdateTimeline(updateTimeline);
+        Host.setNuetzlicheMethoden(methoden);
+        Host.setMultiHostBotController(this);
     }
 
     //Konstruktor laden
@@ -217,6 +218,8 @@ public class MultiHostBotController implements Initializable, Serializable {
         if(derBot.dasSpiel.isStarted()){
             spielstatus=true;
         }
+        Host.setNuetzlicheMethoden(methoden);
+        Host.setMultiHostBotController(this);
     }
 
     /**
@@ -390,6 +393,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         Host.schuss();
         GOETTLICHESSPIELDERVERNICHTUNGMITbot.setAbschussSpieler(1);
         gameStartButton.setVisible(false);
+        Host.speichernErlauben();
         methoden.setAbschussLabelTimeline(GOETTLICHESSPIELDERVERNICHTUNGMITbot, GameTopLabel, GameTopLabel1);
         initupdateTimeline();
         Host.setUpdateTimeline(updateTimeline);
@@ -422,6 +426,7 @@ public class MultiHostBotController implements Initializable, Serializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         speicherbutton.setVisible(false);
+
         gameStartButton.setText("warte auf Ready..");
         //gameStartButton.setVisible(false);
         startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
@@ -448,6 +453,14 @@ public class MultiHostBotController implements Initializable, Serializable {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 //System.out.println("observable: "+observable+" oldValue: "+oldValue+" newValue: "+newValue);
                 changeSlider();
+            }
+        });
+        MainMenuController.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                if(Host!=null){
+                    Host.CutConnection();
+                }
             }
         });
     }
@@ -531,5 +544,63 @@ public class MultiHostBotController implements Initializable, Serializable {
             Host.save(hash);
             newStage.close();
         });
+        if(!Host.dasSpiel.isStarted()){
+            System.err.println("Das Spiel hat doch noch gar nicht angefangen, nichts zu speichern!");
+            return;
+        }
+        Runnable runnable=()->{
+            Host.pause = true;
+            speicherbutton.setVisible(false);
+            while (Host.dasSpiel.getAbschussSpieler() == 0){
+                try {
+                    System.out.println(Host.dasSpiel.getAbschussSpieler());
+                    Thread.sleep(500);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            //SaveData data = new SaveData();
+            //ResourceManager.save(this, "1.save");
+            // SAVE POP UP Fenster
+            Timeline timeline=new Timeline(new KeyFrame(new Duration(100),event1 -> {
+                Stage newStage2 = new Stage();
+                VBox comp2 = new VBox();
+                comp2.setPadding(new Insets(10, 10, 10, 10));
+                comp2.setSpacing(5);
+                comp2.setStyle("-fx-background-color: DARKCYAN;");
+                comp2.setAlignment(Pos.CENTER);
+                TextField DateiName2 = new TextField();
+                DateiName2.setText("Dateiname");
+                Button Save2 = new Button();
+                Save2.setPrefSize(100, 30);
+                Save2.setText("Save");
+                Save2.setOnAction(event2 -> {
+                    String name = String.valueOf(DateiName.getText());
+                    name = name + "-M";
+                    System.out.println("Name: " + name);
+                    //Speichern
+                    String hash = "" + this.hashCode();
+                    Spiel s=GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+                    s.calcEnemyShips();
+                    new SAFE_SOME( new Spiel[]{s}, 4, hash, name,s.slayship,s.slayX,s.slayY,s.enemyShips,s.smallestShip,s.longestShip);
+                    Host.save(hash);
+                    newStage2.close();
+                });
+                Label label2 = new Label("Dateiname:");
+                label2.setFont(new Font("System",14));
+                comp2.getChildren().add(label2);
+                comp2.getChildren().add(DateiName2);
+                comp2.getChildren().add(Save2);
+                Scene stageScene2 = new Scene(comp2, 300, 150);
+                newStage2.setScene(stageScene2);
+                newStage2.show();
+            }));
+            timeline.setCycleCount(1);
+            timeline.play();
+        };
+        Thread t=new Thread(runnable);
+        t.start();
+
     }
 }

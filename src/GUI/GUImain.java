@@ -23,6 +23,7 @@ public class GUImain extends Application {
         primaryStage.setTitle("MainMenu");
         primaryStage.setScene(scene);
         MainMenuController.setPrimaryStage(primaryStage);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
     }
