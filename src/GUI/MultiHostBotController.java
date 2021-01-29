@@ -459,6 +459,7 @@ public class MultiHostBotController implements Initializable, Serializable {
             @Override
             public void handle(WindowEvent event) {
                 if(Host!=null){
+                    Host.closeOnPurpose=true;
                     Host.CutConnection();
                 }
             }

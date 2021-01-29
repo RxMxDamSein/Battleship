@@ -588,6 +588,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
             @Override
             public void handle(WindowEvent event) {
                 if(Client!=null){
+                    Client.closeOnPurpose=true;
                     Client.CutConnection();
                 }
             }
