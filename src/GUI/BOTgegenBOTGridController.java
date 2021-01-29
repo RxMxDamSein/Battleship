@@ -190,7 +190,7 @@ public class BOTgegenBOTGridController implements Initializable {
         Spielinit();
         Gridinit();
         GridUpdater();
-        methoden.initspeichern(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel,speicherbutton);
+        speicherbutton.setVisible(false);
     }
 
     /**
@@ -205,7 +205,7 @@ public class BOTgegenBOTGridController implements Initializable {
         feld = ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getFeld();
         Gridinit();
         GridUpdater();
-        methoden.initspeichern(ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel,speicherbutton);
+        speicherbutton.setVisible(false);
     }
 
     /**
@@ -442,6 +442,7 @@ public class BOTgegenBOTGridController implements Initializable {
      */
     public void gameStart(ActionEvent event) {
         gameStartButton.setVisible(false);
+        speicherbutton.setVisible(true);
         WUNDERVOLLERGEGNERBOT.dasSpiel.setAbschussSpieler((ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.dasSpiel.getAbschussSpieler() == 1) ? 0 : 1);
         initoneSecondsWonder();
     }
@@ -522,7 +523,6 @@ public class BOTgegenBOTGridController implements Initializable {
             ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST.saveGame(name+"-B");
              */
             newStage.close();
-            oneSecondsWonder.play();
         });
         Label label = new Label("Dateiname:");
         label.setFont(new Font("System",14));
@@ -539,6 +539,7 @@ public class BOTgegenBOTGridController implements Initializable {
             System.out.println("Name: " + hash+"-B");
             new SAFE_SOME(new Bot[]{ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST,WUNDERVOLLERGEGNERBOT},null,3,hash,hash+"-B");
             newStage.close();
+
         });
     }
 
