@@ -496,6 +496,54 @@ public class MultiHostBotController implements Initializable, Serializable {
      * @throws IOException
      */
     public void Speichern(ActionEvent event) throws IOException {
+        Host.pause = true;
+
+        //SaveData data = new SaveData();
+        //ResourceManager.save(this, "1.save");
+        // SAVE POP UP Fenster
+        Stage newStage = new Stage();
+        VBox comp = new VBox();
+        comp.setPadding(new Insets(10, 10, 10, 10));
+        comp.setSpacing(5);
+        comp.setStyle("-fx-background-color: DARKCYAN;");
+        comp.setAlignment(Pos.CENTER);
+        TextField DateiName = new TextField();
+        DateiName.setText("Dateiname");
+        Button Save = new Button();
+        Save.setPrefSize(100, 30);
+        Save.setText("Save");
+        Save.setOnAction(event1 -> {
+            String name = String.valueOf(DateiName.getText());
+            name = name + "-M";
+            System.out.println("Name: " + name);
+            //Speichern
+            String hash = "" + this.hashCode();
+            Spiel s=GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+            s.calcEnemyShips();
+            new SAFE_SOME( new Spiel[]{s}, 4, hash, name,s.slayship,s.slayX,s.slayY,s.enemyShips,s.smallestShip,s.longestShip);
+            Host.save(hash);
+            newStage.close();
+        });
+        Label label = new Label("Dateiname:");
+        label.setFont(new Font("System",14));
+        comp.getChildren().add(label);
+        comp.getChildren().add(DateiName);
+        comp.getChildren().add(Save);
+        Scene stageScene = new Scene(comp, 300, 150);
+        newStage.setScene(stageScene);
+        newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
+        newStage.setOnCloseRequest(e-> {
+            //Speichern
+            String hash = "" + this.hashCode();
+            System.out.println("Name: " + hash+"-M");
+            Spiel s=GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+            s.calcEnemyShips();
+            new SAFE_SOME( new Spiel[]{s}, 4, hash, hash+"-M",s.slayship,s.slayX,s.slayY,s.enemyShips,s.smallestShip,s.longestShip);
+            Host.save(hash);
+            newStage.close();
+        });
         if(!Host.dasSpiel.isStarted()){
             System.err.println("Das Spiel hat doch noch gar nicht angefangen, nichts zu speichern!");
             return;
@@ -516,18 +564,18 @@ public class MultiHostBotController implements Initializable, Serializable {
             //ResourceManager.save(this, "1.save");
             // SAVE POP UP Fenster
             Timeline timeline=new Timeline(new KeyFrame(new Duration(100),event1 -> {
-                Stage newStage = new Stage();
-                VBox comp = new VBox();
-                comp.setPadding(new Insets(10, 10, 10, 10));
-                comp.setSpacing(5);
-                comp.setStyle("-fx-background-color: DARKCYAN;");
-                comp.setAlignment(Pos.CENTER);
-                TextField DateiName = new TextField();
-                DateiName.setText("Dateiname");
-                Button Save = new Button();
-                Save.setPrefSize(100, 30);
-                Save.setText("Save");
-                Save.setOnAction(event2 -> {
+                Stage newStage2 = new Stage();
+                VBox comp2 = new VBox();
+                comp2.setPadding(new Insets(10, 10, 10, 10));
+                comp2.setSpacing(5);
+                comp2.setStyle("-fx-background-color: DARKCYAN;");
+                comp2.setAlignment(Pos.CENTER);
+                TextField DateiName2 = new TextField();
+                DateiName2.setText("Dateiname");
+                Button Save2 = new Button();
+                Save2.setPrefSize(100, 30);
+                Save2.setText("Save");
+                Save2.setOnAction(event2 -> {
                     String name = String.valueOf(DateiName.getText());
                     name = name + "-M";
                     System.out.println("Name: " + name);
@@ -537,16 +585,16 @@ public class MultiHostBotController implements Initializable, Serializable {
                     s.calcEnemyShips();
                     new SAFE_SOME( new Spiel[]{s}, 4, hash, name,s.slayship,s.slayX,s.slayY,s.enemyShips,s.smallestShip,s.longestShip);
                     Host.save(hash);
-                    newStage.close();
+                    newStage2.close();
                 });
-                Label label = new Label("Dateiname:");
-                label.setFont(new Font("System",14));
-                comp.getChildren().add(label);
-                comp.getChildren().add(DateiName);
-                comp.getChildren().add(Save);
-                Scene stageScene = new Scene(comp, 300, 150);
-                newStage.setScene(stageScene);
-                newStage.show();
+                Label label2 = new Label("Dateiname:");
+                label2.setFont(new Font("System",14));
+                comp2.getChildren().add(label2);
+                comp2.getChildren().add(DateiName2);
+                comp2.getChildren().add(Save2);
+                Scene stageScene2 = new Scene(comp2, 300, 150);
+                newStage2.setScene(stageScene2);
+                newStage2.show();
             }));
             timeline.setCycleCount(1);
             timeline.play();

@@ -532,6 +532,14 @@ public class BOTgegenBOTGridController implements Initializable {
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
+        newStage.setOnCloseRequest(e-> {
+            String hash = "" + this.hashCode();
+            System.out.println("Name: " + hash+"-B");
+            new SAFE_SOME(new Bot[]{ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST,WUNDERVOLLERGEGNERBOT},null,3,hash,hash+"-B");
+            newStage.close();
+        });
     }
 
     /**

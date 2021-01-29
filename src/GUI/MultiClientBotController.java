@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logic.*;
+import logic.save.SAFE_SOME;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -605,6 +606,50 @@ public class MultiClientBotController implements Initializable, Serializable {
             System.err.println("Das Spiel hat doch noch gar nicht angefangen, nichts zu speichern!");
             return;
         }
+        Client.pause = true;
+        //SaveData data = new SaveData();
+        //ResourceManager.save(this, "1.save");
+        // SAVE POP UP Fenster
+        Stage newStage = new Stage();
+        VBox comp = new VBox();
+        comp.setPadding(new Insets(10, 10, 10, 10));
+        comp.setSpacing(5);
+        comp.setStyle("-fx-background-color: DARKCYAN;");
+        comp.setAlignment(Pos.CENTER);
+        TextField DateiName = new TextField();
+        DateiName.setText("Dateiname");
+        Button Save = new Button();
+        Save.setPrefSize(100, 30);
+        Save.setText("Save");
+        Save.setOnAction(event1 -> {
+            methoden.connectionlost.stop();
+            String name = String.valueOf(DateiName.getText());
+            name = name + "-M";
+            System.out.println("Name: " + name);
+            //Speichern
+            String hash = "" + this.hashCode();
+
+            Client.save(hash, name);
+            newStage.close();
+        });
+        Label label = new Label("Dateiname:");
+        label.setFont(new Font("System",14));
+        comp.getChildren().add(label);
+        comp.getChildren().add(DateiName);
+        comp.getChildren().add(Save);
+        Scene stageScene = new Scene(comp, 300, 150);
+        newStage.setScene(stageScene);
+        newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
+        newStage.setOnCloseRequest(e-> {
+            methoden.connectionlost.stop();
+            //Speichern
+            String hash = "" + this.hashCode();
+            System.out.println("Name: "+hash+"-M");
+            Client.save(hash, hash+"-M");
+            newStage.close();
+        });
         Runnable runnable=()->{
             Client.pause = true;
             speicherbutton.setVisible(false);
@@ -618,35 +663,35 @@ public class MultiClientBotController implements Initializable, Serializable {
                 }
             }
             Timeline t=new Timeline(new KeyFrame(new Duration(100),event2 -> {
-                Stage newStage = new Stage();
-                VBox comp = new VBox();
-                comp.setPadding(new Insets(10, 10, 10, 10));
-                comp.setSpacing(5);
-                comp.setStyle("-fx-background-color: DARKCYAN;");
-                comp.setAlignment(Pos.CENTER);
-                TextField DateiName = new TextField();
-                DateiName.setText("Dateiname");
-                Button Save = new Button();
-                Save.setPrefSize(100, 30);
-                Save.setText("Save");
-                Save.setOnAction(event1 -> {
-                    String name = String.valueOf(DateiName.getText());
+                Stage newStage2 = new Stage();
+                VBox comp2 = new VBox();
+                comp2.setPadding(new Insets(10, 10, 10, 10));
+                comp2.setSpacing(5);
+                comp2.setStyle("-fx-background-color: DARKCYAN;");
+                comp2.setAlignment(Pos.CENTER);
+                TextField DateiName2 = new TextField();
+                DateiName2.setText("Dateiname");
+                Button Save2 = new Button();
+                Save2.setPrefSize(100, 30);
+                Save2.setText("Save");
+                Save2.setOnAction(event1 -> {
+                    String name = String.valueOf(DateiName2.getText());
                     name = name + "-M";
                     System.out.println("Name: " + name);
                     //Speichern
                     String hash = "" + this.hashCode();
 
                     Client.save(hash, name);
-                    newStage.close();
+                    newStage2.close();
                 });
-                Label label = new Label("Dateiname:");
-                label.setFont(new Font("System",14));
-                comp.getChildren().add(label);
-                comp.getChildren().add(DateiName);
-                comp.getChildren().add(Save);
-                Scene stageScene = new Scene(comp, 300, 150);
-                newStage.setScene(stageScene);
-                newStage.show();
+                Label label2 = new Label("Dateiname:");
+                label2.setFont(new Font("System",14));
+                comp2.getChildren().add(label2);
+                comp2.getChildren().add(DateiName2);
+                comp2.getChildren().add(Save2);
+                Scene stageScene2 = new Scene(comp2, 300, 150);
+                newStage2.setScene(stageScene2);
+                newStage2.show();
             }));
             t.setCycleCount(1);
             t.play();

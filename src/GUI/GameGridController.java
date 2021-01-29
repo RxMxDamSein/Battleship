@@ -1,6 +1,7 @@
 package GUI;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,6 +15,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import logic.*;
 
 import logic.save.SAFE_SOME;
@@ -663,6 +666,7 @@ public class GameGridController implements Initializable, Serializable {
         //ResourceManager.save(this, "1.save");
         // SAVE POP UP Fenster
         Stage newStage = new Stage();
+        //newStage.initStyle(StageStyle.UTILITY);
         VBox comp = new VBox();
         comp.setPadding(new Insets(10, 10, 10, 10));
         comp.setSpacing(5);
@@ -694,5 +698,13 @@ public class GameGridController implements Initializable, Serializable {
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
+        newStage.setOnCloseRequest(e-> {
+            String hash = "" + this.hashCode();
+            System.out.println("Name: " + hash+"-S");
+            new SAFE_SOME(new Bot[]{ROMANSFABELHAFTERbotDERNOCHVERBUGGTIST},new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot},2,hash,hash+"-S");
+            newStage.close();
+        });
     }
 }
