@@ -623,7 +623,6 @@ public class MultiClientBotController implements Initializable, Serializable {
         Save.setPrefSize(100, 30);
         Save.setText("Save");
         Save.setOnAction(event1 -> {
-            methoden.connectionlost.stop();
             String name = String.valueOf(DateiName.getText());
             name = name + "-M";
             System.out.println("Name: " + name);
@@ -644,7 +643,6 @@ public class MultiClientBotController implements Initializable, Serializable {
         newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
         newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
         newStage.setOnCloseRequest(e-> {
-            methoden.connectionlost.stop();
             //Speichern
             String hash = "" + this.hashCode();
             System.out.println("Name: "+hash+"-M");
