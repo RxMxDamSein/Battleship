@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="1411.7219221866358" y="5104.0">GUI.EinstellungenController</node>
+    <node x="686.6513657323272" y="3793.5">GUI.BotHost</node>
+    <node x="2581.3135888533025" y="5104.5">GUI.MainMenuController</node>
+    <node x="395.1846990656604" y="250.5">logic.logicOUTput</node>
+    <node x="1633.5899999999997" y="2609.0">GUI.MultiHostSpielerController</node>
+    <node x="426.85136573232717" y="1769.0">logic.Bot</node>
+    <node x="2160.2865338494826" y="4752.0">GUI.MultiClientSpielerController</node>
+    <node x="931.6513657323272" y="2982.0">logic.Bot_nightmare</node>
+    <node x="497.8513657323273" y="2993.5">logic.Bot_schwer</node>
+    <node x="1633.3399999999997" y="1802.0">GUI.Host</node>
+    <node x="1843.0969221866358" y="7330.5">GUI.JoinMenuController</node>
+    <node x="592.2499999999999" y="7967.0">GUI.NeuesSpielMenuController</node>
+    <node x="1543.413098657224" y="7330.5">GUI.HostMenuController</node>
+    <node x="866.0635888533029" y="751.6666666666665">GUI.MehrspielerMenuController</node>
+    <node x="1469.012755519969" y="543.0">logic.Spiel</node>
+    <node x="2684.0635888533025" y="6208.0">GUI.GUImain</node>
+    <node x="445.875" y="7022.0">GUI.GameGridController</node>
+    <node x="1432.2333333333333" y="5745.0">GUI.nuetzlicheMethoden</node>
+    <node x="634.6116004084363" y="4752.5">GUI.MultiHostBotController</node>
+    <node x="82.875" y="7000.0">GUI.BOTgegenBOTGridController</node>
+    <node x="1771.5649619890114" y="4905.5">GUI.BotClient</node>
+    <node x="1467.746628655678" y="173.0">logic.Schiff</node>
+    <node x="1575.0116286556781" y="3673.0">GUI.MultiClientBotController</node>
+    <node x="304.375" y="8000.5">GUI.EinzelspielerController</node>
+    <node x="270.9208101767716" y="0.0">logic.RDM_Bot</node>
+    <node x="2379.3649619890116" y="3881.5">GUI.Client</node>
+    <node x="301.9994887455896" y="4091.0">logic.Bot_lvl_2</node>
+    <node x="0.0" y="7945.0">GUI.BOTgegenBOTMenuController</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="GUI.NeuesSpielMenuController" target="GUI.GameGridController">
+      <point x="0.0" y="-106.0" />
+      <point x="728.2499999999999" y="7920.0" />
+      <point x="703.125" y="7920.0" />
+      <point x="85.75" y="425.5" />
+    </edge>
+    <edge source="GUI.GameGridController" target="logic.Bot">
+      <point x="-100.04166666666652" y="-425.5" />
+      <point x="517.3333333333335" y="6810.0" />
+      <point x="269.4994887455896" y="6810.0" />
+      <point x="269.4994887455896" y="2539.0" />
+      <point x="504.629143510105" y="2539.0" />
+      <point x="-122.22222222222217" y="360.0" />
+    </edge>
+    <edge source="GUI.nuetzlicheMethoden" target="GUI.MultiClientSpielerController">
+      <point x="84.70588235294076" y="-502.5" />
+      <point x="1696.939215686274" y="5685.0" />
+      <point x="2213.453200516149" y="5685.0" />
+      <point x="-106.33333333333326" y="436.5" />
+    </edge>
+    <edge source="GUI.MultiHostBotController" target="logic.Bot">
+      <point x="29.0" y="-436.0" />
+      <point x="823.1116004084363" y="4692.0" />
+      <point x="910.1513657323272" y="4692.0" />
+      <point x="910.1513657323272" y="2559.0" />
+      <point x="704.629143510105" y="2559.0" />
+      <point x="77.77777777777783" y="360.0" />
+    </edge>
+    <edge source="GUI.BotHost" target="logic.Bot_schwer">
+      <point x="-85.20000000000005" y="-349.0" />
+      <point x="707.9513657323272" y="3653.0" />
+      <point x="678.4513657323273" y="3653.0" />
+      <point x="51.60000000000002" y="62.5" />
+    </edge>
+    <edge source="GUI.MultiClientBotController" target="GUI.nuetzlicheMethoden">
+      <point x="-79.75" y="469.5" />
+      <point x="1654.7616286556781" y="4722.0" />
+      <point x="1696.2219221866358" y="4722.0" />
+      <point x="1696.2219221866358" y="5655.0" />
+      <point x="1633.4098039215685" y="5655.0" />
+      <point x="21.176470588235134" y="-502.5" />
+    </edge>
+    <edge source="GUI.Client" target="logic.Spiel">
+      <point x="-53.25" y="-261.0" />
+      <point x="2432.6149619890116" y="3653.0" />
+      <point x="2172.6816666666664" y="3653.0" />
+      <point x="2172.6816666666664" y="1579.0" />
+      <point x="1720.932755519969" y="1579.0" />
+      <point x="117.92000000000007" y="503.0" />
+    </edge>
+    <edge source="GUI.BotHost" target="GUI.MultiHostBotController">
+      <point x="71.0" y="349.0" />
+      <point x="864.1513657323272" y="4682.0" />
+      <point x="794.1116004084363" y="4682.0" />
+      <point x="0.0" y="-436.0" />
+    </edge>
+    <edge source="GUI.MultiHostBotController" target="logic.Bot_lvl_2">
+      <point x="-116.0" y="-436.0" />
+      <point x="678.1116004084363" y="4712.0" />
+      <point x="431.3744887455896" y="4712.0" />
+      <point x="25.875" y="51.5" />
+    </edge>
+    <edge source="GUI.BOTgegenBOTGridController" target="logic.Bot">
+      <point x="-62.36363636363649" y="-447.5" />
+      <point x="192.0113636363635" y="6860.0" />
+      <point x="247.4994887455896" y="6860.0" />
+      <point x="247.4994887455896" y="2519.0" />
+      <point x="460.1846990656604" y="2519.0" />
+      <point x="-166.66666666666674" y="360.0" />
+    </edge>
+    <edge source="GUI.BOTgegenBOTMenuController" target="GUI.BOTgegenBOTGridController">
+      <point x="0.0" y="-128.0" />
+      <point x="141.0" y="7920.0" />
+      <point x="168.625" y="7920.0" />
+      <point x="-85.75" y="447.5" />
+    </edge>
+    <edge source="GUI.BOTgegenBOTGridController" target="GUI.nuetzlicheMethoden">
+      <point x="124.72727272727252" y="-447.5" />
+      <point x="379.1022727272725" y="6950.0" />
+      <point x="1454.7333333333333" y="6950.0" />
+      <point x="-157.5" y="502.5" />
+    </edge>
+    <edge source="GUI.GameGridController" target="GUI.nuetzlicheMethoden">
+      <point x="128.625" y="-425.5" />
+      <point x="746.0" y="6970.0" />
+      <point x="1544.7333333333333" y="6970.0" />
+      <point x="-67.5" y="502.5" />
+    </edge>
+    <edge source="logic.Bot" target="logic.Spiel">
+      <point x="44.44444444444434" y="-360.0" />
+      <point x="671.2958101767715" y="1699.0" />
+      <point x="1474.372755519969" y="1699.0" />
+      <point x="-128.6400000000001" y="503.0" />
+    </edge>
+    <edge source="logic.Spiel" target="logic.Schiff">
+      <point x="22.333333333333258" y="-503.0" />
+      <point x="1625.3460888533023" y="523.0" />
+      <point x="1597.121628655678" y="523.0" />
+      <point x="-43.125" y="150.0" />
+    </edge>
+    <edge source="GUI.MultiClientSpielerController" target="GUI.Client">
+      <point x="0.0" y="-436.5" />
+      <point x="2319.7865338494826" y="4732.0" />
+      <point x="2400.6649619890113" y="4732.0" />
+      <point x="-85.20000000000005" y="261.0" />
+    </edge>
+    <edge source="GUI.nuetzlicheMethoden" target="GUI.MultiHostSpielerController">
+      <point x="-84.70588235294144" y="-502.5" />
+      <point x="1527.527450980392" y="5685.0" />
+      <point x="1379.2219221866358" y="5685.0" />
+      <point x="1379.2219221866358" y="3623.0" />
+      <point x="1686.7566666666662" y="3623.0" />
+      <point x="-106.33333333333348" y="447.0" />
+    </edge>
+    <edge source="GUI.JoinMenuController" target="GUI.Client">
+      <point x="97.91666666666674" y="-117.0" />
+      <point x="2058.5135888533023" y="6980.0" />
+      <point x="2570.8135888533025" y="6980.0" />
+      <point x="85.20000000000005" y="261.0" />
+    </edge>
+    <edge source="GUI.BOTgegenBOTGridController" target="logic.Bot_lvl_2">
+      <point x="0.0" y="-447.5" />
+      <point x="254.375" y="6880.0" />
+      <point x="342.26059865722425" y="6880.0" />
+      <point x="342.26059865722425" y="4732.0" />
+      <point x="327.8744887455896" y="4732.0" />
+      <point x="-77.625" y="51.5" />
+    </edge>
+    <edge source="GUI.GameGridController" target="logic.Bot_lvl_2">
+      <point x="-14.291666666666629" y="-425.5" />
+      <point x="603.0833333333334" y="6780.0" />
+      <point x="401.3513657323273" y="6780.0" />
+      <point x="401.3513657323273" y="4732.0" />
+      <point x="379.6244887455896" y="4732.0" />
+      <point x="-25.875" y="51.5" />
+    </edge>
+    <edge source="GUI.MultiHostSpielerController" target="logic.Bot">
+      <point x="-127.59999999999991" y="-447.0" />
+      <point x="1665.4899999999998" y="2509.0" />
+      <point x="815.7402546212161" y="2509.0" />
+      <point x="188.8888888888889" y="360.0" />
+    </edge>
+    <edge source="GUI.BotClient" target="logic.RDM_Bot">
+      <point x="94.66666666666663" y="-283.0" />
+      <point x="1972.7316286556782" y="4732.0" />
+      <point x="2224.851922186636" y="4732.0" />
+      <point x="2224.851922186636" y="123.0" />
+      <point x="464.9833101767716" y="123.0" />
+      <point x="90.5625" y="51.5" />
+    </edge>
+    <edge source="logic.Bot_nightmare" target="logic.Bot">
+      <point x="-25.875" y="-74.0" />
+      <point x="1009.2763657323272" y="2529.0" />
+      <point x="771.2958101767717" y="2529.0" />
+      <point x="144.44444444444457" y="360.0" />
+    </edge>
+    <edge source="GUI.BotHost" target="logic.Bot">
+      <point x="-42.59999999999991" y="-349.0" />
+      <point x="750.5513657323273" y="3653.0" />
+      <point x="766.3513657323273" y="3653.0" />
+      <point x="766.3513657323273" y="2579.0" />
+      <point x="660.1846990656607" y="2579.0" />
+      <point x="33.333333333333485" y="360.0" />
+    </edge>
+    <edge source="GUI.MultiClientBotController" target="logic.Spiel">
+      <point x="0.0" y="-469.5" />
+      <point x="1734.5116286556781" y="3653.0" />
+      <point x="2044.3816666666664" y="3653.0" />
+      <point x="2044.3816666666664" y="1619.0" />
+      <point x="1678.052755519969" y="1619.0" />
+      <point x="75.03999999999996" y="503.0" />
+    </edge>
+    <edge source="GUI.BotClient" target="logic.Spiel">
+      <point x="71.0" y="-283.0" />
+      <point x="1949.0649619890114" y="4722.0" />
+      <point x="2151.2416666666663" y="4722.0" />
+      <point x="2151.2416666666663" y="1599.0" />
+      <point x="1699.492755519969" y="1599.0" />
+      <point x="96.48000000000002" y="503.0" />
+    </edge>
+    <edge source="GUI.GameGridController" target="logic.logicOUTput">
+      <point x="-128.6249999999999" y="-425.5" />
+      <point x="488.7500000000001" y="6820.0" />
+      <point x="194.48857604717693" y="6820.0" />
+      <point x="194.48857604717693" y="1749.0" />
+      <point x="258.2263657323273" y="1749.0" />
+      <point x="258.2263657323273" y="523.0" />
+      <point x="440.82755620851754" y="523.0" />
+      <point x="-60.85714285714289" y="72.5" />
+    </edge>
+    <edge source="GUI.nuetzlicheMethoden" target="GUI.MultiHostBotController">
+      <point x="-169.41176470588266" y="-502.5" />
+      <point x="1442.8215686274507" y="5725.0" />
+      <point x="687.778267075103" y="5725.0" />
+      <point x="-106.33333333333326" y="436.0" />
+    </edge>
+    <edge source="GUI.nuetzlicheMethoden" target="GUI.BotClient">
+      <point x="63.52941176470563" y="-502.5" />
+      <point x="1675.762745098039" y="5675.0" />
+      <point x="1807.0649619890114" y="5675.0" />
+      <point x="-71.0" y="283.0" />
+    </edge>
+    <edge source="GUI.nuetzlicheMethoden" target="GUI.EinstellungenController">
+      <point x="-21.17647058823559" y="-502.5" />
+      <point x="1591.0568627450978" y="5655.0" />
+      <point x="1543.2219221866358" y="5655.0" />
+      <point x="0.0" y="84.5" />
+    </edge>
+    <edge source="GUI.BOTgegenBOTGridController" target="logic.logicOUTput">
+      <point x="-124.72727272727252" y="-447.5" />
+      <point x="129.64772727272748" y="6840.0" />
+      <point x="165.13143319003404" y="6840.0" />
+      <point x="165.13143319003404" y="1739.0" />
+      <point x="247.22636573232728" y="1739.0" />
+      <point x="247.22636573232728" y="513.0" />
+      <point x="410.3989847799462" y="513.0" />
+      <point x="-91.28571428571422" y="72.5" />
+    </edge>
+    <edge source="GUI.JoinMenuController" target="GUI.nuetzlicheMethoden">
+      <point x="-97.91666666666674" y="-117.0" />
+      <point x="1862.6802555199688" y="6980.0" />
+      <point x="1724.7333333333331" y="6980.0" />
+      <point x="112.49999999999977" y="502.5" />
+    </edge>
+    <edge source="GUI.MultiClientBotController" target="GUI.BotClient">
+      <point x="79.75" y="469.5" />
+      <point x="1814.2616286556781" y="4632.0" />
+      <point x="1854.398295322345" y="4632.0" />
+      <point x="-23.66666666666663" y="-283.0" />
+    </edge>
+    <edge source="GUI.MultiHostBotController" target="GUI.BotHost">
+      <point x="-58.0" y="-436.0" />
+      <point x="736.1116004084363" y="4732.0" />
+      <point x="722.1513657323272" y="4732.0" />
+      <point x="-71.0" y="349.0" />
+    </edge>
+    <edge source="GUI.MultiHostSpielerController" target="GUI.Host">
+      <point x="-63.80000000000018" y="-447.0" />
+      <point x="1729.2899999999995" y="2589.0" />
+      <point x="1686.5899999999997" y="2589.0" />
+      <point x="-53.25" y="327.0" />
+    </edge>
+    <edge source="GUI.GUImain" target="GUI.MainMenuController">
+      <point x="0.0" y="-39.5" />
+      <point x="58.75" y="84.0" />
+    </edge>
+    <edge source="GUI.MultiHostSpielerController" target="logic.Spiel">
+      <point x="63.80000000000018" y="-447.0" />
+      <point x="1856.8899999999999" y="2589.0" />
+      <point x="1899.1049999999998" y="2589.0" />
+      <point x="1899.1049999999998" y="1639.0" />
+      <point x="1656.612755519969" y="1639.0" />
+      <point x="53.59999999999991" y="503.0" />
+    </edge>
+    <edge source="GUI.BotClient" target="logic.Bot_schwer">
+      <point x="-71.00000000000011" y="-283.0" />
+      <point x="1807.0649619890114" y="4652.0" />
+      <point x="993.3602103200709" y="4652.0" />
+      <point x="993.3602103200709" y="3533.0" />
+      <point x="730.0513657323273" y="3533.0" />
+      <point x="103.20000000000005" y="62.5" />
+    </edge>
+    <edge source="GUI.MultiHostSpielerController" target="GUI.nuetzlicheMethoden">
+      <point x="0.0" y="447.0" />
+      <point x="1793.0899999999997" y="3633.0" />
+      <point x="1390.2219221866358" y="3633.0" />
+      <point x="1390.2219221866358" y="5675.0" />
+      <point x="1548.7039215686273" y="5675.0" />
+      <point x="-63.52941176470608" y="-502.5" />
+    </edge>
+    <edge source="GUI.MultiHostBotController" target="logic.Bot_schwer">
+      <point x="-87.0" y="-436.0" />
+      <point x="707.1116004084363" y="4702.0" />
+      <point x="626.8513657323273" y="4702.0" />
+      <point x="0.0" y="62.5" />
+    </edge>
+    <edge source="GUI.nuetzlicheMethoden" target="GUI.MainMenuController">
+      <point x="169.4117647058822" y="-502.5" />
+      <point x="1781.6450980392156" y="5725.0" />
+      <point x="2640.0635888533025" y="5725.0" />
+      <point x="-58.75" y="84.0" />
+    </edge>
+    <edge source="GUI.MultiClientSpielerController" target="logic.Spiel">
+      <point x="-106.33333333333326" y="-436.5" />
+      <point x="2213.453200516149" y="4722.0" />
+      <point x="2161.9616666666666" y="4722.0" />
+      <point x="2161.9616666666666" y="1589.0" />
+      <point x="1710.212755519969" y="1589.0" />
+      <point x="107.20000000000005" y="503.0" />
+    </edge>
+    <edge source="logic.logicOUTput" target="logic.Bot">
+      <point x="-30.42857142857133" y="72.5" />
+      <point x="471.2561276370891" y="523.0" />
+      <point x="490.6846990656604" y="523.0" />
+      <point x="490.6846990656604" y="1749.0" />
+      <point x="493.5180323989937" y="1749.0" />
+      <point x="-133.33333333333348" y="-360.0" />
+    </edge>
+    <edge source="GUI.GameGridController" target="logic.Bot_schwer">
+      <point x="14.291666666666742" y="-425.5" />
+      <point x="631.6666666666667" y="6770.0" />
+      <point x="579.8513657323273" y="6770.0" />
+      <point x="579.8513657323273" y="3653.0" />
+      <point x="575.2513657323273" y="3653.0" />
+      <point x="-51.60000000000002" y="62.5" />
+    </edge>
+    <edge source="GUI.nuetzlicheMethoden" target="GUI.MultiClientBotController">
+      <point x="42.352941176470495" y="-502.5" />
+      <point x="1654.5862745098038" y="5665.0" />
+      <point x="1707.2219221866358" y="5665.0" />
+      <point x="-26.583333333333258" y="469.5" />
+    </edge>
+    <edge source="logic.Bot_lvl_2" target="logic.Bot">
+      <point x="51.75" y="-51.5" />
+      <point x="457.2494887455896" y="3653.0" />
+      <point x="418.93521032007095" y="3653.0" />
+      <point x="418.93521032007095" y="2579.0" />
+      <point x="593.5180323989939" y="2579.0" />
+      <point x="-33.33333333333326" y="360.0" />
+    </edge>
+    <edge source="logic.Bot_nightmare" target="logic.Spiel">
+      <point x="77.625" y="-74.0" />
+      <point x="1112.7763657323271" y="2589.0" />
+      <point x="1208.389765323891" y="2589.0" />
+      <point x="1208.389765323891" y="1749.0" />
+      <point x="1527.972755519969" y="1749.0" />
+      <point x="-75.03999999999996" y="503.0" />
+    </edge>
+    <edge source="GUI.GameGridController" target="logic.Bot_nightmare">
+      <point x="42.875" y="-425.5" />
+      <point x="660.25" y="6920.0" />
+      <point x="1153.514765323891" y="6920.0" />
+      <point x="1153.514765323891" y="3533.0" />
+      <point x="1104.1513657323271" y="3533.0" />
+      <point x="69.0" y="74.0" />
+    </edge>
+    <edge source="GUI.nuetzlicheMethoden" target="logic.Spiel">
+      <point x="-105.8823529411768" y="-502.5" />
+      <point x="1506.3509803921565" y="5695.0" />
+      <point x="1294.9282953223449" y="5695.0" />
+      <point x="1294.9282953223449" y="3613.0" />
+      <point x="1622.8399999999997" y="3613.0" />
+      <point x="1622.8399999999997" y="1679.0" />
+      <point x="1613.732755519969" y="1679.0" />
+      <point x="10.720000000000027" y="503.0" />
+    </edge>
+    <edge source="logic.Bot" target="logic.logicOUTput">
+      <point x="-88.88888888888891" y="-360.0" />
+      <point x="537.9624768434383" y="1749.0" />
+      <point x="501.6846990656604" y="1749.0" />
+      <point x="0.0" y="72.5" />
+    </edge>
+    <edge source="GUI.MultiClientSpielerController" target="GUI.nuetzlicheMethoden">
+      <point x="0.0" y="436.5" />
+      <point x="2319.7865338494826" y="5695.0" />
+      <point x="1718.1156862745097" y="5695.0" />
+      <point x="105.88235294117635" y="-502.5" />
+    </edge>
+    <edge source="logic.Spiel" target="logic.Bot">
+      <point x="-96.48000000000002" y="503.0" />
+      <point x="1506.532755519969" y="1729.0" />
+      <point x="804.629143510105" y="1729.0" />
+      <point x="177.77777777777783" y="-360.0" />
+    </edge>
+    <edge source="GUI.EinzelspielerController" target="GUI.BOTgegenBOTGridController">
+      <point x="-65.75" y="-72.5" />
+      <point x="370.125" y="7920.0" />
+      <point x="340.125" y="7920.0" />
+      <point x="85.75" y="447.5" />
+    </edge>
+    <edge source="GUI.GameGridController" target="logic.Spiel">
+      <point x="71.45833333333337" y="-425.5" />
+      <point x="688.8333333333334" y="6930.0" />
+      <point x="1236.2594717929333" y="6930.0" />
+      <point x="1236.2594717929333" y="3593.0" />
+      <point x="1601.12" y="3593.0" />
+      <point x="1601.12" y="1699.0" />
+      <point x="1592.292755519969" y="1699.0" />
+      <point x="-10.720000000000027" y="503.0" />
+    </edge>
+    <edge source="GUI.Host" target="logic.Spiel">
+      <point x="-71.0" y="-327.0" />
+      <point x="1668.8399999999997" y="1669.0" />
+      <point x="1624.452755519969" y="1669.0" />
+      <point x="21.440000000000055" y="503.0" />
+    </edge>
+    <edge source="logic.logicOUTput" target="logic.RDM_Bot">
+      <point x="-53.25" y="-72.5" />
+      <point x="448.4346990656604" y="153.0" />
+      <point x="387.3583101767716" y="153.0" />
+      <point x="12.9375" y="51.5" />
+    </edge>
+    <edge source="GUI.MultiHostBotController" target="logic.RDM_Bot">
+      <point x="-145.0" y="-436.0" />
+      <point x="649.1116004084363" y="4722.0" />
+      <point x="205.48857604717693" y="4722.0" />
+      <point x="205.48857604717693" y="1729.0" />
+      <point x="154.13143319003404" y="1729.0" />
+      <point x="154.13143319003404" y="143.0" />
+      <point x="335.6083101767716" y="143.0" />
+      <point x="-38.8125" y="51.5" />
+    </edge>
+    <edge source="logic.Spiel" target="logic.logicOUTput">
+      <point x="-111.66666666666652" y="-503.0" />
+      <point x="1491.3460888533025" y="513.0" />
+      <point x="532.113270494232" y="513.0" />
+      <point x="30.42857142857156" y="72.5" />
+    </edge>
+    <edge source="logic.Bot_schwer" target="logic.Bot">
+      <point x="64.5" y="-62.5" />
+      <point x="691.3513657323273" y="2589.0" />
+      <point x="637.9624768434383" y="2589.0" />
+      <point x="11.111111111111086" y="360.0" />
+    </edge>
+    <edge source="logic.logicOUTput" target="logic.Spiel">
+      <point x="60.85714285714289" y="72.5" />
+      <point x="562.5418419228033" y="503.0" />
+      <point x="1536.012755519969" y="503.0" />
+      <point x="-67.0" y="-503.0" />
+    </edge>
+    <edge source="GUI.BotClient" target="GUI.MultiClientBotController">
+      <point x="-47.33333333333337" y="-283.0" />
+      <point x="1830.7316286556782" y="4642.0" />
+      <point x="1761.0949619890114" y="4642.0" />
+      <point x="26.583333333333258" y="469.5" />
+    </edge>
+    <edge source="GUI.GameGridController" target="logic.RDM_Bot">
+      <point x="-157.20833333333326" y="-425.5" />
+      <point x="460.16666666666674" y="6830.0" />
+      <point x="143.13143319003404" y="6830.0" />
+      <point x="143.13143319003404" y="133.0" />
+      <point x="309.7333101767716" y="133.0" />
+      <point x="-64.6875" y="51.5" />
+    </edge>
+    <edge source="GUI.MultiHostBotController" target="GUI.nuetzlicheMethoden">
+      <point x="0.0" y="436.0" />
+      <point x="794.1116004084363" y="5715.0" />
+      <point x="1463.998039215686" y="5715.0" />
+      <point x="-148.2352941176473" y="-502.5" />
+    </edge>
+    <edge source="GUI.BOTgegenBOTGridController" target="logic.RDM_Bot">
+      <point x="-155.909090909091" y="-447.5" />
+      <point x="98.46590909090901" y="6980.0" />
+      <point x="82.31944444444446" y="6980.0" />
+      <point x="82.31944444444446" y="123.0" />
+      <point x="283.8583101767716" y="123.0" />
+      <point x="-90.5625" y="51.5" />
+    </edge>
+    <edge source="GUI.EinzelspielerController" target="GUI.GameGridController">
+      <point x="65.75" y="-72.5" />
+      <point x="501.625" y="7920.0" />
+      <point x="531.625" y="7920.0" />
+      <point x="-85.75" y="425.5" />
+    </edge>
+    <edge source="GUI.BotClient" target="logic.Bot_lvl_2">
+      <point x="-94.66666666666674" y="-283.0" />
+      <point x="1783.398295322345" y="4662.0" />
+      <point x="483.1244887455896" y="4662.0" />
+      <point x="77.625" y="51.5" />
+    </edge>
+    <edge source="GUI.BOTgegenBOTGridController" target="logic.Bot_nightmare">
+      <point x="93.5454545454545" y="-447.5" />
+      <point x="347.9204545454545" y="6910.0" />
+      <point x="1050.360210320071" y="6910.0" />
+      <point x="1050.360210320071" y="3533.0" />
+      <point x="1035.1513657323271" y="3533.0" />
+      <point x="0.0" y="74.0" />
+    </edge>
+    <edge source="GUI.BotHost" target="logic.Spiel">
+      <point x="85.20000000000005" y="-349.0" />
+      <point x="878.3513657323273" y="3553.0" />
+      <point x="1557.6799999999998" y="3553.0" />
+      <point x="1557.6799999999998" y="1739.0" />
+      <point x="1549.412755519969" y="1739.0" />
+      <point x="-53.59999999999991" y="503.0" />
+    </edge>
+    <edge source="logic.Bot" target="logic.Schiff">
+      <point x="0.0" y="-360.0" />
+      <point x="626.8513657323272" y="1749.0" />
+      <point x="629.6846990656604" y="1749.0" />
+      <point x="629.6846990656604" y="523.0" />
+      <point x="1510.871628655678" y="523.0" />
+      <point x="-129.375" y="150.0" />
+    </edge>
+    <edge source="GUI.BOTgegenBOTGridController" target="logic.Bot_schwer">
+      <point x="31.181818181818016" y="-447.5" />
+      <point x="285.556818181818" y="6890.0" />
+      <point x="568.8513657323273" y="6890.0" />
+      <point x="568.8513657323273" y="3653.0" />
+      <point x="523.6513657323273" y="3653.0" />
+      <point x="-103.19999999999993" y="62.5" />
+    </edge>
+    <edge source="GUI.nuetzlicheMethoden" target="GUI.Client">
+      <point x="148.23529411764662" y="-502.5" />
+      <point x="1760.46862745098" y="5715.0" />
+      <point x="2489.7865338494826" y="5715.0" />
+      <point x="2489.7865338494826" y="4732.0" />
+      <point x="2485.8649619890116" y="4732.0" />
+      <point x="0.0" y="261.0" />
+    </edge>
+    <edge source="GUI.MultiHostBotController" target="logic.Spiel">
+      <point x="87.0" y="-436.0" />
+      <point x="881.1116004084363" y="4712.0" />
+      <point x="982.3602103200709" y="4712.0" />
+      <point x="982.3602103200709" y="3563.0" />
+      <point x="1568.3999999999996" y="3563.0" />
+      <point x="1568.3999999999996" y="1729.0" />
+      <point x="1560.132755519969" y="1729.0" />
+      <point x="-42.88000000000011" y="503.0" />
+    </edge>
+    <edge source="GUI.HostMenuController" target="GUI.nuetzlicheMethoden">
+      <point x="-58.75" y="-117.0" />
+      <point x="1602.163098657224" y="6980.0" />
+      <point x="1634.7333333333333" y="6980.0" />
+      <point x="22.5" y="502.5" />
+    </edge>
+    <edge source="GUI.BotClient" target="logic.Bot">
+      <point x="23.66666666666663" y="-283.0" />
+      <point x="1901.7316286556782" y="4732.0" />
+      <point x="1904.5116286556781" y="4732.0" />
+      <point x="1904.5116286556781" y="3533.0" />
+      <point x="1508.4033333333332" y="3533.0" />
+      <point x="1508.4033333333332" y="2519.0" />
+      <point x="793.5180323989939" y="2519.0" />
+      <point x="166.66666666666674" y="360.0" />
+    </edge>
+    <edge source="GUI.JoinMenuController" target="GUI.BotClient">
+      <point x="-19.583333333333258" y="-117.0" />
+      <point x="1941.0135888533023" y="5675.0" />
+      <point x="1878.0649619890114" y="5675.0" />
+      <point x="0.0" y="283.0" />
+    </edge>
+    <edge source="logic.RDM_Bot" target="logic.Bot">
+      <point x="-12.9375" y="51.5" />
+      <point x="361.4833101767716" y="153.0" />
+      <point x="236.22636573232728" y="153.0" />
+      <point x="236.22636573232728" y="1729.0" />
+      <point x="449.07358795454934" y="1729.0" />
+      <point x="-177.77777777777783" y="-360.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.6000000000000001" x="1953.333333333333" y="990.8333333333331" />
+  <SelectedNodes>
+    <node>GUI.MehrspielerMenuController</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

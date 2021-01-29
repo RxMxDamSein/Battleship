@@ -22,6 +22,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.*;
+import logic.save.SAFE_SOME;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -631,5 +632,15 @@ public class MultiClientBotController implements Initializable, Serializable {
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
+        newStage.setOnCloseRequest(e-> {
+            methoden.connectionlost.stop();
+            //Speichern
+            String hash = "" + this.hashCode();
+            System.out.println("Name: "+hash+"-M");
+            Client.save(hash, hash+"-M");
+            newStage.close();
+        });
     }
 }

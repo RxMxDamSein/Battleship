@@ -297,6 +297,8 @@ public class nuetzlicheMethoden {
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
     }
 
     /**
@@ -338,6 +340,8 @@ public class nuetzlicheMethoden {
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
 
         timeline = new Timeline(new KeyFrame(new Duration(50), event -> {
             count++;
@@ -532,6 +536,8 @@ public class nuetzlicheMethoden {
         newStage.setScene(stageScene);
 
         newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
     }
 
     //Integer Port,Integer Feldgroesse, SAFE_SOME SAFE, String id
@@ -772,9 +778,10 @@ public class nuetzlicheMethoden {
         //newStage.setAlwaysOnTop(true);
         //double x = MainMenuController.primaryStage.getX();//-(newStage.getWidth()/2);//+((MainMenuController.primaryStage.getWidth()/2)-newStage.getWidth()/2);
         //double y = MainMenuController.primaryStage.getY();//+(newStage.getHeight()/2);//+((MainMenuController.primaryStage.getHeight()/2)-newStage.getHeight()/2);
-        newStage.setX(MainMenuController.primaryStage.getX());
-        newStage.setY(MainMenuController.primaryStage.getY());
+
         newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
     }
 
     public void connectionlost(Client Client,BotClient BClient) {

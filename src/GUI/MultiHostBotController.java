@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logic.*;
 
@@ -517,5 +519,17 @@ public class MultiHostBotController implements Initializable, Serializable {
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
+        newStage.setOnCloseRequest(e-> {
+            //Speichern
+            String hash = "" + this.hashCode();
+            System.out.println("Name: " + hash+"-M");
+            Spiel s=GOETTLICHESSPIELDERVERNICHTUNGMITbot;
+            s.calcEnemyShips();
+            new SAFE_SOME( new Spiel[]{s}, 4, hash, hash+"-M",s.slayship,s.slayX,s.slayY,s.enemyShips,s.smallestShip,s.longestShip);
+            Host.save(hash);
+            newStage.close();
+        });
     }
 }

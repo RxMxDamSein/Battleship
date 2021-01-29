@@ -666,5 +666,16 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         Scene stageScene = new Scene(comp, 300, 150);
         newStage.setScene(stageScene);
         newStage.show();
+        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
+        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
+        newStage.setOnCloseRequest(e-> {
+            //Speichern
+            String hash = "" + this.hashCode();
+            System.out.println("Name: " + hash+"-M");
+            GOETTLICHESSPIELDERVERNICHTUNGMITbot.calcEnemyShips();
+            new SAFE_SOME( new Spiel[]{GOETTLICHESSPIELDERVERNICHTUNGMITbot}, 4, hash, hash+"-M",GOETTLICHESSPIELDERVERNICHTUNGMITbot.slayship, GOETTLICHESSPIELDERVERNICHTUNGMITbot.slayX,GOETTLICHESSPIELDERVERNICHTUNGMITbot.slayY, GOETTLICHESSPIELDERVERNICHTUNGMITbot.enemyShips, GOETTLICHESSPIELDERVERNICHTUNGMITbot.smallestShip, GOETTLICHESSPIELDERVERNICHTUNGMITbot.longestShip);
+            Host.save(hash);
+            newStage.close();
+        });
     }
 }
