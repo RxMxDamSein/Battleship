@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logic.*;
 
@@ -556,6 +558,14 @@ public class MultiClientBotController implements Initializable, Serializable {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 //System.out.println("observable: "+observable+" oldValue: "+oldValue+" newValue: "+newValue);
                 changeSlider();
+            }
+        });
+        MainMenuController.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                if(Client!=null){
+                    Client.CutConnection();
+                }
             }
         });
     }

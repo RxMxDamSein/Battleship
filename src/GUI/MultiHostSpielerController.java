@@ -4,6 +4,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logic.*;
 
@@ -599,27 +601,14 @@ public class MultiHostSpielerController implements Initializable, Serializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        /*
-        gameStartButton.setText("warte auf Client..");
-        sendship = new Timeline(new KeyFrame(Duration.millis(100),event -> {
-            if (Host.Connected) {
-                gameStartButton.setText("Schiffe senden");
-                sendship.stop();
+        MainMenuController.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                if(Host!=null){
+                    Host.CutConnection();
+                }
             }
-        }));
-        sendship.setCycleCount(Animation.INDEFINITE);
-        sendship.play();
-        startbutton = new Timeline(new KeyFrame(Duration.millis(100),event -> {
-            if (Host != null && Host.Spielstartet) {
-                gameStartButton.setPrefSize(41,25);
-                gameStartButton.setText("Start");
-                startbutton.stop();
-            }
-        }));
-        startbutton.setCycleCount(Animation.INDEFINITE);
-        startbutton.play();
-
-         */
+        });
     }
 
 
@@ -670,4 +659,5 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         newStage.setScene(stageScene);
         newStage.show();
     }
+
 }
