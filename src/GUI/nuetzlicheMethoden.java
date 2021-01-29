@@ -742,62 +742,46 @@ public class nuetzlicheMethoden {
 
     public void connectionfeedback() {
         System.out.println("Verbindung wurde getrennt!");
-        Stage newStage = new Stage();
-        VBox comp = new VBox();
-        comp.setPadding(new Insets(10, 10, 10, 10));
-        comp.setSpacing(5);
-        comp.setStyle("-fx-background-color: DARKCYAN;");
-        comp.setAlignment(Pos.CENTER);
-        Button back = new Button("back to Menu");
-        //back.setPrefSize(100, 30);
-        back.setOnAction(event1 -> {
-            try {
-                Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
-                Scene s = new Scene(root);
-                MainMenuController.primaryStage.setScene(s);
-                MainMenuController.primaryStage.setTitle("MainMenu");
-                MainMenuController.primaryStage.show();
-                newStage.close();
-            } catch (IOException e) {
-                System.err.println("FXML Fehler!!");
-                return;
-            }
-        });
-        Label label = new Label("Verbindung wurde getrennt!");
-        label.setFont(new Font("System",14));
-        comp.getChildren().add(label);
-        comp.getChildren().add(back);
-        Scene stageScene = new Scene(comp, 300, 150);
-        newStage.setScene(stageScene);
-        //newStage.setAlwaysOnTop(true);
-        //double x = MainMenuController.primaryStage.getX();//-(newStage.getWidth()/2);//+((MainMenuController.primaryStage.getWidth()/2)-newStage.getWidth()/2);
-        //double y = MainMenuController.primaryStage.getY();//+(newStage.getHeight()/2);//+((MainMenuController.primaryStage.getHeight()/2)-newStage.getHeight()/2);
-        newStage.setX(MainMenuController.primaryStage.getX());
-        newStage.setY(MainMenuController.primaryStage.getY());
-        newStage.show();
-    }
-
-    public void connectionlost(Client Client,BotClient BClient) {
-        connectionlost = new Timeline(new KeyFrame(Duration.millis(100),event -> {
-            if (Client == null) {
-                if (BClient.ERROR) {
-                    connectionlost.stop();
-                    connectionfeedback();
+        Timeline t=new Timeline(new KeyFrame(new Duration(1000),event -> {
+            Stage newStage = new Stage();
+            VBox comp = new VBox();
+            comp.setPadding(new Insets(10, 10, 10, 10));
+            comp.setSpacing(5);
+            comp.setStyle("-fx-background-color: DARKCYAN;");
+            comp.setAlignment(Pos.CENTER);
+            Button back = new Button("back to Menu");
+            //back.setPrefSize(100, 30);
+            back.setOnAction(event1 -> {
+                try {
+                    Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+                    Scene s = new Scene(root);
+                    MainMenuController.primaryStage.setScene(s);
+                    MainMenuController.primaryStage.setTitle("MainMenu");
+                    MainMenuController.primaryStage.show();
+                    newStage.close();
+                } catch (IOException e) {
+                    System.err.println("FXML Fehler!!");
                     return;
                 }
-            }
-            if (BClient == null) {
-                if (Client.ERROR) {
-                    connectionlost.stop();
-                    connectionfeedback();
-                    return;
-                }
-            }
+            });
+            Label label = new Label("Verbindung wurde getrennt!");
+            label.setFont(new Font("System",14));
+            comp.getChildren().add(label);
+            comp.getChildren().add(back);
+            Scene stageScene = new Scene(comp, 300, 150);
+            newStage.setScene(stageScene);
+            //newStage.setAlwaysOnTop(true);
+            //double x = MainMenuController.primaryStage.getX();//-(newStage.getWidth()/2);//+((MainMenuController.primaryStage.getWidth()/2)-newStage.getWidth()/2);
+            //double y = MainMenuController.primaryStage.getY();//+(newStage.getHeight()/2);//+((MainMenuController.primaryStage.getHeight()/2)-newStage.getHeight()/2);
+            newStage.setX(MainMenuController.primaryStage.getX());
+            newStage.setY(MainMenuController.primaryStage.getY());
+            newStage.show();
         }));
-        connectionlost.setCycleCount(Animation.INDEFINITE);
-        connectionlost.play();
-
+        t.setCycleCount(1);
+        t.play();
     }
+
+
     /**
      * Timeline fuer connectionfeedback
      */

@@ -167,14 +167,12 @@ public class MultiClientBotController implements Initializable, Serializable {
         GOETTLICHESSPIELDERVERNICHTUNGMITbot = Client.dasSpiel;
         methoden.initspeichern(GOETTLICHESSPIELDERVERNICHTUNGMITbot,speicherbutton);
         Gridinit();
-        //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
-        //Client.init(); wurde davor schon erledigt
+        Client.setNuetzlicheMethoden(methoden);
         GridUpdater();
         initupdateTimeline();
         Client.setUpdateTimeline(updateTimeline);
         spielstatus = true;
-        methoden.connectionlost(null,Client);
     }
 
     /**
@@ -529,7 +527,7 @@ public class MultiClientBotController implements Initializable, Serializable {
         if (updateTimeline != null) {
             updateTimeline.stop();
         }
-        methoden.connectionlost.stop();
+        Client.closeOnPurpose=true;
         Client.CutConnection();
 
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
@@ -613,7 +611,6 @@ public class MultiClientBotController implements Initializable, Serializable {
         Save.setPrefSize(100, 30);
         Save.setText("Save");
         Save.setOnAction(event1 -> {
-            methoden.connectionlost.stop();
             String name = String.valueOf(DateiName.getText());
             name = name + "-M";
             System.out.println("Name: " + name);

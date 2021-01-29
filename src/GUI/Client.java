@@ -1,16 +1,10 @@
 package GUI;
 
 import javafx.animation.Timeline;
-import logic.Bot;
 import logic.Spiel;
 import logic.save.SAFE_SOME;
-import sun.security.provider.ConfigFile;
-
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.file.NoSuchFileException;
 
 /**
  * Klasse fuer den Multiplayer-Spieler-Client
@@ -60,6 +54,7 @@ public class Client {
     // 1 = Verbindung und Spielfeldgröße gegeben
     // 2 = Schiffsgrößen erhalten
     private Timeline updateT;
+    private nuetzlicheMethoden nuetzlicheMethoden;
 
     /**
      * Konstruktor fuer die Client-Klasse, welche sich  mit dem Host verbindet
@@ -106,7 +101,7 @@ public class Client {
                     status = 1;
                     sendSocket("next");
                     z = receiveSocket();
-                    if (!z.contains("ships")) {
+                    if (z==null || !z.contains("ships")) {
                         System.err.println("Ships von Server erwartet!!");
                         CutConnection();
                         return;
@@ -138,6 +133,9 @@ public class Client {
 
     public void setUpdateTimeline(Timeline t){
         updateT=t;
+    }
+    public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
+        this.nuetzlicheMethoden=nuetzlicheMethoden;
     }
     /**
      * Funktion zum der Nachrichten an den Host
@@ -231,6 +229,9 @@ public class Client {
                     out.close();
                 }
                 closed=true;
+                if(!dasSpiel.isOver()&& !closeOnPurpose && nuetzlicheMethoden!=null){
+                    nuetzlicheMethoden.connectionfeedback();
+                }
             } catch (IOException e) {
                 System.err.println("Can not close Socket!!");
                 e.printStackTrace();
@@ -239,6 +240,8 @@ public class Client {
         Thread t= new Thread(runnable);
         t.start();
     }
+
+    public boolean closeOnPurpose;
     /**
      * Speichert das Spiel
      * @param hash Speicher-Id
@@ -253,6 +256,7 @@ public class Client {
             CutConnection();
             return;
         }
+        closeOnPurpose =true;
         CutConnection();
     }
     /**
@@ -333,12 +337,12 @@ public class Client {
      * @param nachricht Sondernachricht vom Host
      */
     private void sonderNachrichten(String nachricht) {
-        if (nachricht.contains("save")) {
+        if (nachricht!=null &&nachricht.contains("save")) {
             dasSpiel.calcEnemyShips();
             new SAFE_SOME( new Spiel[]{dasSpiel}, 4, nachricht.split(" ")[1],dasSpiel.slayship, dasSpiel.slayX,dasSpiel.slayY, dasSpiel.enemyShips, dasSpiel.smallestShip, dasSpiel.longestShip);
             sendSocket("done");
             CutConnection();
-        } else if (nachricht.contains("next")) {
+        } else if (nachricht!=null &&nachricht.contains("next")) {
             System.out.println("Sie sind an der Reihe!");
         } else {
             CutConnection();

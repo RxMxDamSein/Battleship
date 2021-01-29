@@ -75,6 +75,7 @@ public class BotHost {
      */
     public boolean pause = false;
     private Timeline updateT;
+    private nuetzlicheMethoden nuetzlicheMethoden;
     /**
      * Normaler Konstrukter von BotHost
      * @param p Port
@@ -106,6 +107,9 @@ public class BotHost {
 
     public void setUpdateTimeline(Timeline t){
         updateT=t;
+    }
+    public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
+        this.nuetzlicheMethoden=nuetzlicheMethoden;
     }
 
     /**
@@ -293,6 +297,9 @@ public class BotHost {
                 }
                 ss.close();
                 closed=true;
+                if(!dasSpiel.isOver() && !closeOnPurpose && nuetzlicheMethoden!=null){
+                    nuetzlicheMethoden.connectionfeedback();
+                }
             } catch (IOException e) {
                 System.err.println("Can not close Socket!!");
                 e.printStackTrace();
@@ -421,6 +428,8 @@ public class BotHost {
 
     }
 
+
+    public boolean closeOnPurpose;
     /**
      * Speichert das Spiel
      * @param hash Speicher-ID
@@ -432,6 +441,7 @@ public class BotHost {
             CutConnection();
             return;
         }
+        closeOnPurpose=true;
         CutConnection();
     }
 }

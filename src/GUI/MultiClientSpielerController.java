@@ -174,7 +174,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         Gridinit();
         //Spielinit(); wurde davor schon erledigt
         this.Client = Client;
-        methoden.connectionlost(Client,null);
+        Client.setNuetzlicheMethoden(methoden);
         //Client.init(); wurde davor schon erledigt
         if (Client.loaded) {
             GridUpdater();
@@ -563,8 +563,7 @@ public class MultiClientSpielerController implements Initializable, Serializable
         }
         if(time!=null)
             time.stop();
-        methoden.connectionlost.stop();
-
+        Client.closeOnPurpose=true;
         Client.CutConnection();
 
         Parent root = FXMLLoader.load(getClass().getResource("MehrspielerMenu.fxml"));
@@ -607,7 +606,6 @@ public class MultiClientSpielerController implements Initializable, Serializable
             System.err.println("Du kannst nur speichern, wenn du dran bist!");
             return;
         }
-        methoden.connectionlost.stop();
 
         //SaveData data = new SaveData();
         //ResourceManager.save(this, "1.save");

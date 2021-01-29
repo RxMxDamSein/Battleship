@@ -3,12 +3,9 @@ package GUI;
 import javafx.animation.Timeline;
 import logic.*;
 import logic.save.SAFE_SOME;
-import sun.security.provider.ConfigFile;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
  * Klasse fuer den Multiplayer-Bot-Client
@@ -62,6 +59,7 @@ public class BotClient {
     // 2 = Schiffsgrößen erhalten
 
     private Timeline updateT;
+    private nuetzlicheMethoden nuetzlicheMethoden;
 
     /**
      * Konstruktor fuer die BotClient-Klasse, welche sich  mit dem Host verbindet
@@ -173,6 +171,9 @@ public class BotClient {
 
     public void setUpdateTimeline(Timeline t){
         updateT=t;
+    }
+    public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
+        this.nuetzlicheMethoden=nuetzlicheMethoden;
     }
 
     /**
@@ -288,6 +289,9 @@ public class BotClient {
                     out.close();
                 }
                 closed=true;
+                if(!dasSpiel.isOver()&& !closeOnPurpose && nuetzlicheMethoden!=null){
+                    nuetzlicheMethoden.connectionfeedback();
+                }
             } catch (IOException e) {
                 System.err.println("Can not close Socket!!");
                 //e.printStackTrace();
@@ -297,6 +301,7 @@ public class BotClient {
         t.start();
     }
 
+    public boolean closeOnPurpose =false;
     /**
      * Speichert das Spiel
      * @param hash Speicher-Id
@@ -310,6 +315,7 @@ public class BotClient {
             CutConnection();
             return;
         }
+        closeOnPurpose =true;
         CutConnection();
     }
 

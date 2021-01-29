@@ -176,6 +176,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         GridUpdater();
         initupdateTimeline();
         Host.setUpdateTimeline(updateTimeline);
+        Host.setNuetzlicheMethoden(methoden);
     }
 
     //Konstruktor laden
@@ -215,6 +216,7 @@ public class MultiHostBotController implements Initializable, Serializable {
         if(derBot.dasSpiel.isStarted()){
             spielstatus=true;
         }
+        Host.setNuetzlicheMethoden(methoden);
     }
 
     /**
