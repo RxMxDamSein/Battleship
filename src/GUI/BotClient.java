@@ -22,15 +22,15 @@ public class BotClient {
      */
     private BufferedReader in;
     /**
-     * schreibt die Nachrichten fuer den Host
+     * schreibt die Nachrichten für den Host
      */
     private OutputStreamWriter out;
     /**
-     * ERROR, true wenn ein Verbindungsfehler oder aehnliches auftritt.
+     * ERROR, true wenn ein Verbindungsfehler oder ähnliches auftritt.
      * <br>
-     * loaded, true wenn des Spiel geladen werden soll.
+     * loaded, true wenn das Spiel geladen werden soll.
      * <br>
-     * pause, true wenn der Bot pausieren soll.
+     * pause, true wenn der Bot pausieren soll, um zu speichern.
      */
     public boolean ERROR = false, loaded = false, pause = false;
 
@@ -43,7 +43,7 @@ public class BotClient {
      */
     public Bot derBot;
     /**
-     * Schiffgroessen vom Host
+     * Schiffgrössen vom Host
      */
     public int[] ships;//if ships is added make it -1
     /**
@@ -60,12 +60,15 @@ public class BotClient {
     // 1 = Verbindung und Spielfeld
     // 2 = Schiffsgrößen erhalten
 
+    /** Die Timeline vom Controller um das Spielfeld zu aktualisieren */
     private Timeline updateT;
+    /** Das neutzliche methoden Objekt, um das Verbindug verloren Fenster anzuzeigen */
     private nuetzlicheMethoden nuetzlicheMethoden;
+    /** der Controller um den Speicherbutton freizuschalten*/
     private MultiClientBotController multiClientBotController;
 
     /**
-     * Konstruktor fuer die BotClient-Klasse, welche sich  mit dem Host verbindet
+     * Konstruktor für die BotClient-Klasse, welche sich  mit dem Host verbindet
      * @param IP IP-Adresse vom Host
      * @param PORT PORT vom Host
      * @param bot Bot-Schwierigkeit
@@ -173,19 +176,33 @@ public class BotClient {
 
     }
 
+    /**
+     * Setzt die Timeline um das Spielfeld zu aktualisieren
+     * @param t updateTimeline
+     */
     public void setUpdateTimeline(Timeline t){
         updateT=t;
     }
+
+    /**
+     * NuetzlicheMehtoden objekt um Verbindung verloren anzuzeigen
+     * @param nuetzlicheMethoden methoden Objekt
+     */
     public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
         this.nuetzlicheMethoden=nuetzlicheMethoden;
     }
+
+    /**
+     * der Controller um den Speicher Button freizuschalten
+     * @param multiClientBotController Controller objekt
+     */
     public void setMultiClientBotController(MultiClientBotController multiClientBotController){
         this.multiClientBotController=multiClientBotController;
     }
 
     /**
      * Funktion zum der Nachrichten an den Host
-     * @param antwort Die Nachricht fuer den Host
+     * @param antwort Die Nachricht für den Host
      */
     public void sendSocket(String antwort) {
         System.out.print("Zu Server: " + antwort + "\n");
@@ -202,9 +219,9 @@ public class BotClient {
     }
 
     /**
-     * Funktion um fest zu stellen ob die gewählte Schiffsgroesse zulaessig ist.
+     * Funktion um fest zu stellen ob die gewählte Schiffsgroesse zulässig ist.
      * @param len Schiffgroesse
-     * @return false wenn
+     * @return false wenn ein Schiff dieser Größe nicht gesetzt werden darf
      */
     public boolean inShips(int len) {
         if (ships == null)
@@ -217,7 +234,7 @@ public class BotClient {
     }
 
     /**
-     * loescht verwendete Schiffgroessen.
+     * löscht verwendete Schiffgroessen.
      * @param len Schiffgroesse
      */
     public void deleteShip(int len) {
@@ -229,7 +246,7 @@ public class BotClient {
     }
 
     /**
-     * aendert change auf true
+     * aktualisiert das Spielbrett und wartet für die Zeit des Sliders
      */
     private void update(){
 
@@ -308,6 +325,9 @@ public class BotClient {
         t.start();
     }
 
+    /**
+     * Um zu verhindern das Verbindung verloren angezeigt wird, wenn man selbst die Verbindung trennt
+     */
     public boolean closeOnPurpose =false;
     /**
      * Speichert das Spiel
@@ -470,7 +490,7 @@ public class BotClient {
     }
 
     /**
-     * macht den Speicherbutton Visble wenn man speichern darf
+     * macht den Speicherbutton Visible wenn man speichern darf
      */
     private void erlaubeSpeichern(){
         Timeline timeline=new Timeline(new KeyFrame(new Duration(100),event -> {

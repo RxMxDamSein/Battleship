@@ -76,7 +76,9 @@ public class BotHost {
      * pause, true wenn der Bot pausieren soll.
      */
     public boolean pause = false;
+    /** Die Timeline vom Controller um das Spielfeld zu aktualisieren */
     private Timeline updateT;
+    /** Das neutzliche methoden Objekt, um das Verbindug verloren Fenster anzuzeigen */
     private nuetzlicheMethoden nuetzlicheMethoden;
     /**
      * Normaler Konstrukter von BotHost
@@ -106,10 +108,17 @@ public class BotHost {
         this.derBot = derBot;
         this.id = id;
     }
-
+    /**
+     * Setzt die Timeline um das Spielfeld zu aktualisieren
+     * @param t updateTimeline
+     */
     public void setUpdateTimeline(Timeline t){
         updateT=t;
     }
+    /**
+     * NuetzlicheMehtoden objekt um Verbindung verloren anzuzeigen
+     * @param nuetzlicheMethoden methoden Objekt
+     */
     public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
         this.nuetzlicheMethoden=nuetzlicheMethoden;
     }
@@ -190,7 +199,7 @@ public class BotHost {
 
     }
     /**
-     * Funktion zum der Nachrichten an den Host
+     * Funktion zum Senden der Nachrichten an den Host
      * @param antwort Die Nachricht fuer den Host
      */
     public void sendSocket(String antwort) {
@@ -258,6 +267,9 @@ public class BotHost {
         t.start();
     }
 
+    /**
+     * macht den Speicherbutton Visible wenn man speichern darf
+     */
     public void speichernErlauben(){
         Timeline timeline=new Timeline(new KeyFrame(new Duration(100), event -> {
             multiHostBotController.speicherbutton.setVisible(true);
@@ -409,7 +421,7 @@ public class BotHost {
         sonderNachrichten(z);
     }
     /**
-     * aendert change auf true
+     * aktualisiert das Spielbrett und wartet für die Zeit des Sliders
      */
     private void update(){
         try {
@@ -422,7 +434,7 @@ public class BotHost {
         }
     }
     /**
-     * Moegliche vom Client
+     * Fängt unerwartete Nachrichten ab
      * @param nachricht Sondernachricht vom Host
      */
     private void sonderNachrichten(String nachricht) {
@@ -445,7 +457,9 @@ public class BotHost {
 
     }
 
-
+    /**
+     * Um zu verhindern das Verbindung verloren angezeigt wird, wenn man selbst die Verbindung trennt
+     */
     public boolean closeOnPurpose;
     /**
      * Speichert das Spiel
@@ -461,8 +475,12 @@ public class BotHost {
         closeOnPurpose=true;
         CutConnection();
     }
-
+    /** der Controller um den Speicherbutton freizuschalten*/
     private MultiHostBotController multiHostBotController;
+    /**
+     * der Controller um den Speicher Button freizuschalten
+     * @param multiHostBotController Controller objekt
+     */
     public void setMultiHostBotController(MultiHostBotController multiHostBotController) {
         this.multiHostBotController=multiHostBotController;
     }

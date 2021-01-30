@@ -53,7 +53,9 @@ public class Client {
     // 0 = keine verbindung
     // 1 = Verbindung und Spielfeldgröße gegeben
     // 2 = Schiffsgrößen erhalten
+    /** Die Timeline vom Controller um das Spielfeld zu aktualisieren */
     private Timeline updateT;
+    /** Das neutzliche methoden Objekt, um das Verbindug verloren Fenster anzuzeigen */
     private nuetzlicheMethoden nuetzlicheMethoden;
 
     /**
@@ -130,10 +132,17 @@ public class Client {
 
 
     }
-
+    /**
+     * Setzt die Timeline um das Spielfeld zu aktualisieren
+     * @param t updateTimeline
+     */
     public void setUpdateTimeline(Timeline t){
         updateT=t;
     }
+    /**
+     * NuetzlicheMehtoden objekt um Verbindung verloren anzuzeigen
+     * @param nuetzlicheMethoden methoden Objekt
+     */
     public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden){
         this.nuetzlicheMethoden=nuetzlicheMethoden;
     }
@@ -169,7 +178,10 @@ public class Client {
         }
         return false;
     }
-
+    /**
+     * löscht verwendete Schiffgroessen.
+     * @param len Schiffgroesse
+     */
     public void deleteShip(int len) {
         for (int i = 0; i < ships.length; i++)
             if (ships[i] == len) {
@@ -195,6 +207,9 @@ public class Client {
         }
         return nachricht;
     }
+    /**
+     * Boolean, welche angibt ob der Server geschlossen wurde
+     */
     private boolean closed=false;
     /**
      * Trennt die Verbindung zum Host
@@ -240,7 +255,9 @@ public class Client {
         Thread t= new Thread(runnable);
         t.start();
     }
-
+    /**
+     * Um zu verhindern das Verbindung verloren angezeigt wird, wenn man selbst die Verbindung trennt
+     */
     public boolean closeOnPurpose;
     /**
      * Speichert das Spiel

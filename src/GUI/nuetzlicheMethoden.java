@@ -442,7 +442,11 @@ public class nuetzlicheMethoden {
      */
     Stage newStage;
 
-
+    /**
+     * Versucht ein Spiel zu Hosten
+     * @param label Label um Fehler anzuzeigen
+     * @return Erfolg
+     */
     private boolean makeServer(Label label){
         String message="ERROR Try again?";
         boolean success=false;

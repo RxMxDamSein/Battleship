@@ -69,14 +69,17 @@ public class Host {
      * Spiel aus dem Logic-package
      */
     public Spiel dasSpiel;
+    /** Die Timeline vom Controller um das Spielfeld zu aktualisieren */
     private Timeline updateT;
+    /** Das neutzliche methoden Objekt, um das Verbindug verloren Fenster anzuzeigen */
     private nuetzlicheMethoden nuetzlicheMethoden;
+    /** um den Speicherbutton freizuschalten */
     private Button speicherbutton;
 
     /**
-     * Nromaler Konstrukter von Host
+     * Normaler Konstruktor von Host
      * @param p Port
-     * @param g Feldgrosse
+     * @param g Feldgrösse
      * @param dasSpiel Bot-Schwierigkeit
      */
     public Host(int p, int g, Spiel dasSpiel) {
@@ -170,10 +173,17 @@ public class Host {
 
 
     }
-
+    /**
+     * Setzt die Timeline um das Spielfeld zu aktualisieren
+     * @param t updateTimeline
+     */
     public void setUpdateTimeline(Timeline t){
         updateT=t;
     }
+    /**
+     * NuetzlicheMehtoden objekt um Verbindung verloren anzuzeigen
+     * @param nuetzlicheMethoden methoden Objekt
+     */
     public void setNuetzlicheMethoden(nuetzlicheMethoden nuetzlicheMethoden,Button speicherbutton){
         this.nuetzlicheMethoden=nuetzlicheMethoden;
         this.speicherbutton=speicherbutton;
@@ -244,6 +254,9 @@ public class Host {
         Thread t = new Thread(Runnable);
         t.start();
     }
+    /**
+     * Boolean, welche angibt ob der Server geschlossen wurde
+     */
     public boolean closed=false;
     /**
      * Schliesst die Verbindung
