@@ -278,7 +278,9 @@ public class BotClient {
         }
         return nachricht;
     }
-
+    /**
+     * Boolean, welche angibt ob der Server geschlossen wurde
+     */
     public boolean closed=false;
     /**
      * Trennt die Verbindung zum Host
