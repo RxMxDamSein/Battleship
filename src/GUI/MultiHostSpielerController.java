@@ -490,7 +490,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
         System.out.println("x= " + a + " y= " + b);
 
         // sx,sy,ex,ey
-        if (!spielstatus) {
+        if (!spielstatus && !shipsend) {
             if (count == 0) {
                 sx = a;
                 sy = b;
@@ -534,7 +534,6 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe, 0));
             shipsend =  true;
             gameStartButton.setText("warte auf Ready..");
-            spielstatus = true;
             return;
         }
         if (!Host.Spielstartet) {
