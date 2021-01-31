@@ -587,6 +587,15 @@ public class nuetzlicheMethoden {
             return true;
         }
     }
+    private void closeHost(BotHost Host){
+        try{
+            Host.closeOnPurpose=true;
+            Host.CutConnection();
+        }catch ( Exception e){
+
+        }
+
+    }
 
     //Integer Port,Integer Feldgroesse,Integer bot, SAFE_SOME SAFE, String id
     /**
@@ -601,7 +610,7 @@ public class nuetzlicheMethoden {
             MultiHostBotController controller = loader.getController();
             controller.setVariables(Port, Feldgroesse, bot);
             try {
-                Thread.sleep(200);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -612,6 +621,8 @@ public class nuetzlicheMethoden {
                     e.printStackTrace();
                 }
                 if (controller.Host.ERROR || !controller.Host.Hosted) {
+
+                    closeHost(controller.Host);
                     return false;
                 }
             }

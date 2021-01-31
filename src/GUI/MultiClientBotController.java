@@ -585,47 +585,11 @@ public class MultiClientBotController implements Initializable, Serializable {
             System.err.println("Das Spiel hat doch noch gar nicht angefangen, nichts zu speichern!");
             return;
         }
-        Client.pause = true;
-        // SAVE POP UP Fenster
-        Stage newStage = new Stage();
-        VBox comp = new VBox();
-        comp.setPadding(new Insets(10, 10, 10, 10));
-        comp.setSpacing(5);
-        comp.setStyle("-fx-background-color: DARKCYAN;");
-        comp.setAlignment(Pos.CENTER);
-        TextField DateiName = new TextField();
-        DateiName.setText("Dateiname");
-        Button Save = new Button();
-        Save.setPrefSize(100, 30);
-        Save.setText("Save");
-        Save.setOnAction(event1 -> {
-            String name = String.valueOf(DateiName.getText());
-            name = name + "-M";
-            System.out.println("Name: " + name);
-            //Speichern
-            String hash = "" + this.hashCode();
 
-            Client.save(hash, name);
-            newStage.close();
-        });
-        Label label = new Label("Dateiname:");
-        label.setFont(new Font("System",14));
-        comp.getChildren().add(label);
-        comp.getChildren().add(DateiName);
-        comp.getChildren().add(Save);
-        Scene stageScene = new Scene(comp, 300, 150);
-        newStage.setScene(stageScene);
-        newStage.show();
-        newStage.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage.getWidth()/2);
-        newStage.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage.getHeight()/2);
-        newStage.setOnCloseRequest(e-> {
-            //Speichern
-            String hash = "" + this.hashCode();
-            System.out.println("Name: "+hash+"-M");
-            Client.save(hash, hash+"-M");
-            newStage.close();
-        });
+
+
         Runnable runnable=()->{
+            TextField DateiName = new TextField();
             Client.pause = true;
             speicherbutton.setVisible(false);
             while (Client.dasSpiel.getAbschussSpieler() == 0){
@@ -666,7 +630,17 @@ public class MultiClientBotController implements Initializable, Serializable {
                 comp2.getChildren().add(Save2);
                 Scene stageScene2 = new Scene(comp2, 300, 150);
                 newStage2.setScene(stageScene2);
+
+                newStage2.setOnCloseRequest(e-> {
+                    //Speichern
+                    String hash = "" + this.hashCode();
+                    System.out.println("Name: "+hash+"-M");
+                    Client.save(hash, hash+"-M");
+                    newStage2.close();
+                });
                 newStage2.show();
+                newStage2.setX(MainMenuController.primaryStage.getX()+MainMenuController.primaryStage.getWidth()/2-newStage2.getWidth()/2);
+                newStage2.setY(MainMenuController.primaryStage.getY()+MainMenuController.primaryStage.getHeight()/2-newStage2.getHeight()/2);
             }));
             t.setCycleCount(1);
             t.play();
