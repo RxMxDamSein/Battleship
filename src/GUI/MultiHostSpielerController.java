@@ -534,6 +534,7 @@ public class MultiHostSpielerController implements Initializable, Serializable {
             Host.senships(Bot.getShipSizes(GOETTLICHESSPIELDERVERNICHTUNGMITbot.schiffe, 0));
             shipsend =  true;
             gameStartButton.setText("warte auf Ready..");
+            spielstatus = true;
             return;
         }
         if (!Host.Spielstartet) {
