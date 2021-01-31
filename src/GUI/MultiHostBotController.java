@@ -397,6 +397,7 @@ public class MultiHostBotController implements Initializable, Serializable {
             updateTimeline.stop();
         }
         if (Host != null) {
+            Host.closeOnPurpose=true;
             Host.CutConnection();
         }
 
